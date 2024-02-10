@@ -1,6 +1,6 @@
 package com.hompo.auth.dto;
 
-public record JwtInfoDto(
+public record JwtSecretDto(
         String secretKey,
 
         long expireTime

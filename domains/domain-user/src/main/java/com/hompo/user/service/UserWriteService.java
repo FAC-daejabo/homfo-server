@@ -1,9 +1,9 @@
 package com.hompo.user.service;
 
-import com.hompo.auth.dto.JwtDto;
-import com.hompo.user.dto.RegisterCommand;
+import com.hompo.user.command.RegisterCommand;
+import com.hompo.user.dto.UserDto;
 import lombok.NonNull;
-import com.hompo.user.dto.SignInCommand;
+import com.hompo.user.command.SignInCommand;
 
 import java.util.function.Function;
 
@@ -11,17 +11,13 @@ public interface UserWriteService {
     /**
      * 회원가입합니다.
      * */
-    JwtDto register(@NonNull RegisterCommand command, @NonNull Function<Long, String> getAccessToken, @NonNull Function<Long, String> getRefreshToken);
+    UserDto register(@NonNull RegisterCommand command);
 
     /**
      * 로그인합니다.
      * */
-    JwtDto signIn(@NonNull SignInCommand command, @NonNull JwtDto jwtDto);
+    UserDto signIn(@NonNull SignInCommand command);
 
-    /**
-     * 로그아웃합니다.
-     * */
-    void signOut(long userId);
 
     /**
      * 계정 정보를 삭제합니다.

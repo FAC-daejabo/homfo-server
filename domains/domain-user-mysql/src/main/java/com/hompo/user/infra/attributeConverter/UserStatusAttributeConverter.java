@@ -1,10 +1,10 @@
 package com.hompo.user.infra.attributeConverter;
 
 
+import com.hompo.user.infra.enums.UserStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
-import com.hompo.user.infra.enums.UserStatus;
 
 @Converter
 @Slf4j

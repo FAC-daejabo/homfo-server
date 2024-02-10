@@ -83,17 +83,20 @@ public class MySqlUser extends User {
     }
 
     @Override
-    public void signIn(PasswordEncoder encoder, String originPassword, JwtDto jwtDto) {
-        if (encoder.matches(originPassword, password)) {
-            this.refreshToken = encoder.encode(jwtDto.refreshToken());
-        } else {
+    public void signIn(PasswordEncoder encoder, String originPassword) {
+        if(!encoder.matches(originPassword, password)) {
             // TODO: exception 변경
             throw new RuntimeException();
         }
     }
 
     @Override
-    public void signUp(PasswordEncoder encoder,JwtDto jwtDto) {
-        this.refreshToken = encoder.encode(jwtDto.refreshToken());
+    public void deleteAccount() {
+        account = null;
+        password = null;
+        phoneNumber = null;
+        nickname = null;
+        status = UserStatus.DELETED;
+        refreshToken = null;
     }
 }

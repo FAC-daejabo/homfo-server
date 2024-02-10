@@ -1,4 +1,4 @@
-package com.hompo.user.dto;
+package com.hompo.user.command;
 
 import com.hompo.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;

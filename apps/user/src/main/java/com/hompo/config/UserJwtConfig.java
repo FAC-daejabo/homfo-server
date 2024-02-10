@@ -1,12 +1,13 @@
 package com.hompo.config;
 
-import com.hompo.auth.dto.JwtInfoDto;
+import com.hompo.auth.dto.JwtSecretDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
+
+import java.util.List;
 
 @Configuration
+@ComponentScan("com.hompo.user.service")
 @PropertySource(value = {"classpath:application.yaml"})
 public class UserJwtConfig {
     @Value("${jwt.accessTokenSecret}")
@@ -22,12 +23,22 @@ public class UserJwtConfig {
     private String refreshTokenExpire;
 
     @Bean
-    public JwtInfoDto accessTokenInfo() {
-        return new JwtInfoDto(accessTokenSecret, Long.parseLong(accessTokenExpire));
+    public JwtSecretDto userAccessTokenInfo() {
+        return new JwtSecretDto(accessTokenSecret, Long.parseLong(accessTokenExpire));
     }
 
     @Bean
-    public JwtInfoDto refreshTokenInfo() {
-        return new JwtInfoDto(refreshTokenSecret, Long.parseLong(refreshTokenExpire));
+    public JwtSecretDto userRefreshTokenInfo() {
+        return new JwtSecretDto(refreshTokenSecret, Long.parseLong(refreshTokenExpire));
+    }
+
+    @Bean
+    public List<String> userAccessTokenWhiteList() {
+        return List.of("/users/register", "/users/sign-in");
+    }
+
+    @Bean
+    public List<String> userRefreshTokenBlackList() {
+        return List.of("/users/refresh");
     }
 }

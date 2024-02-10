@@ -1,6 +1,7 @@
 package com.hompo.user.service;
 
 import com.hompo.auth.dto.JwtDto;
+import com.hompo.user.dto.UserDto;
 import com.hompo.user.entity.MySqlUser;
 import com.hompo.user.repository.UserRepository;
 import lombok.NonNull;
@@ -8,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.hompo.user.dto.SignInCommand;
-import com.hompo.user.dto.RegisterCommand;
+import com.hompo.user.command.SignInCommand;
+import com.hompo.user.command.RegisterCommand;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -23,9 +24,8 @@ public class MySqlUserWriteService implements UserWriteService {
 
     @Transactional
     @Override
-    public JwtDto register(@NonNull RegisterCommand command, @NonNull Function<Long, String> getAccessToken, @NonNull Function<Long, String> getRefreshToken) {
+    public UserDto register(@NonNull RegisterCommand command) {
         MySqlUser user;
-        JwtDto jwtDto;
         Optional<MySqlUser> optionalUser = userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber());
 
         if (optionalUser.isPresent()) {
@@ -45,32 +45,28 @@ public class MySqlUserWriteService implements UserWriteService {
 
         userRepository.save(user);
 
-        jwtDto = new JwtDto(getAccessToken.apply(user.getId()), getRefreshToken.apply(user.getId()));
-
-        user.signUp(encoder, jwtDto);
-
-        return jwtDto;
+        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday());
     }
 
     @Override
-    public JwtDto signIn(@NonNull SignInCommand command, @NonNull JwtDto jwtDto) {
+    public UserDto signIn(@NonNull SignInCommand command) {
         // TODO: 존재하지 않는 유저 알려주기
         MySqlUser user = userRepository.findByAccount(command.account()).orElseThrow(RuntimeException::new);
 
-        user.signIn(encoder, command.password(), jwtDto);
+        user.signIn(encoder, command.password());
 
         userRepository.save(user);
 
         return null;
     }
 
-    @Override
-    public void signOut(long userId) {
-
-    }
 
     @Override
     public void deleteAccount(long userId) {
+        // TODO: 존재하지 않는 유저 알려주기
+        MySqlUser user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
 
+        user.deleteAccount();
+        userRepository.save(user);
     }
 }

@@ -117,9 +117,9 @@ public abstract class User {
      */
     public abstract LocalDateTime getUpdatedAt();
 
-    public abstract void signIn(PasswordEncoder encoder, String originPassword, JwtDto jwtDto);
+    public abstract void signIn(PasswordEncoder encoder, String originPassword);
 
-    public abstract void signUp(PasswordEncoder encoder,JwtDto jwtDto);
+    public abstract void deleteAccount();
 
     protected void validateAccount(String account) {
         Assert.isTrue(Pattern.matches(ACCOUNT_REGEXP, Objects.requireNonNull(account)), "올바르지 않은 계정입니다.");

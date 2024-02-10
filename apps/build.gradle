@@ -31,6 +31,7 @@ subprojects { // 각 모듈에 적용할 공통 설정
     dependencies {
         // spring
         implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-security'
 
         // lombok
         compileOnly 'org.projectlombok:lombok'
