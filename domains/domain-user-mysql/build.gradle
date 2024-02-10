@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hompo.domains.domain-user-mysql'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    implementation project(':domains:domain-user')
+}
+
+test {
+    useJUnitPlatform()
+}

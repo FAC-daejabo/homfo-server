@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.2'
+    id 'io.spring.dependency-management' version '1.1.4'
+}
+
+allprojects {
+    group = 'com.hompo.apps'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '21'
+
+    repositories {
+        mavenCentral()
+    }
+
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+subprojects { // 각 모듈에 적용할 공통 설정
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+    dependencies {
+        // lombok
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        // jackson
+        implementation 'com.fasterxml.jackson.core:jackson-core:2.15.3'
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+        implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3'
+    }
+
+    tasks.named('bootJar') { // 빌드할 때 bootjar로 하지 않음 (실행 불가능)
+        enabled = false
+    }
+
+    tasks.named('jar') { // 빌드할 때 jar 파일로 하겠다는 의미
+        enabled = true
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

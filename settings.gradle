@@ -1,0 +1,51 @@
+rootProject.name = 'hompo'
+
+// domain layer
+include 'domains'
+
+// 관리자 domain
+include 'domains:domain-employee'
+findProject(':domains:domain-employee')?.name = 'domain-employee'
+include 'domains:domain-employee-mysql'
+findProject(':domains:domain-employee-mysql')?.name = 'domain-employee-mysql'
+
+// 사용자 domain
+include 'domains:domain-user'
+findProject(':domains:domain-user')?.name = 'domain-user'
+include 'domains:domain-user-mysql'
+findProject(':domains:domain-user-mysql')?.name = 'domain-user-mysql'
+
+// 부동산 domain
+include 'domains:domain-real-estate'
+findProject(':domains:domain-real-estate')?.name = 'domain-real-estate'
+include 'domains:domain-real-estate-mysql'
+findProject(':domains:domain-real-estate-mysql')?.name = 'domain-real-estate-mysql'
+
+// 외부 클라이언트
+include 'clients'
+
+// 카카오 맵 클라이언트
+include 'clients:kakao-map-client'
+findProject(':clients:kakao-map-client')?.name = 'kakao-map-client'
+
+// 공공데이터포털 클라이언
+include 'clients:public-data-portal-client'
+findProject(':clients:public-data-portal-client')?.name = 'public-data-portal-client'
+
+// application
+include 'apps'
+
+// 사용자 서버
+include 'apps:user'
+findProject(':apps:user')?.name = 'user'
+
+// 관리자 서버
+include 'apps:employee'
+findProject(':apps:employee')?.name = 'employee'
+
+// 부동산 서버
+include 'apps:real-estate'
+findProject(':apps:real-estate')?.name = 'real-estate'
+
+include 'core'
+

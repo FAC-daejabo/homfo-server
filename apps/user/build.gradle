@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hompo.apps.user'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation project(':core')
+    implementation project(':domains:domain-user')
+    runtimeOnly project(':domains:domain-user-mysql')
+}
+
+test {
+    useJUnitPlatform()
+}

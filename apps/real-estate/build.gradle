@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.hompo.apps.real-estate'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    implementation project(':domains:domain-real-estate')
+    runtimeOnly project(':domains:domain-real-estate-mysql')
+
+    implementation project(':clients:kakao-map-client')
+    implementation project(':clients:public-data-portal-client')
+}
+
+test {
+    useJUnitPlatform()
+}
