@@ -1,0 +1,5 @@
+jwt:
+  accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
+  accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}
+  refreshTokenSecret: ${USER_REFRESH_TOKEN_SECRET}
+  refreshTokenExpire: ${USER_REFRESH_TOKEN_EXPIRE}

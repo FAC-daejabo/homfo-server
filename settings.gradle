@@ -48,4 +48,6 @@ include 'apps:real-estate'
 findProject(':apps:real-estate')?.name = 'real-estate'
 
 include 'core'
+include 'domains:domain-common'
+findProject(':domains:domain-common')?.name = 'domain-common'
 

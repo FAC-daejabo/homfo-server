@@ -28,7 +28,6 @@ subprojects { // 각 모듈에 적용할 공통 설정
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springdoc.openapi-gradle-plugin'
 
-
     dependencies {
         compileOnly 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'

@@ -5,7 +5,7 @@ plugins {
 }
 
 allprojects {
-    group = 'com.hompo.clients'
+    group = 'com.hompo'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '21'
 
