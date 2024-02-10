@@ -21,7 +21,7 @@ public class MySqlUserRefreshTokenReadService implements UserRefreshTokenReadSer
         MySqlRefreshToken refreshToken = refreshTokenRepository.findById(userId).orElseThrow(RuntimeException::new);
 
         if(encoder.matches(token, refreshToken.getToken())) {
-            return refreshToken.getToken();
+            return token;
         }
 
         throw new RuntimeException();

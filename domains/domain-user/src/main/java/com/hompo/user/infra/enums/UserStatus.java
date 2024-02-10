@@ -30,6 +30,14 @@ public enum UserStatus {
         this.code = code;
     }
 
+    public boolean isDeleted() {
+        return this == UserStatus.DELETED;
+    }
+
+    public boolean isStopped() {
+        return this == UserStatus.STOPPED;
+    }
+
     @JsonValue
     public String getCode() {
         return code;

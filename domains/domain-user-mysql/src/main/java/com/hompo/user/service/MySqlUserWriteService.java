@@ -3,6 +3,7 @@ package com.hompo.user.service;
 import com.hompo.auth.dto.JwtDto;
 import com.hompo.user.dto.UserDto;
 import com.hompo.user.entity.MySqlUser;
+import com.hompo.user.infra.enums.UserStatus;
 import com.hompo.user.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -57,14 +58,14 @@ public class MySqlUserWriteService implements UserWriteService {
 
         userRepository.save(user);
 
-        return null;
+        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday());
     }
 
 
     @Override
     public void deleteAccount(long userId) {
         // TODO: 존재하지 않는 유저 알려주기
-        MySqlUser user = userRepository.findById(userId).orElseThrow(RuntimeException::new);
+        MySqlUser user = userRepository.findByIdAndStatusNot(userId, UserStatus.DELETED).orElseThrow(RuntimeException::new);
 
         user.deleteAccount();
         userRepository.save(user);

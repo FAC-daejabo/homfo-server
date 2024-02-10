@@ -50,9 +50,6 @@ public class MySqlUser extends User {
     @Convert(converter = UserStatusAttributeConverter.class)
     private UserStatus status;
 
-    @Column(length = 50)
-    private String refreshToken;
-
     @Column(updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -97,6 +94,5 @@ public class MySqlUser extends User {
         phoneNumber = null;
         nickname = null;
         status = UserStatus.DELETED;
-        refreshToken = null;
     }
 }

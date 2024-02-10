@@ -11,6 +11,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+
+server:
+  servlet:
+    context-path: /api
+
 jwt:
   accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
   accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}

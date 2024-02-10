@@ -1,13 +1,14 @@
 package com.hompo.controller;
 
+import com.hompo.auth.command.TokenRefreshCommand;
 import com.hompo.auth.dto.JwtDto;
 import com.hompo.auth.entity.CustomUserDetails;
-import com.hompo.usecase.RegisterUsecase;
-import com.hompo.usecase.SignInUsecase;
+import com.hompo.usecase.TokenRefreshUsecase;
 import com.hompo.user.command.SignInCommand;
-import com.hompo.user.service.UserRefreshTokenReadService;
 import com.hompo.user.service.UserRefreshTokenWriteService;
 import com.hompo.user.service.UserWriteService;
+import com.hompo.user.usecase.RegisterUsecase;
+import com.hompo.user.usecase.SignInUsecase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,8 @@ public class UserController {
 
     private final SignInUsecase signInUsecase;
 
+    private final TokenRefreshUsecase tokenRefreshUsecase;
+
     @Operation(summary = "사용자 회원가입")
     @PostMapping("/register")
     public ResponseEntity<JwtDto> register(@RequestBody RegisterCommand command) {
@@ -46,7 +49,7 @@ public class UserController {
     @Operation(summary = "사용자 로그아웃")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/sign-out")
-    public ResponseEntity<JwtDto> signOut(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Void> signOut(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long userId = customUserDetails.getUserId();
         userRefreshTokenWriteService.deleteByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -55,9 +58,17 @@ public class UserController {
     @Operation(summary = "사용자 계정 삭제")
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/account")
-    public ResponseEntity<JwtDto> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
         Long userId = customUserDetails.getUserId();
         userWriteService.deleteAccount(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @Operation(summary = "사용자 토큰 새로고침")
+    @PreAuthorize("isAuthenticated()")
+    @PatchMapping("/refresh")
+    public ResponseEntity<JwtDto> refreshToken(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody TokenRefreshCommand command) {
+        Long userId = customUserDetails.getUserId();
+        return ResponseEntity.status(HttpStatus.OK).body(tokenRefreshUsecase.execute(userId, command));
     }
 }

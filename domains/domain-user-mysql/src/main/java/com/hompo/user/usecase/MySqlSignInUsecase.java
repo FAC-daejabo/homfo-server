@@ -1,18 +1,18 @@
-package com.hompo.usecase;
+package com.hompo.user.usecase;
 
 import com.hompo.auth.dto.JwtDto;
 import com.hompo.auth.dto.JwtSecretDto;
 import com.hompo.auth.infra.util.JwtUtil;
-import com.hompo.auth.service.JwtWriteService;
+import com.hompo.user.command.SignInCommand;
 import com.hompo.user.dto.UserDto;
 import com.hompo.user.service.UserRefreshTokenWriteService;
+import com.hompo.user.service.UserWriteService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import com.hompo.user.command.RegisterCommand;
-import com.hompo.user.service.UserWriteService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class RegisterUsecase {
+public class MySqlSignInUsecase implements SignInUsecase {
     private final UserWriteService userWriteService;
 
     private final UserRefreshTokenWriteService userRefreshTokenWriteService;
@@ -21,7 +21,7 @@ public class RegisterUsecase {
 
     private final JwtSecretDto refreshTokenInfo;
 
-    public RegisterUsecase(
+    public MySqlSignInUsecase(
             UserWriteService userWriteService,
             UserRefreshTokenWriteService userRefreshTokenWriteService,
             @Qualifier("userAccessTokenInfo") JwtSecretDto accessTokenInfo,
@@ -33,8 +33,10 @@ public class RegisterUsecase {
         this.refreshTokenInfo = refreshTokenInfo;
     }
 
-    public JwtDto execute(RegisterCommand command) {
-        UserDto userDto = userWriteService.register(command);
+
+    @Transactional
+    public JwtDto execute(SignInCommand command) {
+        UserDto userDto = userWriteService.signIn(command);
         String accessToken = JwtUtil.createToken(userDto.id(), accessTokenInfo);
         String refreshToken = userRefreshTokenWriteService.save(userDto.id(), refreshTokenInfo);
 

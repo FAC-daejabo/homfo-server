@@ -7,8 +7,7 @@ import org.springframework.context.annotation.*;
 import java.util.List;
 
 @Configuration
-@ComponentScan("com.hompo.user.service")
-@PropertySource(value = {"classpath:application.yaml"})
+@PropertySource(value = {"classpath:application-user.yaml"})
 public class UserJwtConfig {
     @Value("${jwt.accessTokenSecret}")
     private String accessTokenSecret;

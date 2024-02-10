@@ -101,13 +101,6 @@ public abstract class User {
     public abstract UserStatus getStatus();
 
     /**
-     * 사용자 Refresh token 입니다.
-     * <p>
-     * Nullable 입니다.
-     */
-    public abstract String getRefreshToken();
-
-    /**
      * 사용자 정보 생성 시점입니다.
      */
     public abstract LocalDateTime getCreatedAt();
