@@ -3,6 +3,9 @@ rootProject.name = 'hompo'
 // domain layer
 include 'domains'
 
+include 'domains:domain-common'
+findProject(':domains:domain-common')?.name = 'domain-common'
+
 // 관리자 domain
 include 'domains:domain-employee'
 findProject(':domains:domain-employee')?.name = 'domain-employee'
@@ -32,6 +35,10 @@ findProject(':clients:kakao-map-client')?.name = 'kakao-map-client'
 include 'clients:public-data-portal-client'
 findProject(':clients:public-data-portal-client')?.name = 'public-data-portal-client'
 
+// T-Map 클라이언트
+include 'clients:t-map-client'
+findProject(':clients:t-map-client')?.name = 't-map-client'
+
 // application
 include 'apps'
 
@@ -48,6 +55,3 @@ include 'apps:real-estate'
 findProject(':apps:real-estate')?.name = 'real-estate'
 
 include 'core'
-include 'domains:domain-common'
-findProject(':domains:domain-common')?.name = 'domain-common'
-
