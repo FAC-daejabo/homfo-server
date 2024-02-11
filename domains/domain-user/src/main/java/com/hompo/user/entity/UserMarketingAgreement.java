@@ -11,11 +11,9 @@ public abstract class UserMarketingAgreement {
 
     public abstract MarketingCode getCode();
 
-    public abstract boolean getAgreement();
+    public abstract boolean isAgreement();
 
     public abstract LocalDateTime getCreatedAt();
 
     public abstract LocalDateTime getUpdatedAt();
-
-    public abstract boolean isAgree();
 }
