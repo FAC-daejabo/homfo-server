@@ -5,8 +5,10 @@ import com.hompo.auth.dto.JwtDto;
 import com.hompo.auth.entity.CustomUserDetails;
 import com.hompo.usecase.TokenRefreshUsecase;
 import com.hompo.user.command.SignInCommand;
+import com.hompo.user.dto.UserMarketingAgreementDto;
 import com.hompo.user.service.UserRefreshTokenWriteService;
 import com.hompo.user.service.UserWriteService;
+import com.hompo.user.usecase.GetUserInfoUsecase;
 import com.hompo.user.usecase.RegisterUsecase;
 import com.hompo.user.usecase.SignInUsecase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,11 +30,20 @@ public class UserController {
 
     private final UserRefreshTokenWriteService userRefreshTokenWriteService;
 
+    private final GetUserInfoUsecase getUserInfoUsecase;
+
     private final RegisterUsecase registerUsecase;
 
     private final SignInUsecase signInUsecase;
 
     private final TokenRefreshUsecase tokenRefreshUsecase;
+
+    @Operation(summary = "사용자 정보 확인")
+    @GetMapping("/info")
+    public ResponseEntity<UserMarketingAgreementDto> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Long userId = customUserDetails.getUserId();
+        return ResponseEntity.status(HttpStatus.OK).body(getUserInfoUsecase.execute(userId));
+    }
 
     @Operation(summary = "사용자 회원가입")
     @PostMapping("/register")

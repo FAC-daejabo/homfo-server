@@ -1,6 +1,7 @@
 package com.hompo.user.dto;
 
 import com.hompo.enums.Gender;
+import com.hompo.user.infra.enums.UserStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
@@ -25,6 +26,9 @@ public record UserDto(
         String job,
 
         @Schema(example = "2000-12-12", description = "생년월일")
-        LocalDate birthday
+        LocalDate birthday,
+
+        @Schema(example = "U", description = "사용자 계정 상태")
+        UserStatus status
 ) {
 }
