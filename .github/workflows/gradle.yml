@@ -33,3 +33,16 @@ jobs:
         USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
       run: ./gradlew build --no-build-cache --rerun-tasks
 
+    - name: Notify Discord about build result
+      if: always()
+      run: |
+        STATUS="${{ job.status }}"
+        if [ "$STATUS" == "success" ]; then
+          MESSAGE="✅ Build succeeded!"
+        else
+          MESSAGE="❌ Build failed!"
+        fi
+        PR_NUMBER="${{ github.event.pull_request.number }}"
+        PR_URL="${{ github.event.pull_request.html_url }}"
+        curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE PR: #$PR_NUMBER ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+
