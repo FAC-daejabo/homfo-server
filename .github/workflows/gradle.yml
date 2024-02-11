@@ -21,7 +21,7 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Use secret
+    - name: Build with Gradle Wrapper
       env:
         MYSQL_IP: ${{ secrets.MYSQL_IP }}
         MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
@@ -31,7 +31,5 @@ jobs:
         USER_ACCESS_TOKEN_EXPIRE: ${{ secrets.USER_ACCESS_TOKEN_EXPIRE }}
         USER_REFRESH_TOKEN_SECRET: ${{ secrets.USER_REFRESH_TOKEN_SECRET }}
         USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
-
-    - name: Build with Gradle Wrapper
       run: ./gradlew build --no-build-cache --rerun-tasks
 
