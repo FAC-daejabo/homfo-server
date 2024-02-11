@@ -2,6 +2,9 @@ package com.hompo.enums;
 
 import java.util.Arrays;
 
+/**
+ * 성별입니다.
+ * */
 public enum Gender {
     MAN("M"),
 
