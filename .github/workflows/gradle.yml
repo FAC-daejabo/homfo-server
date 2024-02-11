@@ -36,27 +36,41 @@ jobs:
       if: always()
       run: |
         STATUS="${{ job.status }}"
+
         if [ "$STATUS" == "success" ]; then
           MESSAGE="✅ Build succeeded!"
         else
           MESSAGE="❌ Build failed!"
         fi
-        
+
         # Pull Request 이벤트에 대한 처리
         if [ "${{ github.event_name }}" == "pull_request" ]; then
           PR_NUMBER="${{ github.event.pull_request.number }}"
           PR_URL="${{ github.event.pull_request.html_url }}"
           SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
           TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
-          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE PR: #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          AUTHOR_NAME="${{ github.event.pull_request.user.login }}"
+          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Pull Request\nAuthor: $AUTHOR_NAME\n\nPR: #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
         fi
-    
+
         # Push 이벤트에 대한 처리
         if [ "${{ github.event_name }}" == "push" ]; then
           COMMIT_REF="${{ github.ref }}"
           COMMIT_SHA="${{ github.sha }}"
           COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE Push to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          AUTHOR_NAME="${{ github.event.pusher.name }}"
+        
+          MERGE_PR_REGEX='Merge pull request #([0-9]+) from (.+)/(.+)'
+
+          # PR Merge 이벤트에 대한 처리
+          if [[ "${{ github.event.head_commit.message }}" =~ $MERGE_PR_REGEX ]]; then
+            PR_NUMBER=${BASH_REMATCH[1]}
+            SOURCE_BRANCH=${BASH_REMATCH[3]}
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Merge\nAuthor: $AUTHOR_NAME\n\nMerge for PR #${PR_NUMBER} from '${SOURCE_BRANCH}'\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          else
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Push\nAuthor: $AUTHOR_NAME\n\nPush to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          fi
         fi
+      
     
 
