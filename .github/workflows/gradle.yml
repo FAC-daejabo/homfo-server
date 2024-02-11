@@ -36,6 +36,7 @@ jobs:
       if: always()
       run: |
         STATUS="${{ job.status }}"
+        
         if [ "$STATUS" == "success" ]; then
           MESSAGE="✅ Build succeeded!"
         else
@@ -53,10 +54,27 @@ jobs:
     
         # Push 이벤트에 대한 처리
         if [ "${{ github.event_name }}" == "push" ]; then
-          COMMIT_REF="${{ github.ref }}"
-          COMMIT_SHA="${{ github.sha }}"
-          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE Push to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          MERGE_PR_REGEX='Merge pull request #([0-9]+) from (.+)/(.+)'
+        
+          # PR Merge 이벤트에 대한 처리
+          if [[ "${{ github.event.head_commit.message }}" =~ $MERGE_PR_REGEX ]]; then
+            if [ "$STATUS" == "success" ]; then
+              MESSAGE="✅ Merge succeeded!"
+            else
+              MESSAGE="❌ Merge failed!"
+            fi
+        
+            PR_NUMBER=${BASH_REMATCH[1]}
+            SOURCE_BRANCH=${BASH_REMATCH[3]}
+            echo "This is a merge commit for PR #${PR_NUMBER} from the '${SOURCE_BRANCH}' branch."
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE Merge for for PR #${PR_NUMBER} from the '${SOURCE_BRANCH}'" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          else
+            # 일반 Push 커밋 처리
+            COMMIT_REF="${{ github.ref }}"
+            COMMIT_SHA="${{ github.sha }}"
+            COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE Push to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          if
         fi
     
 
