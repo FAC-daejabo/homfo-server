@@ -13,7 +13,6 @@ allprojects {
     repositories {
         mavenCentral()
     }
-
 }
 
 configurations {
@@ -53,16 +52,4 @@ subprojects { // 각 모듈에 적용할 공통 설정
     tasks.named('jar') { // 빌드할 때 jar 파일로 하겠다는 의미
         enabled = true
     }
-
-    tasks.named('test') {
-        useJUnitPlatform()
-    }
-}
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-test {
-    useJUnitPlatform()
 }
