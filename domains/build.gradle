@@ -5,6 +5,10 @@ plugins {
     id 'org.springdoc.openapi-gradle-plugin' version '1.6.0'
 }
 
+repositories {
+    mavenCentral()
+}
+
 subprojects { // 각 모듈에 적용할 공통 설정
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
