@@ -6,8 +6,11 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hompo.deserializer.GenderDeserializer;
+import com.hompo.deserializer.MarketingCodeDeserializer;
 import com.hompo.enums.Gender;
+import com.hompo.enums.MarketingCode;
 import com.hompo.serializer.GenderSerializer;
+import com.hompo.serializer.MarketingCodeSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,12 +27,22 @@ public class JacksonConfig {
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-        module.addSerializer(Gender.class, new GenderSerializer());
-        module.addDeserializer(Gender.class, new GenderDeserializer());
+        addSerializers(module);
+        addDeserializers(module);
 
         mapper.registerModule(module);
         mapper.registerModule(new JavaTimeModule());
 
         return mapper;
+    }
+
+    private static void addSerializers(SimpleModule module) {
+        module.addSerializer(Gender.class, new GenderSerializer());
+        module.addSerializer(MarketingCode.class, new MarketingCodeSerializer());
+    }
+
+    private static void addDeserializers(SimpleModule module) {
+        module.addDeserializer(Gender.class, new GenderDeserializer());
+        module.addDeserializer(MarketingCode.class, new MarketingCodeDeserializer());
     }
 }

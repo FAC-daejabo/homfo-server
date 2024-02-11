@@ -5,6 +5,7 @@ import com.hompo.user.infra.attributeConverter.MarketingCodeAttributeConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,4 +37,11 @@ public class MySqlUserMarketingAgreement extends UserMarketingAgreement {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Builder
+    public MySqlUserMarketingAgreement(Long userId, MarketingCode code, boolean agreement) {
+        this.userId = userId;
+        this.code = code;
+        this.agreement = agreement;
+    }
 }

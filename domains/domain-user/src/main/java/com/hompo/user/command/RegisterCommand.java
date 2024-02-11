@@ -1,9 +1,12 @@
 package com.hompo.user.command;
 
 import com.hompo.enums.Gender;
+import com.hompo.enums.MarketingCode;
+import com.hompo.user.dto.MarketingAgreementDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record RegisterCommand(
 
@@ -26,6 +29,8 @@ public record RegisterCommand(
         String job,
 
         @Schema(example = "2000-12-12", description = "생년월일")
-        LocalDate birthday
+        LocalDate birthday,
+
+        List<MarketingAgreementDto> marketingCodeList
 ) {
 }
