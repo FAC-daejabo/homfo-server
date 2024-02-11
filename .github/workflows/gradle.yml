@@ -21,10 +21,17 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@ec92e829475ac0c2315ea8f9eced72db85bb337a # v3.0.0
-      with:
-        gradle-version: '8.5'
+    - name: Use secret
+      env:
+        MYSQL_IP: ${{ secrets.MYSQL_IP }}
+        MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
+        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
+        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        USER_ACCESS_TOKEN_SECRET: ${{ secrets.USER_ACCESS_TOKEN_SECRET }}
+        USER_ACCESS_TOKEN_EXPIRE: ${{ secrets.USER_ACCESS_TOKEN_EXPIRE }}
+        USER_REFRESH_TOKEN_SECRET: ${{ secrets.USER_REFRESH_TOKEN_SECRET }}
+        USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build
+      run: ./gradlew build --no-build-cache --rerun-tasks
+
