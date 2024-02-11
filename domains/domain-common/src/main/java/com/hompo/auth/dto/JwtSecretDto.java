@@ -2,6 +2,8 @@ package com.hompo.auth.dto;
 
 /**
  * 토큰 정보 DTO 입니다.
+ *
+ * Swagger에는 노출하지 않습니다.
  * */
 public record JwtSecretDto(
         /**

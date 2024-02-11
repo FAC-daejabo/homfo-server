@@ -1,12 +1,11 @@
 package com.hompo.user.usecase;
 
-import com.hompo.auth.dto.JwtSecretDto;
-import com.hompo.user.service.UserRefreshTokenWriteService;
-import com.hompo.user.service.UserWriteService;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
-
-
+/**
+ * 사용자 계정 정보를 삭제합니다.
+ * */
 public interface DeleteAccountUsecase {
+    /**
+     * 사용자 계정 삭제와 Refresh token 삭제를 한 트랜잭션으로 묶어야 합니다.
+     * */
     void execute(long userId);
 }

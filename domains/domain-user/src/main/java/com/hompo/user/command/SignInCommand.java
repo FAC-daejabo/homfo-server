@@ -2,6 +2,9 @@ package com.hompo.user.command;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+/**
+ * 로그인을 위한 Command 입니다.
+ * */
 public record SignInCommand(
         @Schema(example = "testAccount", description = "계정")
         String account,

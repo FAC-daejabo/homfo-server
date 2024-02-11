@@ -49,19 +49,6 @@ public class MySqlUserWriteService implements UserWriteService {
     }
 
     @Override
-    public UserDto signIn(@NonNull SignInCommand command) {
-        // TODO: 존재하지 않는 유저 알려주기
-        MySqlUser user = userRepository.findByAccount(command.account()).orElseThrow(RuntimeException::new);
-
-        user.signIn(encoder, command.password());
-
-        userRepository.save(user);
-
-        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday(), user.getStatus());
-    }
-
-
-    @Override
     public void deleteAccount(long userId) {
         // TODO: 존재하지 않는 유저 알려주기
         MySqlUser user = userRepository.findByIdAndStatusNot(userId, UserStatus.DELETED).orElseThrow(RuntimeException::new);

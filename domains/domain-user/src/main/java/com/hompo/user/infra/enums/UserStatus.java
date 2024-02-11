@@ -30,10 +30,16 @@ public enum UserStatus {
         this.code = code;
     }
 
+    /**
+     * 사용자가 삭제된 상태인지 확인합니다.
+     * */
     public boolean isDeleted() {
         return this == UserStatus.DELETED;
     }
 
+    /**
+     * 사용자가 정지된 상태인지 확인합니다.
+     * */
     public boolean isStopped() {
         return this == UserStatus.STOPPED;
     }

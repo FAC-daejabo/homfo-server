@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+/**
+ * 사용자 Entity 입니다.
+ * */
 public abstract class User {
     /**
      * 계정은 8자 이상, 15자 이하의 대소문자 및 숫자로 구성되어야 합니다.
@@ -110,18 +113,43 @@ public abstract class User {
      */
     public abstract LocalDateTime getUpdatedAt();
 
+    /**
+     * 암호화된 비밀번호와 일치하는지 확인합니다.
+     *
+     * 일치하지 않으면 [RuntimeException]이 발생합니다.
+     * */
     public abstract void signIn(PasswordEncoder encoder, String originPassword);
 
+    /**
+     * 계정 정보를 삭제합니다.
+     *
+     * 사용자를 특정할 수 없도록 정보를 모두 null로 업데이트 하고, status는 삭제된 사용자로 변경합니다.
+     * */
     public abstract void deleteAccount();
 
+    /**
+     * 계정 문자열이 올바른지 확인합니다.
+     *
+     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * */
     protected void validateAccount(String account) {
         Assert.isTrue(Pattern.matches(ACCOUNT_REGEXP, Objects.requireNonNull(account)), "올바르지 않은 계정입니다.");
     }
 
+    /**
+     * 닉네임 문자열이 올바른지 확인합니다.
+     *
+     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * */
     protected void validateNickname(String nickname) {
         Assert.isTrue(Pattern.matches(NICKNAME_REGEXP, Objects.requireNonNull(nickname)), "올바르지 않은 닉네임입니다.");
     }
 
+    /**
+     * 비밀번호 문자열이 올바른지 확인합니다.
+     *
+     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * */
     protected void validatePassword(String password) {
         Assert.isTrue(Pattern.matches(ENCRYPTED_PASSWORD_REGEXP, Objects.requireNonNull(password)), "올바르지 않은 비밀번호입니다.");
     }

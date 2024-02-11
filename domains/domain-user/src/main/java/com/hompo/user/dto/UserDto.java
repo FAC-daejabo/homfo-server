@@ -6,6 +6,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.LocalDate;
 
+/**
+ * 사용자 정보 DTO 입니다.
+ *
+ * 비밀번호는 절대로 넣지 않습니다.
+ * */
 public record UserDto(
         @Schema(example = "1", description = "ID 값")
         Long id,
