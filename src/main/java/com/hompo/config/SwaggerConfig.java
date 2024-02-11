@@ -34,7 +34,7 @@ public class SwaggerConfig {
                 .in(SecurityScheme.In.HEADER)
                 .name(HttpHeaders.AUTHORIZATION);
 
-        // Security 요청 설정
+        // Security 요청 설정 => JWT 활성화
         SecurityRequirement addSecurityItem = new SecurityRequirement();
         addSecurityItem.addList("JWT");
 

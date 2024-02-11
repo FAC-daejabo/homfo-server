@@ -21,12 +21,26 @@ import java.util.List;
 @EnableWebSecurity
 @EnableConfigurationProperties
 public class SecurityConfig {
+    /**
+     * 사용자 액세스 토큰 정보입니다.
+     * */
     private final JwtSecretDto userAccessTokenInfo;
 
+    /**
+     * 사용자 액세스 토큰 허용 URI 목록입니다.
+     * */
     private final List<String> userAccessTokenWhiteList;
 
+    /**
+     * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
+     * */
     private final List<String> userRefreshTokenBlackList;
 
+    /**
+     * 서비스 화이트 리스트입니다.
+     *
+     * TODO: public network에서 접속 불가능하도록 막기, private network에서만 접속 가능하게 변경
+     * */
     private final List<String> WHITE_LIST = new ArrayList<>(List.of(
             "/v3/api-docs/**",
             "/swagger-ui/**",
@@ -53,6 +67,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         WHITE_LIST.addAll(userAccessTokenWhiteList);
 
+        // 화이트 리스트는 허용합니다.
+        // 이외에는 JWT 액세스 토큰 인증을 거칩니다.
         return httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(WHITE_LIST.toArray(new String[0])).permitAll()
