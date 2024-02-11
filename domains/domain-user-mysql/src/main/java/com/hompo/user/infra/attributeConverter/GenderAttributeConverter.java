@@ -6,6 +6,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Gender enum을 DB 값과 매칭시킵니다.
+ * */
 @Converter
 @Slf4j
 public class GenderAttributeConverter implements AttributeConverter<Gender, String> {

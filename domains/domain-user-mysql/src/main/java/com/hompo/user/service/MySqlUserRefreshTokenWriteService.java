@@ -28,15 +28,6 @@ public class MySqlUserRefreshTokenWriteService implements UserRefreshTokenWriteS
     }
 
     @Override
-    public String refresh(long userId, @NonNull TokenRefreshCommand command, @NonNull JwtSecretDto jwtSecretDto) {
-       if(!JwtUtil.verifyToken(command.token(), jwtSecretDto)) {
-           throw new RuntimeException();
-       }
-
-       return save(userId, jwtSecretDto);
-    }
-
-    @Override
     public void deleteByUserId(long userId) {
         refreshTokenRepository.deleteById(userId);
     }

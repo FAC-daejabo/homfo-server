@@ -21,6 +21,11 @@ public class MySqlDeleteAccountUsecase implements DeleteAccountUsecase{
         this.userRefreshTokenWriteService = userRefreshTokenWriteService;
     }
 
+    /**
+     * 사용자 정보를 삭제합니다.
+     *
+     * 하나라도 실패하면 삭제가 실패해야 해 한 트랜잭션으로 묶습니다.
+     * */
     @Transactional
     public void execute(long userId) {
         userWriteService.deleteAccount(userId);

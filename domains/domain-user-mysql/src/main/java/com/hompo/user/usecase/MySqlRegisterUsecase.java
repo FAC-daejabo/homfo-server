@@ -26,6 +26,11 @@ public class MySqlRegisterUsecase implements RegisterUsecase {
 
     private final JwtSecretDto userRefreshTokenInfo;
 
+    /**
+     * 사용자 정보를 등록합니다.
+     *
+     * 하나라도 실패하면 회원가입이 실패해야 해 한 트랜잭션으로 묶습니다.
+     * */
     @Transactional
     public JwtDto execute(RegisterCommand command) {
         UserDto userDto = userWriteService.register(command);

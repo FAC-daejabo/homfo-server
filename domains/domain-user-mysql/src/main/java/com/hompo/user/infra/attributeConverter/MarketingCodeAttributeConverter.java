@@ -5,6 +5,9 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * MarketingCode enum을 DB 값과 매칭시킵니다.
+ * */
 @Converter
 @Slf4j
 public class MarketingCodeAttributeConverter implements AttributeConverter<MarketingCode, String> {

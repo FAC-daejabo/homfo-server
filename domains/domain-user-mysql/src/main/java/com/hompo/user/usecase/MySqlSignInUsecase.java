@@ -25,7 +25,11 @@ public class MySqlSignInUsecase implements SignInUsecase {
     private final JwtSecretDto userRefreshTokenInfo;
 
 
-    @Transactional
+    /**
+     * 로그인합니다. Jwt 정보를 반환합니다.
+     *
+     * 리프레쉬 토큰 재발급만 DB에서 제대로 처리되면 되기에, 트랜잭션으로 묶지 않습니다.
+     * */
     public JwtDto execute(SignInCommand command) {
         UserDto userDto = userReadService.signIn(command);
         String accessToken = JwtUtil.createToken(userDto.id(), userAccessTokenInfo);
