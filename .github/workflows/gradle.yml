@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "development" ]
   pull_request:
     branches: [ "main", "development" ]
 
@@ -42,7 +41,22 @@ jobs:
         else
           MESSAGE="❌ Build failed!"
         fi
-        PR_NUMBER="${{ github.event.pull_request.number }}"
-        PR_URL="${{ github.event.pull_request.html_url }}"
-        curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE PR: #$PR_NUMBER ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+        
+        # Pull Request 이벤트에 대한 처리
+        if [ "${{ github.event_name }}" == "pull_request" ]; then
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+          TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
+          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE PR: #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+        fi
+    
+        # Push 이벤트에 대한 처리
+        if [ "${{ github.event_name }}" == "push" ]; then
+          COMMIT_REF="${{ github.ref }}"
+          COMMIT_SHA="${{ github.sha }}"
+          COMMIT_URL="https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE Push to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+        fi
+    
 
