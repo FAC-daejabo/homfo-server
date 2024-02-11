@@ -41,7 +41,7 @@ public class UserController {
     @Operation(summary = "사용자 정보 확인")
     @GetMapping("/info")
     public ResponseEntity<UserMarketingAgreementDto> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.getUserId();
+        Long userId = customUserDetails.userId();
         return ResponseEntity.status(HttpStatus.OK).body(getUserInfoUsecase.execute(userId));
     }
 
@@ -61,7 +61,7 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/sign-out")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.getUserId();
+        Long userId = customUserDetails.userId();
         userRefreshTokenWriteService.deleteByUserId(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -70,16 +70,16 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/account")
     public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.getUserId();
+        Long userId = customUserDetails.userId();
         userWriteService.deleteAccount(userId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @Operation(summary = "사용자 토큰 새로고침", description = "헤더에 액세스 토큰 꼭 보내야합니다. 만료되더라도 보내주셔야 합니다.")
+    @Operation(summary = "사용자 액세스 토큰 새로고침", description = "헤더에 액세스 토큰 꼭 보내야합니다. 만료되더라도 보내주셔야 합니다.")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/refresh")
     public ResponseEntity<JwtDto> refreshToken(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody TokenRefreshCommand command) {
-        Long userId = customUserDetails.getUserId();
+        Long userId = customUserDetails.userId();
         return ResponseEntity.status(HttpStatus.OK).body(tokenRefreshUsecase.execute(userId, command));
     }
 }
