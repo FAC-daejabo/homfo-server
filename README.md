@@ -1,6 +1,9 @@
 # 홈포 서버
 홈포 서비스를 제공하는 서버입니다. 멀티모듈 - 모놀리틱으로 구성되어 있습니다. 
 
+## 목차
+- [모듈](#모듈)
+
 ## 모듈
 모듈은 다음과 같은 원칙하에 설계하고 있습니다.
 
@@ -10,21 +13,10 @@
 ### main
 부팅가능한 어플리케이션입니다. Jackson, Security, Swagger 등 어플리케이션에 필요한 설정을 수행합니다.
 
-### apps
+### [apps](apps/README.md)
 부팅이 불가능하지만 주요 기능으로 세분화된 어플리케이션 레벨 모듈입니다. 추후 서버를 분리한다면 apps의 하위 모듈 단위로 분리할 예정입니다.
 
-다음과 같은 원칙을 가지고 있습니다.
-
-#### user
-사용자를 위한 어플리케이션 모듈입니다.
-
-#### employee
-관리자를 위한 어플리케이션 모듈입니다.
-
-#### real-estate
-부동산 관련 작업을 위한 어플리케이션 모듈입니다.
-
-### domains
+### [domains](domains/README.md)
 도메인에만 집중하는 모듈입니다. 다음과 같은 원칙이 추가로 적용됩니다.
 
 1. 어플리케이션의 로직을 모른다. 
@@ -43,51 +35,12 @@ Infra에는 MySQL, Oracle, MongoDB 등이 사용될 수 있습니다. 실제 개
 
 이를 통해 다른 모듈에서는 실제 구현체를 전혀 몰라도 되고, 동시에 DB 커넥션 풀을 낭비하지 않을 수 있다는 장점이 있었습니다.
 
-#### domain-common
-JWT처럼 모든 액터에게 공통으로 적용되어야 하는 도메인을 관리합니다.
-
-#### domain-employee
-관리자 액터와 관련있는 도메인을 Interface로 관리합니다.
-
-#### domain-employee-mysql
-관리자 액터 도메인을 MySQL를 활용해 구현합니다. 현재 라이브 서버에 제공되는 DB입니다.
-
-#### domain-employee-oracle
-관리자 액터 도메인을 Oracle DB를 활용해 구현합니다. 인스턴스 비용 문제로 Oracle Cloud Free Tier로 제공되는 autonomous database를 사용할 예정입니다.
-
-#### domain-real-estate
-부동산 시스템 액터와 관련있는 도메인을 Interface로 관리합니다.
-
-#### domain-real-estate-mysql
-부동산 시스템 도메인을 MySQL를 활용해 구현합니다. 현재 라이브 서버에 제공되는 DB입니다.
-
-#### domain-real-estate-oracle
-부동산 시스템 도메인을 Oracle DB를 활용해 구현합니다. 인스턴스 비용 문제로 Oracle Cloud Free Tier로 제공되는 autonomous database를 사용할 예정입니다.
-
-#### domain-user
-사용자 액터와 관련있는 도메인을 Interface로 관리합니다.
-
-#### domain-user-mysql
-관리자 액터 도메인을 MySQL를 활용해 구현합니다. 현재 라이브 서버에 제공되는 DB입니다.
-
-#### domain-user-oracle
-관리자 액터 도메인을 Oracle DB를 활용해 구현합니다. 인스턴스 비용 문제로 Oracle Cloud Free Tier로 제공되는 autonomous database를 사용할 예정입니다.
-
-### clients
+### [clients](clients/README.md)
 외부 클라이언트와의 소통에 집중하는 모듈입니다. 다음과 같은 원칙을 가지고 있습니다.
 
 + 서비스 요구사항이나 도메인에 대해 알지 못 합니다.
 
 추후 푸시 알람, 메세지 큐 등을 확장할 예정입니다.
 
-#### kakao-map-client
-카카오 맵 API를 사용하기 위한 클라이언트 모듈입니다.
-
-#### public-data-portal-client
-공공데이터포털 API를 사용하기 위한 클라이언트 모듈입니다.
-
-#### t-map-client
-공공데이터포털 API를 사용하기 위한 클라이언트 모듈입니다.
-
-### core
+### [core](core/README.md)
 제일 하위 모듈입니다. 시스템 내 모든 레이어에서 공통으로 사용되어야 할 POJO, Util 등을 모아놓습니다.
