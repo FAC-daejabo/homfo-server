@@ -3,6 +3,7 @@ package com.hompo.user.service;
 import com.hompo.user.command.SignInCommand;
 import com.hompo.user.dto.UserDto;
 import com.hompo.user.entity.MySqlUser;
+import com.hompo.user.infra.util.ValidationUtil;
 import com.hompo.user.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,12 @@ public class MySqlUserReadService implements UserReadService {
 
     @Override
     public UserDto signIn(@NonNull SignInCommand command) {
+        MySqlUser user;
+
+        ValidationUtil.validateUserOriginPassword(command.password());
+
         // TODO: 존재하지 않는 유저 알려주기
-        MySqlUser user = userRepository.findByAccount(command.account()).orElseThrow(RuntimeException::new);
+        user = userRepository.findByAccount(command.account()).orElseThrow(RuntimeException::new);
 
         user.signIn(encoder, command.password());
 

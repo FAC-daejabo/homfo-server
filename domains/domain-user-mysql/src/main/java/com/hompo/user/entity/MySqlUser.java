@@ -62,6 +62,11 @@ public class MySqlUser extends User {
         validateAccount(account);
         validateNickname(nickname);
         validatePassword(password);
+        validatePhoneNumber(phoneNumber);
+
+        if(job != null) {
+            validateJob(job);
+        }
 
         this.account = account;
         this.password = password;
