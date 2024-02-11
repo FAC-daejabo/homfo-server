@@ -5,7 +5,12 @@ plugins {
     id 'org.springdoc.openapi-gradle-plugin' version '1.6.0'
 }
 
-allprojects {
+subprojects { // 각 모듈에 적용할 공통 설정
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springdoc.openapi-gradle-plugin'
+
     group = 'com.hompo.domains'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '21'
@@ -14,19 +19,11 @@ allprojects {
         mavenCentral()
     }
 
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
-}
-
-subprojects { // 각 모듈에 적용할 공통 설정
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.springdoc.openapi-gradle-plugin'
 
     dependencies {
         compileOnly 'org.projectlombok:lombok'
@@ -56,6 +53,9 @@ subprojects { // 각 모듈에 적용할 공통 설정
     }
 }
 
-test {
-    useJUnitPlatform()
+tasks.named('bootJar') {
+    enabled = false
+}
+tasks.named('jar') {
+    enabled = false
 }
