@@ -8,6 +8,10 @@ import com.hompo.enums.MarketingCode;
 
 import java.io.IOException;
 
+
+/**
+ * MarketingCode의 코드 값을 객체로 변환합니다.
+ * */
 public class MarketingCodeDeserializer extends JsonDeserializer<MarketingCode> {
 
     @Override

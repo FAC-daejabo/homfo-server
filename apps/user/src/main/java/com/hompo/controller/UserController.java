@@ -45,7 +45,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(getUserInfoUsecase.execute(userId));
     }
 
-    @Operation(summary = "사용자 회원가입")
+    @Operation(summary = "사용자 회원가입", description = "마케팅 동의 여부도 보내주셔야 합니다. 미동의더라도 false로 보내주세요.")
     @PostMapping("/register")
     public ResponseEntity<JwtDto> register(@RequestBody RegisterCommand command) {
         return ResponseEntity.status(HttpStatus.OK).body(registerUsecase.execute(command));
@@ -75,7 +75,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @Operation(summary = "사용자 토큰 새로고침")
+    @Operation(summary = "사용자 토큰 새로고침", description = "헤더에 액세스 토큰 꼭 보내야합니다. 만료되더라도 보내주셔야 합니다.")
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/refresh")
     public ResponseEntity<JwtDto> refreshToken(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody TokenRefreshCommand command) {

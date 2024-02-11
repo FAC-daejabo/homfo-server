@@ -7,6 +7,9 @@ import com.hompo.enums.Gender;
 
 import java.io.IOException;
 
+/**
+ * Gender 객체를 코드 값으로 변경합니다.
+ * */
 public class GenderSerializer extends StdSerializer<Gender> {
 
     public GenderSerializer() {

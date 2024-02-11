@@ -8,6 +8,9 @@ import com.hompo.enums.MarketingCode;
 
 import java.io.IOException;
 
+/**
+ * MarketingCode 객체를 코드 값으로 변경합니다.
+ * */
 public class MarketingCodeSerializer extends StdSerializer<MarketingCode> {
 
     public MarketingCodeSerializer() {
