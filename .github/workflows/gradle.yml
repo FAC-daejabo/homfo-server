@@ -50,7 +50,7 @@ jobs:
           SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
           TARGET_BRANCH="${{ github.event.pull_request.base.ref }}"
           AUTHOR_NAME="${{ github.event.pull_request.user.login }}"
-          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\nType: Pull Request\nAuthor: $AUTHOR_NAME\nPR: #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+          curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Pull Request\nAuthor: $AUTHOR_NAME\n\nPR: #$PR_NUMBER from $SOURCE_BRANCH to $TARGET_BRANCH ($PR_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
         fi
 
         # Push 이벤트에 대한 처리
@@ -66,9 +66,9 @@ jobs:
           if [[ "${{ github.event.head_commit.message }}" =~ $MERGE_PR_REGEX ]]; then
             PR_NUMBER=${BASH_REMATCH[1]}
             SOURCE_BRANCH=${BASH_REMATCH[3]}
-            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\nType: Merge\nAuthor: $AUTHOR_NAME\nMerge for PR #${PR_NUMBER} from '${SOURCE_BRANCH}'\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Merge\nAuthor: $AUTHOR_NAME\n\nMerge for PR #${PR_NUMBER} from '${SOURCE_BRANCH}'\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
           else
-            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\nType: Push\nAuthor: $AUTHOR_NAME\nPush to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
+            curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Push\nAuthor: $AUTHOR_NAME\n\nPush to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
           fi
         fi
       
