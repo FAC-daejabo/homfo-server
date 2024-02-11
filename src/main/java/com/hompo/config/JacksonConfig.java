@@ -25,6 +25,9 @@ public class JacksonConfig {
         SimpleModule module = new SimpleModule();
 
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
+
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
         addSerializers(module);

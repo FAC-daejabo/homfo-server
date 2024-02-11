@@ -14,7 +14,6 @@ import com.hompo.user.command.SignInCommand;
 import com.hompo.user.command.RegisterCommand;
 
 import java.util.Optional;
-import java.util.function.Function;
 
 @RequiredArgsConstructor
 @Service
@@ -46,7 +45,7 @@ public class MySqlUserWriteService implements UserWriteService {
 
         userRepository.save(user);
 
-        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday());
+        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday(), user.getStatus());
     }
 
     @Override
@@ -58,7 +57,7 @@ public class MySqlUserWriteService implements UserWriteService {
 
         userRepository.save(user);
 
-        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday());
+        return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday(), user.getStatus());
     }
 
 
