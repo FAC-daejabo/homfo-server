@@ -5,10 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Executable;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GenderAttributeConverterTest {
@@ -51,15 +53,15 @@ class GenderAttributeConverterTest {
     }
 
     @Test
-    @DisplayName("잘못된 DB 컬럼 문자열 변환 시 예외를 발생시킨다")
+    @DisplayName("잘못된 DB 컬럼 문자열 변환 시 Null을 반환한다")
     void givenInvalidDbColumnString_whenConvertToEntityAttribute_thenThrowsException() {
         // Given
         String invalidCode = "Invalid";
 
         // When
-        Throwable thrown = assertThrows(IllegalArgumentException.class, () -> converter.convertToEntityAttribute(invalidCode));
+        Gender result = converter.convertToEntityAttribute(invalidCode);
 
         // Then
-        assertThat(thrown).hasMessageContaining("unexpected code");
+        assertNull(result);
     }
 }

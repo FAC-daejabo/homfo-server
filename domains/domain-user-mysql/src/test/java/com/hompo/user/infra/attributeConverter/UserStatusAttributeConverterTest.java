@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserStatusAttributeConverterTest {
@@ -57,11 +58,9 @@ class UserStatusAttributeConverterTest {
         String invalidCode = "Invalid";
 
         // When
-        Throwable thrown = assertThrows(IllegalArgumentException.class, 
-            () -> converter.convertToEntityAttribute(invalidCode));
+        UserStatus result = converter.convertToEntityAttribute(invalidCode);
 
         // Then
-        assertThat(thrown).isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("failure to convert cause unexpected code");
+        assertNull(result);
     }
 }

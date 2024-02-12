@@ -12,7 +12,6 @@ import java.util.List;
  * 회원가입을 위한 Command 입니다.
  * */
 public record RegisterCommand(
-
         @Schema(example = "testAccount", description = "계정")
         String account,
 
