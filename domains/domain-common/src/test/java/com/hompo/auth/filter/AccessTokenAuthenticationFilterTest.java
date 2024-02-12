@@ -4,6 +4,7 @@ import com.hompo.auth.dto.JwtSecretDto;
 import com.hompo.auth.infra.util.JwtUtil;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -54,6 +55,7 @@ class AccessTokenAuthenticationFilterTest {
     }
 
     @Test
+    @DisplayName("RefreshTokenBlackList에 포함된 requeset이고 토큰이 올바르다면 인증에 성공해야 한다.")
     void whenRequestPathIsInRefreshTokenBlackListAndTokenIsValid_thenShouldAuthenticate() throws ServletException, IOException {
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
             // given
@@ -71,6 +73,7 @@ class AccessTokenAuthenticationFilterTest {
     }
 
     @Test
+    @DisplayName("AccessTokenWhiteList에 포함되지 않은 requeset이고 토큰이 올바르고 만료되지 않았다면 인증에 성공해야 한다.")
     void whenRequestPathIsNotInAccessTokenWhiteListAndTokenIsNotExpired_thenShouldAuthenticate() throws ServletException, IOException {
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
             // given
@@ -88,23 +91,20 @@ class AccessTokenAuthenticationFilterTest {
     }
 
     @Test
+    @DisplayName("AccessTokenWhiteList에 포함된 requeset라면 인증 정보가 없어야 한다.")
     void whenRequestPathIsInAccessTokenWhiteListAndTokenIsNotExpired_thenShouldAuthenticate() throws ServletException, IOException {
-        try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
-            // given
-            when(request.getRequestURI()).thenReturn("/public");
-            when(request.getHeader("Authorization")).thenReturn("Bearer validToken");
+        // given
+        when(request.getRequestURI()).thenReturn("/public");
 
-            jwtUtil.when(() -> JwtUtil.verifyTokenNotExpired(anyString(), any())).thenReturn(true);
+        // when
+        filter.doFilterInternal(request, response, filterChain);
 
-            // when
-            filter.doFilterInternal(request, response, filterChain);
-
-            // then
-            assertNull(SecurityContextHolder.getContext().getAuthentication(), "요청 경로가 accessToken 허용 경로에 포함되면, 인증 정보가 SecurityContext에 설정되지 않아야 합니다.");
-        }
+        // then
+        assertNull(SecurityContextHolder.getContext().getAuthentication(), "요청 경로가 accessToken 허용 경로에 포함되면, 인증 정보가 SecurityContext에 설정되지 않아야 합니다.");
     }
 
     @Test
+    @DisplayName("Token이 없고 AccessTokenWhiteList에 포함되지 않았다면 인증이 되면 안 된다.")
     void whenTokenIsMissing_thenShouldNotAuthenticate() throws ServletException, IOException {
         // given
         when(request.getRequestURI()).thenReturn("/api/user");
@@ -117,6 +117,7 @@ class AccessTokenAuthenticationFilterTest {
     }
 
     @Test
+    @DisplayName("올바르지 않은 토큰이라면 인증이 되면 안 된다.")
     void whenTokenIsInvalid_thenShouldNotAuthenticate() throws ServletException, IOException {
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
             // given

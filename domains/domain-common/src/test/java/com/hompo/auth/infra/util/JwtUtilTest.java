@@ -4,6 +4,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.hompo.auth.dto.JwtSecretDto;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -25,6 +26,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("올바른 userId라면 토큰을 생성한다.")
     void createToken_WithValidUserId_ShouldReturnToken() {
         // given
 
@@ -36,6 +38,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("올바른 토큰이라면 인증이 성공적으로 되어야 한다.")
     void verifyToken_WithValidToken_ShouldReturnTrue() {
         // given
         String token = JwtUtil.createToken(userId, jwtSecretDto);
@@ -48,6 +51,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("올바르고 만료되지 않은 토큰이라면 인증이 성공해야 한다.")
     void verifyTokenNotExpired_WithValidToken_ShouldReturnTrue() {
         // given
         String token = JwtUtil.createToken(userId, jwtSecretDto);
@@ -61,6 +65,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("올바른 토큰이라면 userId 값을 돌려받을 수 있다.")
     void getUserIdFromToken_WithValidToken_ShouldReturnUserId() {
         // given
         String token = JwtUtil.createToken(userId, jwtSecretDto);
@@ -74,6 +79,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("시그니쳐가 맞지 않는다면 인증 결과가 false 이다.")
     void verifyToken_WithInvalidSignature_ShouldReturnFalse() {
         // given
         String token = JwtUtil.createToken(userId, jwtSecretDto);
@@ -88,6 +94,7 @@ class JwtUtilTest {
     }
 
     @Test
+    @DisplayName("만료된 토큰이라면 인증 결과가 false이다.")
     void verifyTokenNotExpired_WithExpiredToken_ShouldThrowException() {
         // given
         JwtSecretDto expiredJwtSecretDto = new JwtSecretDto(secretKey, -1000L); // Already expired

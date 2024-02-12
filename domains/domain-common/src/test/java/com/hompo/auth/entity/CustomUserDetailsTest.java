@@ -1,5 +1,6 @@
 package com.hompo.auth.entity;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CustomUserDetailsTest {
 
     @Test
+    @DisplayName("CustomUserDetails를 인스턴스화 할 때 아래 사항을 검증해야한다.")
     void userDetails_WhenNewInstance_ExpectCorrectBehavior() {
         // given
         Long expectedUserId = 1L;

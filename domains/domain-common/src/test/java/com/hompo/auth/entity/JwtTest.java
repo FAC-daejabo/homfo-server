@@ -4,6 +4,7 @@ import com.hompo.auth.dto.JwtSecretDto;
 import com.hompo.auth.infra.util.JwtUtil;
 import com.hompo.user.entity.MySqlRefreshToken;
 import com.hompo.user.entity.MySqlUser;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ public class JwtTest {
     private final int expireTime = 500;
 
     @Test
+    @DisplayName("올바른 토큰은 검증을 통과해야 한다.")
     void validateToken_WithValidToken_ShouldPass() {
         // given
         Long userId = 1L;
@@ -35,6 +37,7 @@ public class JwtTest {
     }
 
     @Test
+    @DisplayName("올바르지 않은 토큰은 IllegalArgumentException이 발생해야 한다.")
     void validateToken_WithInvalidToken_ShouldThrowException() {
         // given
         Long userId = 1L;
