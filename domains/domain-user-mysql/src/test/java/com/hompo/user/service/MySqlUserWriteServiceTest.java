@@ -42,7 +42,22 @@ class MySqlUserWriteServiceTest {
     }
 
     @Test
-    @DisplayName("등록된 사용자의 정보로 새 사용자를 등록할 때, 적절한 예외를 던진다")
+    @DisplayName("새 사용자 등록")
+    void givenNewUser_whenRegister_thenSavesUserCorrectly() {
+        // given
+        RegisterCommand command = new RegisterCommand("testAccount", "Test@123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
+        when(userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber())).thenReturn(Optional.empty());
+
+        // when
+        UserDto result = userWriteService.register(command);
+
+        // then
+        assertThat(result.account()).isEqualTo(command.account());
+        verify(userRepository, times(1)).save(any(MySqlUser.class));
+    }
+
+    @Test
+    @DisplayName("등록된 사용자의 정보와 똑같은 정보로 새 사용자를 등록할 때, 적절한 예외를 던진다")
     void givenExistingUserInfo_whenRegister_thenThrowsException() {
         // given
         RegisterCommand command = new RegisterCommand("testAccount", "password123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
@@ -62,18 +77,63 @@ class MySqlUserWriteServiceTest {
     }
 
     @Test
-    @DisplayName("새 사용자 등록")
-    void givenNewUser_whenRegister_thenSavesUserCorrectly() {
+    @DisplayName("등록된 사용자의 정보와 똑같은 계정으로 새 사용자를 등록할 때, 적절한 예외를 던진다")
+    void givenExistingAccount_whenRegister_thenThrowsException() {
         // given
-        RegisterCommand command = new RegisterCommand("testAccount", "Test@123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
-        when(userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber())).thenReturn(Optional.empty());
+        RegisterCommand command = new RegisterCommand("testAccount", "password123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
+        MySqlUser user = MySqlUser.builder()
+                .account(command.account())
+                .password(encoder.encode(command.password()))
+                .nickname("Another")
+                .phoneNumber("999-9999-9999")
+                .build();
+        when(userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber())).thenReturn(Optional.of(user));
 
         // when
-        UserDto result = userWriteService.register(command);
+        Executable result = () -> userWriteService.register(command);
 
         // then
-        assertThat(result.account()).isEqualTo(command.account());
-        verify(userRepository, times(1)).save(any(MySqlUser.class));
+        assertThrows(RuntimeException.class, result, "등록된 사용자 정보로 새 사용자를 등록하려고 할 때, 적절한 예외를 던져야 합니다.");
+    }
+
+    @Test
+    @DisplayName("등록된 사용자의 정보와 똑같은 닉네임으로 새 사용자를 등록할 때, 적절한 예외를 던진다")
+    void givenExistingNickname_whenRegister_thenThrowsException() {
+        // given
+        RegisterCommand command = new RegisterCommand("testAccount", "password123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
+        MySqlUser user = MySqlUser.builder()
+                .account("AnotherAccount")
+                .password(encoder.encode(command.password()))
+                .nickname(command.nickname())
+                .phoneNumber("999-9999-9999")
+                .build();
+        when(userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber())).thenReturn(Optional.of(user));
+
+        // when
+        Executable result = () -> userWriteService.register(command);
+
+        // then
+        assertThrows(RuntimeException.class, result, "등록된 사용자 정보로 새 사용자를 등록하려고 할 때, 적절한 예외를 던져야 합니다.");
+    }
+
+    @Test
+    @DisplayName("등록된 사용자의 정보와 똑같은 전화번호로 새 사용자를 등록할 때, 적절한 예외를 던진다")
+    void givenExistingPhoneNumber_whenRegister_thenThrowsException() {
+        // given
+        RegisterCommand command = new RegisterCommand("testAccount", "password123!", "TestUser", "010-1234-5678", null, "Developer", LocalDate.of(1990, 1, 1), null);
+        MySqlUser user = MySqlUser.builder()
+                .account("AnotherAccount")
+                .password(encoder.encode(command.password()))
+                .nickname("Another")
+                .phoneNumber("010-1234-5678")
+                .build();
+        when(userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber())).thenReturn(Optional.of(user));
+
+        // when
+        Executable result = () -> userWriteService.register(command);
+
+        // then
+        assertThrows(RuntimeException.class, result, "등록된 사용자 정보로 새 사용자를 등록하려고 할 때, 적절한 예외를 던져야 합니다.");
     }
 
     @Test
