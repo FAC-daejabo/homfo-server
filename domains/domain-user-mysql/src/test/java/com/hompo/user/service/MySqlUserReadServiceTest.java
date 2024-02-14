@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class MySqlUserReadServiceTest {
-
     @Mock
     private UserRepository userRepository;
 

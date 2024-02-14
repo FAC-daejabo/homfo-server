@@ -46,12 +46,26 @@ dependencies {
     implementation 'com.auth0:java-jwt:3.18.2'
 
     // test
-    implementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'com.h2database:h2'
+
+}
+
+
+tasks.register('loadDotEnvFile') {
+    if (file('.env').exists()) {
+        file('.env').eachLine { line ->
+            def (key, value) = line.split('=')
+            System.setProperty(key, value)
+        }
+    }
 }
 
 tasks.named('test') {
+    dependsOn loadDotEnvFile
     finalizedBy jacocoTestReport, jacocoTestCoverageVerification
     useJUnitPlatform()
+    systemProperties System.getProperties()
 }
