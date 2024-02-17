@@ -43,6 +43,18 @@ steps:
       echo "IMAGE_NAME: " $IMAGE_NAME
 
   - type: Command
+    name: "Define Image Tag"
+    timeoutInSeconds: 600
+    command: |
+      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
+      BUILD_RUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      VERSION=$BUILD_RUN_HASH
+      [ -z "$COMMIT_ID" ] && IMAGE_TAG=$BUILD_RUN_HASH || IMAGE_TAG=$COMMIT_ID
+
+      echo "COMMIT ID: " $COMMIT_ID
+      echo "BUILD_RUN_HASH: " $BUILD_RUN_HASH
+
+  - type: Command
     name: "Define Container Registry"
     timeoutInSeconds: 600
     command: |
@@ -75,20 +87,7 @@ steps:
         command: |
           echo "===================== BUILD SOURCE FAILURE ====================="
           BUILD_RESULT=FAILURE
-          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL
-
-
-  - type: Command
-    name: "Define Image Tag"
-    timeoutInSeconds: 600
-    command: |
-      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
-      BUILD_RUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
-      VERSION=$BUILD_RUN_HASH
-      [ -z "$COMMIT_ID" ] && IMAGE_TAG=$BUILD_RUN_HASH || IMAGE_TAG=$COMMIT_ID
-
-      echo "COMMIT ID: " $COMMIT_ID
-      echo "BUILD_RUN_HASH: " $BUILD_RUN_HASH
+          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $VERSION $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $OCI_TRIGGER_SOURCE_BRANCH_NAME
 
   - type: Command
     timeoutInSeconds: 400
@@ -104,7 +103,7 @@ steps:
         command: |
           echo "===================== Dockerizer ====================="
           BUILD_RESULT=FAILURE
-          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL
+          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $VERSION $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $OCI_TRIGGER_SOURCE_BRANCH_NAME
 
   - type: Command
     name: "Check exportedVariables"
@@ -121,7 +120,7 @@ steps:
       echo "VERSION: " $VERSION
       echo "BUILD_RESULT: " $BUILD_RESULT
       
-      ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $IMAGE_TAG
+      ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $VERSION $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $OCI_TRIGGER_SOURCE_BRANCH_NAME $IMAGE_TAG
 
 outputArtifacts:
   - name: homfo_server
