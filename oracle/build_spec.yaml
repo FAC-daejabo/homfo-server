@@ -20,7 +20,7 @@ steps:
     timeoutInSeconds: 600
     command: |
       echo "===================== INIT EXPORTEDVARIABLES ====================="
-      APP_NAME=homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
+      APP_NAME=homfo_server
       IMAGE_NAME="${APP_NAME}"
       BUILD_RESULT=SUCCESS
 
