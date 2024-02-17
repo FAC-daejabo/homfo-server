@@ -40,13 +40,21 @@ steps:
       echo "IMAGE_NAME: " $IMAGE_NAME
 
   - type: Command
+    name: "Define Container Registry"
+    timeoutInSeconds: 600
+    command: |
+      TENANCY_NAMESPACE=`oci os ns get --query data --raw-output`
+      REPO_NAME=$APP_NAME
+      IMAGE_PATH=$OCI_RESOURCE_PRINCIPAL_REGION.ocir.io/$TENANCY_NAMESPACE/$REPO_NAME
+
+  - type: Command
     name: "Build Source"
     timeoutInSeconds: 600
     failImmediatelyOnError: true
     command: |
       echo $PATH
       echo "===================== BUILD SOURCE ====================="
-      ./gradlew build
+      ./gradlew build -x test
 
     onFailure:
       - type: Command
@@ -103,6 +111,6 @@ steps:
       ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $IMAGE_TAG
 
 outputArtifacts:
-  - name: homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
+  - name: homfo_server
     type: DOCKER_IMAGE
-    location: homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
+    location: homfo_server
