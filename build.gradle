@@ -8,7 +8,7 @@ plugins {
 
 def customJacocoReportDir = 'jacoco/reports'
 
-group = 'com.hompo'
+group = 'com.homfo'
 version = '0.0.1-SNAPSHOT'
 
 java {

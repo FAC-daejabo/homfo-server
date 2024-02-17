@@ -3,6 +3,9 @@ component: build
 timeoutInSeconds: 6000
 shell: bash
 env:
+  variables:
+    JAVA_HOME: "/usr/lib64/graalvm/graalvm-java21"
+
   exportedVariables:
     - APP_NAME
     - IMAGE_NAME
@@ -15,7 +18,7 @@ steps:
   - type: Command
     name: "Init environment variables"
     timeoutInSeconds: 600
-    command: | 
+    command: |
       echo "Retrieving secrets from OCI Vault..."
       SECRET_JSON=$(oci secrets secret-bundle get --secret-id $ENV_SECRETS_OCID --query 'data.secret-bundle-content.content' --raw-output | base64 --decode)
       export MYSQL_IP=$(echo $SECRET_JSON | jq -r '.MYSQL_IP')
@@ -48,6 +51,16 @@ steps:
       IMAGE_PATH=$OCI_RESOURCE_PRINCIPAL_REGION.ocir.io/$TENANCY_NAMESPACE/$REPO_NAME
 
   - type: Command
+    name: "Install Oracle GraalVM for JDK 21"
+    command: |
+      yum -y install graalvm-21-native-image
+
+  - type: Command
+    name: "Set PATH Variable"
+    command: |
+      export PATH=$JAVA_HOME/bin:$PATH
+
+  - type: Command
     name: "Build Source"
     timeoutInSeconds: 600
     failImmediatelyOnError: true
@@ -63,8 +76,8 @@ steps:
           echo "===================== BUILD SOURCE FAILURE ====================="
           BUILD_RESULT=FAILURE
           ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL
-                                                                              
-                                                                              
+
+
   - type: Command
     name: "Define Image Tag"
     timeoutInSeconds: 600

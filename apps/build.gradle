@@ -15,7 +15,7 @@ subprojects { // 각 모듈에 적용할 공통 설정
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.springdoc.openapi-gradle-plugin'
 
-    group = 'com.hompo.apps'
+    group = 'com.homfo.apps'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '21'
 

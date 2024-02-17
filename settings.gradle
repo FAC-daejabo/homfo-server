@@ -1,4 +1,4 @@
-rootProject.name = 'hompo'
+rootProject.name = 'homfo'
 
 // domain layer
 include 'domains'

@@ -13,7 +13,7 @@ subprojects { // 각 모듈에 적용할 공통 설정
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
 
-    group = 'com.hompo'
+    group = 'com.homfo'
     version = '0.0.1-SNAPSHOT'
     sourceCompatibility = '21'
 

@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'com.hompo'
+group = 'com.homfo'
 version = '0.0.1-SNAPSHOT'
 
 def customJacocoReportDir = 'jacoco/reports'
