@@ -8,7 +8,7 @@ import java.util.Arrays;
 public enum Gender {
     MAN("M"),
 
-    WOMAN("N");
+    WOMAN("W");
     private final String code;
 
     Gender(String code) {

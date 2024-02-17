@@ -21,6 +21,16 @@ jacocoTestReport {
     }
 }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.0
+            }
+        }
+    }
+}
+
 dependencies {
     implementation project(':core')
     implementation project(':domains:domain-common')

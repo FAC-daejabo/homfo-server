@@ -23,6 +23,7 @@ public class MySqlGetUserInfoUsecase implements GetUserInfoUsecase {
     @Override
     public UserMarketingAgreementDto execute(long userId) {
         UserDto userDto = userReadService.findById(userId);
+
         return userMarketingAgreementReadService.getUserMarketingInfo(userDto);
     }
 }

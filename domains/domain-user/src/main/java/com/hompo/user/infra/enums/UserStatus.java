@@ -54,6 +54,6 @@ public enum UserStatus {
         return Arrays.stream(UserStatus.values())
                 .filter(v -> v.getCode().equals(code))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("유저 상태에 %s가 존재하지 않습니다.", code)));
+                .orElse(null);
     }
 }

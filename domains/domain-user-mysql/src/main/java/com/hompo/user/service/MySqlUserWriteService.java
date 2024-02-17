@@ -4,6 +4,7 @@ import com.hompo.auth.dto.JwtDto;
 import com.hompo.user.dto.UserDto;
 import com.hompo.user.entity.MySqlUser;
 import com.hompo.user.infra.enums.UserStatus;
+import com.hompo.user.infra.util.ValidationUtil;
 import com.hompo.user.repository.UserRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,11 @@ public class MySqlUserWriteService implements UserWriteService {
     @Override
     public UserDto register(@NonNull RegisterCommand command) {
         MySqlUser user;
-        Optional<MySqlUser> optionalUser = userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber());
+        Optional<MySqlUser> optionalUser;
+
+        ValidationUtil.validateUserOriginPassword(command.password());
+
+        optionalUser = userRepository.findByAccountOrNicknameOrPhoneNumber(command.account(), command.nickname(), command.phoneNumber());
 
         if (optionalUser.isPresent()) {
             // TODO: 이미 존재하는 계정, 닉네임, 전화번호 임을 알려주기

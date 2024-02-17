@@ -20,11 +20,6 @@ public abstract class User {
      */
     protected final String ACCOUNT_REGEXP = "^[a-zA-Z\\d]{8,15}$";
 
-    /**
-     * 비밀번호는 8자 이상, 15자 이하의 대소문자, 숫자, 특수문자로 구성되어야 합니다.
-     */
-    protected final String PASSWORD_REGEXP = "^(?=.*[a-zA-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?=.*[a-zA-Z\\d@#$%^&+=!]).{8,15}$";
-
     protected final String ENCRYPTED_PASSWORD_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
 
     /**
@@ -41,11 +36,6 @@ public abstract class User {
      * 직업은 1자 이상, 15자 이하의 대소문자, 한글로 구성되어야 합니다.
      */
     protected final String JOB_REGEXP = "^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z]{1,15}$";
-
-    /**
-     * 생일은 yyyy-MM-dd로 구성되어야 합니다.
-     */
-    protected final String BIRTHDAY_REGEXP = "^(19|20)[0-9]{2}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$";
 
     /**
      * PK 입니다.
@@ -152,5 +142,13 @@ public abstract class User {
      * */
     protected void validatePassword(String password) {
         Assert.isTrue(Pattern.matches(ENCRYPTED_PASSWORD_REGEXP, Objects.requireNonNull(password)), "올바르지 않은 비밀번호입니다.");
+    }
+
+    protected void validatePhoneNumber(String phoneNumber) {
+        Assert.isTrue(Pattern.matches(PHONE_NUMBER_REGEXP, Objects.requireNonNull(phoneNumber)), "올바르지 않은 전화번호입니다.");
+    }
+
+    protected void validateJob(String job) {
+        Assert.isTrue(Pattern.matches(JOB_REGEXP, Objects.requireNonNull(job)), "올바르지 않은 직업입니다.");
     }
 }
