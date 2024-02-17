@@ -48,6 +48,7 @@ public class UserController {
     @Operation(summary = "사용자 회원가입", description = "마케팅 동의 여부도 보내주셔야 합니다. 미동의더라도 false로 보내주세요.")
     @PostMapping("/register")
     public ResponseEntity<JwtDto> register(@RequestBody RegisterCommand command) {
+
         return ResponseEntity.status(HttpStatus.OK).body(registerUsecase.execute(command));
     }
 

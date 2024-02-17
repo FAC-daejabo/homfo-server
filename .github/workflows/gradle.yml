@@ -22,6 +22,7 @@ jobs:
 
     - name: Build with Gradle Wrapper
       env:
+        SQL_DDL: ${{ secrets.SQL_DDL }}
         MYSQL_IP: ${{ secrets.MYSQL_IP }}
         MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}

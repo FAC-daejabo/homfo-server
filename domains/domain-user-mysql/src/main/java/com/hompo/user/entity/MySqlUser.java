@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "users")
+@Table(name = "USERS")
 @Entity
 public class MySqlUser extends User {
     @Id

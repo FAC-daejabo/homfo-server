@@ -48,15 +48,9 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String requestURI = request.getRequestURI();
 
-        System.out.println(requestURI);
-        System.out.println(refreshTokenBlackList);
-        System.out.println(accessTokenWhiteList);
-
         if (refreshTokenBlackList.contains(requestURI)) {
-            System.out.println("case1");
             validateToken(request, true);
         } else if (!accessTokenWhiteList.contains(requestURI)) {
-            System.out.println("case2");
             validateToken(request, false);
         }
 

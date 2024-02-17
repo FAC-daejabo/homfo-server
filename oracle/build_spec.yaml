@@ -1,0 +1,108 @@
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+shell: bash
+env:
+  exportedVariables:
+    - APP_NAME
+    - IMAGE_NAME
+    - IMAGE_PATH
+    - IMAGE_TAG
+    - VERSION
+    - BUILD_RESULT
+
+steps:
+  - type: Command
+    name: "Init environment variables"
+    timeoutInSeconds: 600
+    command: | 
+      echo "Retrieving secrets from OCI Vault..."
+      SECRET_JSON=$(oci secrets secret-bundle get --secret-id $ENV_SECRETS_OCID --query 'data.secret-bundle-content.content' --raw-output | base64 --decode)
+      export MYSQL_IP=$(echo $SECRET_JSON | jq -r '.MYSQL_IP')
+      export MYSQL_PORT=$(echo $SECRET_JSON | jq -r '.MYSQL_PORT')
+      export MYSQL_USERNAME=$(echo $SECRET_JSON | jq -r '.MYSQL_USERNAME')
+      export MYSQL_PASSWORD=$(echo $SECRET_JSON | jq -r '.MYSQL_PASSWORD')
+      export USER_ACCESS_TOKEN_SECRET=$(echo $SECRET_JSON | jq -r '.USER_ACCESS_TOKEN_SECRET')
+      export USER_ACCESS_TOKEN_EXPIRE=$(echo $SECRET_JSON | jq -r '.USER_ACCESS_TOKEN_EXPIRE')
+      export USER_REFRESH_TOKEN_SECRET=$(echo $SECRET_JSON | jq -r '.USER_REFRESH_TOKEN_SECRET')
+      export USER_REFRESH_TOKEN_EXPIRE=$(echo $SECRET_JSON | jq -r '.USER_REFRESH_TOKEN_EXPIRE')
+
+  - type: Command
+    name: "Init exportedVariables"
+    timeoutInSeconds: 600
+    command: |
+      echo "===================== INIT EXPORTEDVARIABLES ====================="
+      APP_NAME=homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
+      IMAGE_NAME="${APP_NAME}"
+      BUILD_RESULT=SUCCESS
+
+      echo "APP_NAME: " $APP_NAME
+      echo "IMAGE_NAME: " $IMAGE_NAME
+
+  - type: Command
+    name: "Build Source"
+    timeoutInSeconds: 600
+    failImmediatelyOnError: true
+    command: |
+      echo $PATH
+      echo "===================== BUILD SOURCE ====================="
+      ./gradlew build
+
+    onFailure:
+      - type: Command
+        timeoutInSeconds: 600
+        command: |
+          echo "===================== BUILD SOURCE FAILURE ====================="
+          BUILD_RESULT=FAILURE
+          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL
+                                                                              
+                                                                              
+  - type: Command
+    name: "Define Image Tag"
+    timeoutInSeconds: 600
+    command: |
+      COMMIT_ID=`echo ${OCI_TRIGGER_COMMIT_HASH} | cut -c 1-7`
+      BUILD_RUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      VERSION=$BUILD_RUN_HASH
+      [ -z "$COMMIT_ID" ] && IMAGE_TAG=$BUILD_RUN_HASH || IMAGE_TAG=$COMMIT_ID
+
+      echo "COMMIT ID: " $COMMIT_ID
+      echo "BUILD_RUN_HASH: " $BUILD_RUN_HASH
+
+  - type: Command
+    timeoutInSeconds: 400
+    name: "Dockerizer"
+    command: |
+      echo "Building Docker image for ARM64 architecture..."
+      docker build --platform linux/arm64 -t ${IMAGE_NAME}:${IMAGE_TAG} .
+      docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+
+    onFailure:
+      - type: Command
+        timeoutInSeconds: 600
+        command: |
+          echo "===================== Dockerizer ====================="
+          BUILD_RESULT=FAILURE
+          ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL
+
+  - type: Command
+    name: "Check exportedVariables"
+    timeoutInSeconds: 600
+    command: |
+      echo "===================== CHECK EXPORTED VARIABLES ====================="
+      [ -z "$APP_NAME" ] && APP_NAME=unknown
+      [ -z "$IMAGE_PATH" ] && IMAGE_PATH=unknown
+      [ -z "$IMAGE_TAG" ] && IMAGE_TAG=unknown
+      echo "APP_NAME: " $APP_NAME
+      echo "IMAGE_PATH: " $IMAGE_PATH
+      echo "IMAGE_NAME : " $IMAGE_NAME
+      echo "IMAGE_TAG: " $IMAGE_TAG
+      echo "VERSION: " $VERSION
+      echo "BUILD_RESULT: " $BUILD_RESULT
+      
+      ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $OCI_BUILD_RUN_ID $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $IMAGE_TAG
+
+outputArtifacts:
+  - name: homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
+    type: DOCKER_IMAGE
+    location: homfo_server_${OCI_TRIGGER_SOURCE_BRANCH_NAME}
