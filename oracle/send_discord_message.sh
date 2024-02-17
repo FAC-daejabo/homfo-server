@@ -25,5 +25,5 @@ fi
 
 # Discord 웹훅을 통해 메시지 전송
 curl -H "Content-Type:application/json" \
-     -d "{\"content\": \"$MESSAGE\n\nApp: ${APP_NAME}_${VERSION}\n\nName: ${OCI_BUILD_STAGE_NAME}\n\nBranch: ${OCI_TRIGGER_SOURCE_BRANCH_NAME}\n\n${IMAGE_TAG_MESSAGE}\n\n\" }" \
+     -d "{\"content\": \"$MESSAGE\n\nApp: ${APP_NAME}_${VERSION}\n\nName: ${OCI_BUILD_STAGE_NAME}\n\nBranch: ${OCI_TRIGGER_SOURCE_BRANCH_NAME}\n${IMAGE_TAG_MESSAGE}\n\n\" }" \
      $DISCORD_WEBHOOK_URL
