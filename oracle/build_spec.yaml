@@ -88,13 +88,31 @@ steps:
           echo "===================== BUILD SOURCE FAILURE ====================="
           BUILD_RESULT=FAILURE
           ./oracle/send_discord_message.sh $BUILD_RESULT $APP_NAME $VERSION $OCI_BUILD_STAGE_NAME $DISCORD_WEBHOOK_URL $OCI_TRIGGER_SOURCE_BRANCH_NAME
+  - type: Command
+    name: "Install the docker buildx"
+    timeoutInSeconds: 600
+    command: |
+      if ! docker buildx version > /dev/null 2>&1; then
+        echo "===================== INSTALL THE DOCKER BUILDX ====================="
+
+        wget -q https://github.com/docker/buildx/releases/download/v0.11.2/buildx-v0.11.2.linux-amd64 -O docker-buildx
+
+        mkdir -p ~/.docker/cli-plugins/
+        mv docker-buildx ~/.docker/cli-plugins/docker-buildx
+
+        chmod a+x ~/.docker/cli-plugins/docker-buildx
+
+        echo "buildx installed."
+      else
+        echo "buildx is already installed."
+      fi
 
   - type: Command
     timeoutInSeconds: 400
     name: "Dockerizer"
     command: |
       echo "Building Docker image for ARM64 architecture..."
-      docker build --platform linux/arm64 -t ${IMAGE_NAME}:${IMAGE_TAG} .
+      docker buildx build --platform linux/arm64 -t ${IMAGE_NAME}:${IMAGE_TAG} .
       docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
 
     onFailure:
