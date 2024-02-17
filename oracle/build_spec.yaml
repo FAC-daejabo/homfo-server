@@ -101,7 +101,6 @@ steps:
       docker buildx create --name arm64-arch-builder --use
       docker buildx inspect arm64-arch-builder --bootstrap
       docker buildx build --platform linux/arm64/v8 --pull --rm -t ${IMAGE_NAME} . --load
-      docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
 
     onFailure:
       - type: Command
