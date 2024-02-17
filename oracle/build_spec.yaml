@@ -16,21 +16,6 @@ env:
 
 steps:
   - type: Command
-    name: "Init environment variables"
-    timeoutInSeconds: 600
-    command: |
-      echo "Retrieving secrets from OCI Vault..."
-      SECRET_JSON=$(oci secrets secret-bundle get --secret-id $ENV_SECRETS_OCID --query 'data.secret-bundle-content.content' --raw-output | base64 --decode)
-      export MYSQL_IP=$(echo $SECRET_JSON | jq -r '.MYSQL_IP')
-      export MYSQL_PORT=$(echo $SECRET_JSON | jq -r '.MYSQL_PORT')
-      export MYSQL_USERNAME=$(echo $SECRET_JSON | jq -r '.MYSQL_USERNAME')
-      export MYSQL_PASSWORD=$(echo $SECRET_JSON | jq -r '.MYSQL_PASSWORD')
-      export USER_ACCESS_TOKEN_SECRET=$(echo $SECRET_JSON | jq -r '.USER_ACCESS_TOKEN_SECRET')
-      export USER_ACCESS_TOKEN_EXPIRE=$(echo $SECRET_JSON | jq -r '.USER_ACCESS_TOKEN_EXPIRE')
-      export USER_REFRESH_TOKEN_SECRET=$(echo $SECRET_JSON | jq -r '.USER_REFRESH_TOKEN_SECRET')
-      export USER_REFRESH_TOKEN_EXPIRE=$(echo $SECRET_JSON | jq -r '.USER_REFRESH_TOKEN_EXPIRE')
-
-  - type: Command
     name: "Init exportedVariables"
     timeoutInSeconds: 600
     command: |
@@ -112,7 +97,10 @@ steps:
     name: "Dockerizer"
     command: |
       echo "Building Docker image for ARM64 architecture..."
-      docker buildx build --platform linux/arm64 -t ${IMAGE_NAME}:${IMAGE_TAG} .
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+      docker buildx create --name arm64-arch-builder --use
+      docker buildx inspect arm64-arch-builder --bootstrap
+      docker buildx build --platform linux/arm64/v8 --pull --rm -t ${IMAGE_NAME} . --load
       docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
 
     onFailure:
