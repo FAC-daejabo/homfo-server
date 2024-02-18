@@ -16,6 +16,12 @@ server:
   servlet:
     context-path: /api
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
 jwt:
   accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
   accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}

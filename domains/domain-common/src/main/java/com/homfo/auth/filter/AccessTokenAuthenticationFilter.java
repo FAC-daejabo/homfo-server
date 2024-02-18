@@ -66,23 +66,18 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
     private void validateToken(HttpServletRequest request, boolean isRefreshToken) {
         String token = getTokenFromRequest(request);
 
-        System.out.println("token123 " + token);
-
         if (token == null) {
-            System.out.println("validate1");
             return;
         }
 
         if (isRefreshToken) {
             if (JwtUtil.verifyToken(token, jwtSecretDto)) {
-                System.out.println("validate2");
                 setDetails(request, token);
             }
             return;
         }
 
         if (JwtUtil.verifyTokenNotExpired(token, jwtSecretDto)) {
-            System.out.println("validate3");
             setDetails(request, token);
         }
     }
