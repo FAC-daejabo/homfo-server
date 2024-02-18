@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.springdoc.openapi-gradle-plugin' version '1.6.0'
     id 'jacoco'
+    id "org.sonarqube" version "4.4.1.3373"
 }
 
 def customJacocoReportDir = 'jacoco/reports'
@@ -38,6 +39,18 @@ jacocoTestCoverageVerification {
             limit {
                 minimum = 0.5
             }
+        }
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "homfo-server"
+        property "sonar.projectName", "homfo-server"
+        property "sonar.modules", subprojects.collect { it.name }.join(',')
+        subprojects.forEach { subproject ->
+            System.out.println("hello123: " + "${subproject.layout.buildDirectory.get()}/$customJacocoReportDir/xml/jacoco.xml")
+            property "sonar.${subproject.name}.coverage.jacoco.xmlReportPaths", "${subproject.layout.buildDirectory.get()}/$customJacocoReportDir/xml/jacoco.xml"
         }
     }
 }
