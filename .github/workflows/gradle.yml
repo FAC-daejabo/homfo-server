@@ -20,7 +20,14 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    - name: Build with Gradle Wrapper
+    - name: Cache SonarCloud packages
+      uses: actions/cache@v3
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+
+    - name: Build and analyze
       env:
         SQL_DDL: ${{ secrets.SQL_DDL }}
         MYSQL_IP: ${{ secrets.MYSQL_IP }}
@@ -31,7 +38,9 @@ jobs:
         USER_ACCESS_TOKEN_EXPIRE: ${{ secrets.USER_ACCESS_TOKEN_EXPIRE }}
         USER_REFRESH_TOKEN_SECRET: ${{ secrets.USER_REFRESH_TOKEN_SECRET }}
         USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
-      run: ./gradlew build --no-build-cache --rerun-tasks
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: ./gradlew build sonar --info
 
     - name: Notify Discord about build result
       if: always()
@@ -72,18 +81,6 @@ jobs:
             curl -H "Content-Type:application/json" -d "{\"content\": \"$MESSAGE\n\nType: Push\nAuthor: $AUTHOR_NAME\n\nPush to $COMMIT_REF ($COMMIT_URL)\" }" ${{ secrets.DISCORD_WEBHOOK_URL }}
           fi
         fi
-
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-    - name: Build and analyze
-      env:
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew build jacocoTestReport sonar --info
       
 #
 #name: Build
