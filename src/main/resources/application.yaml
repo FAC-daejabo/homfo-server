@@ -18,10 +18,15 @@ server:
 
 management:
   endpoints:
+    prometheus:
+      enabled: true
     web:
       exposure:
         include: prometheus
-
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 jwt:
   accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
   accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}
