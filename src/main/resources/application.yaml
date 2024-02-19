@@ -17,12 +17,14 @@ server:
     context-path: /api
 
 management:
+  server:
+    port: 8081
   endpoints:
     prometheus:
       enabled: true
     web:
       exposure:
-        include: health,info,prometheus
+        include: "health,info,metrics,prometheus"
   prometheus:
     metrics:
       export:
