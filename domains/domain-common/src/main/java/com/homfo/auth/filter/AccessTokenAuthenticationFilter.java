@@ -47,7 +47,7 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        String requestURI = request.getRequestURI();
+        String requestURI = request.getRequestURI().substring(4);
         AntPathMatcher pathMatcher = new AntPathMatcher();
         boolean isRefreshTokenPath = refreshTokenBlackList.stream()
                 .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
