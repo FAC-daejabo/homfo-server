@@ -2,7 +2,7 @@ name: Sonarqube Code Analysis
 
 on:
   pull_request:
-    branches: [ "main", "development" ]
+    branches: [ "development" ]
 
 jobs:
   build:
