@@ -26,6 +26,9 @@ management:
     web:
       exposure:
         include: "health,info,metrics,prometheus"
+  metrics:
+    tags:
+      application: ${APPLICATION_NAME}
   prometheus:
     metrics:
       export:

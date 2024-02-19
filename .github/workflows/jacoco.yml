@@ -22,6 +22,7 @@ jobs:
 
       - name: Build and analyze
         env:
+          APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
           SQL_DDL: ${{ secrets.SQL_DDL }}
           MYSQL_IP: ${{ secrets.MYSQL_IP }}
           MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
