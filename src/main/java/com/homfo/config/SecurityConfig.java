@@ -76,7 +76,7 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new AccessTokenAuthenticationFilter(userAccessTokenInfo, userAccessTokenWhiteList, userRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AccessTokenAuthenticationFilter(userAccessTokenInfo, WHITE_LIST, userRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
