@@ -22,7 +22,7 @@ management:
       enabled: true
     web:
       exposure:
-        include: prometheus
+        include: health,info,prometheus
   prometheus:
     metrics:
       export:
