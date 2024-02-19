@@ -19,6 +19,7 @@ server:
 management:
   server:
     port: 8081
+    base-path: /api
   endpoints:
     prometheus:
       enabled: true
@@ -29,6 +30,14 @@ management:
     metrics:
       export:
         enabled: true
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: DEBUG
 jwt:
   accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
   accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}
