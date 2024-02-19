@@ -2,7 +2,7 @@ name: Sonarqube Code Analysis
 
 on:
   pull_request:
-    branches: [ "main", "development" ]
+    branches: [ "development" ]
 
 jobs:
   build:
@@ -36,6 +36,6 @@ jobs:
         USER_ACCESS_TOKEN_EXPIRE: ${{ secrets.USER_ACCESS_TOKEN_EXPIRE }}
         USER_REFRESH_TOKEN_SECRET: ${{ secrets.USER_REFRESH_TOKEN_SECRET }}
         USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL_DEV }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_DEV }}
       run: ./gradlew build sonar --info
