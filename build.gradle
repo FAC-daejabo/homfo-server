@@ -45,11 +45,10 @@ jacocoTestCoverageVerification {
 
 sonar {
     properties {
-        property "sonar.projectKey", "homfo-server"
-        property "sonar.projectName", "homfo-server"
+        property "sonar.projectKey", "homfo-server-dev"
+        property "sonar.projectName", "homfo-server-dev"
         property "sonar.modules", subprojects.collect { it.name }.join(',')
         subprojects.forEach { subproject ->
-            System.out.println("hello123: " + "${subproject.layout.buildDirectory.get()}/$customJacocoReportDir/xml/jacoco.xml")
             property "sonar.${subproject.name}.coverage.jacoco.xmlReportPaths", "${subproject.layout.buildDirectory.get()}/$customJacocoReportDir/xml/jacoco.xml"
         }
     }
