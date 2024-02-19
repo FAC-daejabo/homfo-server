@@ -59,7 +59,7 @@ class AccessTokenAuthenticationFilterTest {
     void whenRequestPathIsInRefreshTokenBlackListAndTokenIsValid_thenShouldAuthenticate() throws ServletException, IOException {
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
             // given
-            when(request.getRequestURI()).thenReturn("/refresh");
+            when(request.getRequestURI()).thenReturn("/api/refresh");
             when(request.getHeader("Authorization")).thenReturn("Bearer validToken");
 
             jwtUtil.when(() -> JwtUtil.verifyToken(anyString(), any())).thenReturn(true);
@@ -94,7 +94,7 @@ class AccessTokenAuthenticationFilterTest {
     @DisplayName("AccessTokenWhiteList에 포함된 requeset라면 인증 정보가 없어야 한다.")
     void whenRequestPathIsInAccessTokenWhiteListAndTokenIsNotExpired_thenShouldAuthenticate() throws ServletException, IOException {
         // given
-        when(request.getRequestURI()).thenReturn("/public");
+        when(request.getRequestURI()).thenReturn("/api/public");
 
         // when
         filter.doFilterInternal(request, response, filterChain);
