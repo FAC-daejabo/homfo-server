@@ -35,7 +35,7 @@ dependencies {
     implementation project(':core')
     implementation project(':domains:domain-common')
     implementation project(':domains:domain-user')
-    runtimeOnly project(':domains:domain-user-mysql')
+    runtimeOnly project(':infrastructures:infra-user-mysql')
 
     // jwt
     implementation 'com.auth0:java-jwt:3.18.2'
