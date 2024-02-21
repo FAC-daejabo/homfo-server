@@ -9,6 +9,7 @@ jacoco {
 }
 
 jacocoTestReport {
+    dependsOn test
     reports {
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir("$customJacocoReportDir/html"))
