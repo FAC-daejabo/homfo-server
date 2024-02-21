@@ -14,9 +14,6 @@ import com.homfo.serializer.MarketingCodeSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.LocalDate;
-import java.util.Map;
-
 @Configuration
 public class JacksonConfig {
     @Bean

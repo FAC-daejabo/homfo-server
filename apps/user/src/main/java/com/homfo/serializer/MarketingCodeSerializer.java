@@ -3,7 +3,6 @@ package com.homfo.serializer;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.homfo.enums.Gender;
 import com.homfo.enums.MarketingCode;
 
 import java.io.IOException;

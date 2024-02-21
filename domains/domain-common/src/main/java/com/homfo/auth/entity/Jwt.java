@@ -1,6 +1,5 @@
 package com.homfo.auth.entity;
 
-import lombok.Builder;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
@@ -13,7 +12,7 @@ import java.util.regex.Pattern;
  * Refresh Token은 저장시 암호화해서 저장합니다.
  * */
 public abstract class Jwt {
-    protected final String ENCRYPTED_TOKEN_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
+    protected static final String ENCRYPTED_TOKEN_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
 
     /**
      * Refresh Token 소유자의 ID 값입니다.

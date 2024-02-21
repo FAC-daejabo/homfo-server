@@ -6,9 +6,7 @@ import org.springframework.context.annotation.*;
 
 import java.util.List;
 
-// TODO: application-user.yaml 로딩 안되는 버그 수정
 @Configuration
-@PropertySource(value = {"classpath:application-user.yaml"})
 public class UserJwtConfig {
     @Value("${jwt.accessTokenSecret}")
     private String accessTokenSecret;

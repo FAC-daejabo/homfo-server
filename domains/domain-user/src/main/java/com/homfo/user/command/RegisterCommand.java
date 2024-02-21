@@ -1,7 +1,6 @@
 package com.homfo.user.command;
 
 import com.homfo.enums.Gender;
-import com.homfo.enums.MarketingCode;
 import com.homfo.user.dto.MarketingAgreementDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 

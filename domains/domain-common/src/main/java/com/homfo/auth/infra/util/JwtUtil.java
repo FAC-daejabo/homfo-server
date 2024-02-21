@@ -1,21 +1,19 @@
 package com.homfo.auth.infra.util;
 
-import com.homfo.auth.dto.JwtSecretDto;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import org.springframework.stereotype.Service;
+import com.homfo.auth.dto.JwtSecretDto;
 
 import java.time.Instant;
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * JWT 관련 유틸 함수입니다.
  */
 public class JwtUtil {
-    private static final String key = "id";
+    private static final String KEY = "id";
 
     /**
      * 토큰을 생성합니다.
@@ -24,7 +22,7 @@ public class JwtUtil {
      */
     public static String createToken(Long userId, JwtSecretDto jwtSecretDto) {
         return JWT.create()
-                .withClaim(key, userId)
+                .withClaim(KEY, userId)
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtSecretDto.expireTime()))
                 .sign(Algorithm.HMAC512(jwtSecretDto.secretKey()));
     }
@@ -59,6 +57,6 @@ public class JwtUtil {
      */
     public static Long getUserIdFromToken(String token, JwtSecretDto jwtSecretDto) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC512(jwtSecretDto.secretKey())).build();
-        return verifier.verify(token).getClaim(key).asLong();
+        return verifier.verify(token).getClaim(KEY).asLong();
     }
 }

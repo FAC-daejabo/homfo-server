@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class GenderTest {
+class GenderTest {
     @Test
     void fromCode_WithValidCode_ShouldNotNull() {
         // given

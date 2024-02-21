@@ -5,7 +5,6 @@ import com.homfo.auth.filter.AccessTokenAuthenticationFilter;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -23,24 +22,24 @@ import java.util.List;
 public class SecurityConfig {
     /**
      * 사용자 액세스 토큰 정보입니다.
-     * */
+     */
     private final JwtSecretDto userAccessTokenInfo;
 
     /**
      * 사용자 액세스 토큰 허용 URI 목록입니다.
-     * */
+     */
     private final List<String> userAccessTokenWhiteList;
 
     /**
      * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
-     * */
+     */
     private final List<String> userRefreshTokenBlackList;
 
     /**
      * 서비스 화이트 리스트입니다.
-     *
+     * <p>
      * TODO: public network에서 접속 불가능하도록 막기, private network에서만 접속 가능하게 변경
-     * */
+     */
     private final List<String> WHITE_LIST = new ArrayList<>(List.of(
             "/v3/api-docs/**",
             "/swagger-ui/**",

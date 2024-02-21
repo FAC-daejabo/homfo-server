@@ -3,7 +3,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     implementation project(':domains:domain-real-estate')
-    runtimeOnly project(':domains:domain-real-estate-mysql')
+    runtimeOnly project(':infrastructures:infra-real-estate-mysql')
 
     implementation project(':clients:kakao-map-client')
     implementation project(':clients:public-data-portal-client')
