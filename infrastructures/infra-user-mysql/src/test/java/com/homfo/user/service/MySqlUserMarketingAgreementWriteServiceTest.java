@@ -44,7 +44,7 @@ class MySqlUserMarketingAgreementWriteServiceTest {
                 null,
                 "Developer",
                 LocalDate.now(),
-                List.of(new MarketingAgreementDto(MarketingCode.SendInformationToThirdParty, true))
+                List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true))
         );
         UserDto userDto = new UserDto(userId, "testAccount", "testNickname", "010-1234-5678", null, "Developer", LocalDate.now(), null);
 

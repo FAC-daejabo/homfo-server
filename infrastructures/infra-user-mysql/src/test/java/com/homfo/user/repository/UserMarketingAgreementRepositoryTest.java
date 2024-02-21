@@ -53,7 +53,7 @@ class UserMarketingAgreementRepositoryTest {
         Long userId = 1L;
         MySqlUserMarketingAgreement agreement = MySqlUserMarketingAgreement.builder()
                 .userId(userId)
-                .code(MarketingCode.SendInformationToThirdParty)
+                .code(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY)
                 .agreement(true)
                 .build();
 

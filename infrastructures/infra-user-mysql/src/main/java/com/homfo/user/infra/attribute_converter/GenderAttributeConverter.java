@@ -21,14 +21,6 @@ public class GenderAttributeConverter implements AttributeConverter<Gender, Stri
 
     @Override
     public Gender convertToEntityAttribute(String dbData) {
-        if (dbData == null) {
-            return null;
-        }
-        try {
-            return Gender.fromCode(dbData);
-        } catch (IllegalArgumentException e) {
-            log.error("failure to convert cause unexpected code [{}]", dbData, e);
-            throw e;
-        }
+        return Gender.fromCode(dbData);
     }
 }

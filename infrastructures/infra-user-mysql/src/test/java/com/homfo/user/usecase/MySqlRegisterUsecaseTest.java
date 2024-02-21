@@ -59,7 +59,7 @@ class MySqlRegisterUsecaseTest {
     void givenRegisterCommand_whenExecute_thenCallsServicesAndReturnsJwtDto() {
         // Given
         long userId = 1L;
-        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SendInformationToThirdParty, true)));
+        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true)));
         RegisterCommand command = new RegisterCommand("testUser", "password", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), marketingAgreementDtoList);
         UserDto userDto = new UserDto(userId, "testUser", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), UserStatus.USE);
         String expectedAccessToken = "accessToken";

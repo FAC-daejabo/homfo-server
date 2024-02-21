@@ -48,7 +48,6 @@ class AccessTokenAuthenticationFilterTest {
         accessTokenWhiteList = List.of("/public", "/login");
         refreshTokenBlackList = List.of("/refresh");
 
-        // 필터 인스턴스를 직접 생성하고 초기화합니다.
         filter = new AccessTokenAuthenticationFilter(jwtSecretDto, accessTokenWhiteList, refreshTokenBlackList);
 
         SecurityContextHolder.clearContext(); // 보안 컨텍스트 초기화
