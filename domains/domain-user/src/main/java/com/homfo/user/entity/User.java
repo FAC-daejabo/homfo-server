@@ -1,10 +1,9 @@
 package com.homfo.user.entity;
 
-import com.homfo.auth.dto.JwtDto;
 import com.homfo.enums.Gender;
+import com.homfo.user.infra.enums.UserStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
-import com.homfo.user.infra.enums.UserStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,24 +17,24 @@ public abstract class User {
     /**
      * 계정은 8자 이상, 15자 이하의 대소문자 및 숫자로 구성되어야 합니다.
      */
-    protected final String ACCOUNT_REGEXP = "^[a-zA-Z\\d]{8,15}$";
+    protected static final String ACCOUNT_REGEXP = "^[a-zA-Z\\d]{8,15}$";
 
-    protected final String ENCRYPTED_PASSWORD_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
+    protected static final String ENCRYPTED_PASSWORD_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
 
     /**
      * 닉네임은 1자 이상, 15자 이하의 대소문자, 숫자, 한글로 구성되어야 합니다.
      */
-    protected final String NICKNAME_REGEXP = "^[a-zA-Z\\d가-힣]{1,15}$";
+    protected static final String NICKNAME_REGEXP = "^[a-zA-Z\\d가-힣]{1,15}$";
 
     /**
      * 전화번호는 xxx-xxxx-xxxx 형태여야 합니다.
      */
-    protected final String PHONE_NUMBER_REGEXP = "^\\d{3}-\\d{4}-\\d{4}$";
+    protected static final String PHONE_NUMBER_REGEXP = "^\\d{3}-\\d{4}-\\d{4}$";
 
     /**
      * 직업은 1자 이상, 15자 이하의 대소문자, 한글로 구성되어야 합니다.
      */
-    protected final String JOB_REGEXP = "^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z]{1,15}$";
+    protected static final String JOB_REGEXP = "^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z]{1,15}$";
 
     /**
      * PK 입니다.

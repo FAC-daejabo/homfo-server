@@ -3,7 +3,6 @@ package com.homfo.auth.entity;
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
 import com.homfo.user.entity.MySqlRefreshToken;
-import com.homfo.user.entity.MySqlUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -13,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JwtTest {
+class JwtTest {
     private final String secretKey = "secretKey";
 
     private final int expireTime = 500;

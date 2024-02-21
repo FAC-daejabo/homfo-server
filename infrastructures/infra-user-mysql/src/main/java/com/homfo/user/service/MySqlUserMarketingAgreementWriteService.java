@@ -1,6 +1,5 @@
 package com.homfo.user.service;
 
-import com.homfo.enums.MarketingCode;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.dto.MarketingAgreementDto;
 import com.homfo.user.dto.UserDto;

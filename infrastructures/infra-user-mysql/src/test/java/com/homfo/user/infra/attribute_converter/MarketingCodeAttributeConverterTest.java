@@ -1,4 +1,4 @@
-package com.homfo.user.infra.attributeConverter;
+package com.homfo.user.infra.attribute_converter;
 
 import com.homfo.enums.MarketingCode;
 import org.junit.jupiter.api.BeforeEach;

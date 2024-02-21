@@ -1,6 +1,6 @@
 package com.homfo.user.service;
 
-import com.homfo.auth.dto.JwtDto;
+import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.dto.UserDto;
 import com.homfo.user.entity.MySqlUser;
 import com.homfo.user.infra.enums.UserStatus;
@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.homfo.user.command.SignInCommand;
-import com.homfo.user.command.RegisterCommand;
 
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
 package com.homfo.user.entity;
 
 import com.homfo.enums.MarketingCode;
-import com.homfo.user.infra.attributeConverter.MarketingCodeAttributeConverter;
+import com.homfo.user.infra.attribute_converter.MarketingCodeAttributeConverter;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

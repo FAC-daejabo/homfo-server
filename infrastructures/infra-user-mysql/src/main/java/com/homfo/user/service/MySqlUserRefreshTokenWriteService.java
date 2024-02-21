@@ -1,6 +1,5 @@
 package com.homfo.user.service;
 
-import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
 import com.homfo.user.entity.MySqlRefreshToken;

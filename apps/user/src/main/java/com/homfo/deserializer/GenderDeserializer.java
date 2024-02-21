@@ -11,7 +11,6 @@ import java.io.IOException;
  * Gender code 값을 객체로 변환합니다.
  * */
 public class GenderDeserializer extends JsonDeserializer<Gender> {
-
     @Override
     public Gender deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String code = p.getText();

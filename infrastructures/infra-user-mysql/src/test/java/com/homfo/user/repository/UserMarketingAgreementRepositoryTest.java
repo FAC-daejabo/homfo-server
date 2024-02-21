@@ -17,10 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
-import javax.sql.DataSource;
-import java.sql.Statement;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.yaml")
-public class UserMarketingAgreementRepositoryTest {
+class UserMarketingAgreementRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
 
@@ -56,7 +53,7 @@ public class UserMarketingAgreementRepositoryTest {
         Long userId = 1L;
         MySqlUserMarketingAgreement agreement = MySqlUserMarketingAgreement.builder()
                 .userId(userId)
-                .code(MarketingCode.sendInformationToThirdParty)
+                .code(MarketingCode.SendInformationToThirdParty)
                 .agreement(true)
                 .build();
 

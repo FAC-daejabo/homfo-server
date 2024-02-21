@@ -1,31 +1,31 @@
-package com.homfo.user.infra.attributeConverter;
+package com.homfo.user.infra.attribute_converter;
 
 
-import com.homfo.enums.Gender;
+import com.homfo.user.infra.enums.UserStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Gender enum을 DB 값과 매칭시킵니다.
+ * UserStatus enum을 DB 값과 매칭시킵니다.
  * */
 @Converter
 @Slf4j
-public class GenderAttributeConverter implements AttributeConverter<Gender, String> {
+public class UserStatusAttributeConverter implements AttributeConverter<UserStatus, String> {
 
     @Override
-    public String convertToDatabaseColumn(Gender attribute) {
+    public String convertToDatabaseColumn(UserStatus attribute) {
         if(attribute == null) return null;
         return attribute.getCode();
     }
 
     @Override
-    public Gender convertToEntityAttribute(String dbData) {
+    public UserStatus convertToEntityAttribute(String dbData) {
         if (dbData == null) {
             return null;
         }
         try {
-            return Gender.fromCode(dbData);
+            return UserStatus.fromCode(dbData);
         } catch (IllegalArgumentException e) {
             log.error("failure to convert cause unexpected code [{}]", dbData, e);
             throw e;

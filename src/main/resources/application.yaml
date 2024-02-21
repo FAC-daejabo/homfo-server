@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+  profiles:
+    active: ${SERVER_MODE}
 
 server:
   servlet:

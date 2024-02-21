@@ -39,7 +39,7 @@ class MySqlUserMarketingAgreementReadServiceTest {
         long userId = 1L;
         UserDto userDto = new UserDto(userId, "username", "nickname", "010-1234-5678", null, "job", null, null);
         List<MySqlUserMarketingAgreement> agreements = List.of(
-                new MySqlUserMarketingAgreement(userId, MarketingCode.sendInformationToThirdParty, true)
+                new MySqlUserMarketingAgreement(userId, MarketingCode.SendInformationToThirdParty, true)
         );
 
         when(userMarketingAgreementRepository.findByUserId(anyLong())).thenReturn(agreements);
@@ -51,7 +51,7 @@ class MySqlUserMarketingAgreementReadServiceTest {
         assertThat(result.userDto()).isEqualTo(userDto);
         assertThat(result.marketingAgreementList()).hasSize(1)
                 .containsExactlyInAnyOrder(
-                        new MarketingAgreementDto(MarketingCode.sendInformationToThirdParty, true)
+                        new MarketingAgreementDto(MarketingCode.SendInformationToThirdParty, true)
                 );
     }
 }

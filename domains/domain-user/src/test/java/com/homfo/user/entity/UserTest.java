@@ -3,10 +3,9 @@ package com.homfo.user.entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserTest {
 
@@ -33,35 +32,6 @@ class UserTest {
 
         // when
         Executable validation = () -> user.validateAccount(invalidAccount);
-
-        // then
-        assertThrows(IllegalArgumentException.class, validation);
-    }
-
-    @Test
-    @DisplayName("올바른 비밀번호가 주어졌을 때, 검증에 통과해야 한다")
-    void validatePassword_WithValidPassword_ShouldPass() {
-        // given
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        MySqlUser user = new MySqlUser();
-        String validPassword = encoder.encode("ValidPass123!");
-
-        // when
-        Executable validation = () -> user.validatePassword(validPassword);
-
-        // then
-        assertDoesNotThrow(validation);
-    }
-
-    @Test
-    @DisplayName("암호화 규격에 맞지 않는 비밀번호가 주어졌을 때, IllegalArgumentException이 발생해야 한다.")
-    void validatePassword_WithInvalidPassword_ShouldThrowException() {
-        // given
-        MySqlUser user = new MySqlUser();
-        String invalidPassword = "invalid";
-
-        // when
-        Executable validation = () -> user.validatePassword(invalidPassword);
 
         // then
         assertThrows(IllegalArgumentException.class, validation);

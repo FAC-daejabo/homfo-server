@@ -4,7 +4,6 @@ import com.homfo.enums.MarketingCode;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.dto.MarketingAgreementDto;
 import com.homfo.user.dto.UserDto;
-import com.homfo.user.entity.MySqlUserMarketingAgreement;
 import com.homfo.user.repository.UserMarketingAgreementRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.verify;
@@ -46,7 +44,7 @@ class MySqlUserMarketingAgreementWriteServiceTest {
                 null,
                 "Developer",
                 LocalDate.now(),
-                List.of(new MarketingAgreementDto(MarketingCode.sendInformationToThirdParty, true))
+                List.of(new MarketingAgreementDto(MarketingCode.SendInformationToThirdParty, true))
         );
         UserDto userDto = new UserDto(userId, "testAccount", "testNickname", "010-1234-5678", null, "Developer", LocalDate.now(), null);
 

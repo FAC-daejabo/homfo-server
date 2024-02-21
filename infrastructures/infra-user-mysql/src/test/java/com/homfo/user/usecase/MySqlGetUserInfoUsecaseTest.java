@@ -44,7 +44,7 @@ class MySqlGetUserInfoUsecaseTest {
         // Given
         long userId = 1L;
         UserDto userDto = new UserDto(userId, "testUser", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), UserStatus.USE);
-        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.sendInformationToThirdParty, true)));
+        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SendInformationToThirdParty, true)));
         UserMarketingAgreementDto expectedDto = new UserMarketingAgreementDto(userDto, marketingAgreementDtoList);
 
         when(userReadService.findById(userId)).thenReturn(userDto);

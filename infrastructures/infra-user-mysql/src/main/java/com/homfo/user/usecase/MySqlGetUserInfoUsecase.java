@@ -3,7 +3,6 @@ package com.homfo.user.usecase;
 import com.homfo.user.dto.UserDto;
 import com.homfo.user.dto.UserMarketingAgreementDto;
 import com.homfo.user.service.UserMarketingAgreementReadService;
-import com.homfo.user.service.UserMarketingAgreementWriteService;
 import com.homfo.user.service.UserReadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

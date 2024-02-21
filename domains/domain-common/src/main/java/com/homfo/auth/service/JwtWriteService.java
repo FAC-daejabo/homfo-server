@@ -1,6 +1,5 @@
 package com.homfo.auth.service;
 
-import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtSecretDto;
 import lombok.NonNull;
 

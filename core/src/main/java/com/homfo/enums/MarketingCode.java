@@ -6,7 +6,7 @@ import java.util.Arrays;
  * 마케팅 코드를 관리합니다.
  * */
 public enum MarketingCode {
-    sendInformationToThirdParty("MARKETING_CODE_00000001");
+    SendInformationToThirdParty("MARKETING_CODE_00000001");
 
     private final String code;
 

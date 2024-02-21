@@ -1,16 +1,17 @@
 package com.homfo.user.entity;
 
-import com.homfo.auth.dto.JwtDto;
-
 import com.homfo.enums.Gender;
-import com.homfo.user.infra.attributeConverter.GenderAttributeConverter;
+import com.homfo.user.infra.attribute_converter.GenderAttributeConverter;
+import com.homfo.user.infra.attribute_converter.UserStatusAttributeConverter;
+import com.homfo.user.infra.enums.UserStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.homfo.user.infra.attributeConverter.UserStatusAttributeConverter;
-import com.homfo.user.infra.enums.UserStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

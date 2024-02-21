@@ -1,11 +1,10 @@
-package com.homfo.user.infra.attributeConverter;
+package com.homfo.user.infra.attribute_converter;
 
 import com.homfo.enums.Gender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Executable;
 import java.util.Arrays;
 import java.util.List;
 

@@ -2,14 +2,13 @@ package com.homfo.enums;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Executable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class MarketingCodeTest {
+class MarketingCodeTest {
     @Test
     void fromCode_WithValidCode_ShouldNotNull() {
         // given
