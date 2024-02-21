@@ -76,6 +76,7 @@ public class MySqlUser extends User {
         this.gender = gender;
         this.birthday = birthday;
         this.job = job;
+        this.status = UserStatus.USE;
     }
 
     @PrePersist

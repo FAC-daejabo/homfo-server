@@ -10,7 +10,7 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MarketingCodeDeserializerTest {
+class MarketingCodeDeserializerTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 

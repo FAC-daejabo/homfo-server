@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MarketingCodeSerializerTest {
+class MarketingCodeSerializerTest {
 
     private final ObjectMapper mapper = new ObjectMapper();
 

@@ -122,4 +122,32 @@ class UserTest {
         // then
         assertThrows(IllegalArgumentException.class, validation);
     }
+
+    @Test
+    @DisplayName("올바른 직업이 주어졌을 때, 검증에 통과해야 한다")
+    void validateJob_WithValidJob_ShouldPass() {
+        // given
+        MySqlUser user = new MySqlUser();
+        String validJob = "대학생";
+
+        // when
+        Executable validation = () -> user.validateJob(validJob);
+
+        // then
+        assertDoesNotThrow(validation);
+    }
+
+    @Test
+    @DisplayName("올바르지 않은 직업이 주어졌을 때, IllegalArgumentException이 발생해야 한다")
+    void validateJob_WithInvalidJob_ShouldThrowException() {
+        // given
+        MySqlUser user = new MySqlUser();
+        String validJob = "#$%%^";
+
+        // when
+        Executable validation = () -> user.validateJob(validJob);
+
+        // then
+        assertThrows(IllegalArgumentException.class, validation);
+    }
 }

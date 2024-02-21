@@ -11,8 +11,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RegisterCommandTest {
-
+ class RegisterCommandTest {
     @Test
     @DisplayName("회원가입 커맨드가 올바르게 생성되어야 한다.")
     void registerCommandIsCreatedProperly() {

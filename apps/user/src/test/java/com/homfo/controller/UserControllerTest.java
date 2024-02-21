@@ -52,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = UserController.class)
 @WebMvcTest(UserController.class)
 @Import({TestSecurityConfig.class})
-public class UserControllerTest {
+class UserControllerTest {
     private MockMvc mockMvc;
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -79,7 +79,7 @@ public class UserControllerTest {
     private TokenRefreshUsecase tokenRefreshUsecase;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         objectMapper.registerModule(new JavaTimeModule());
 
@@ -91,7 +91,7 @@ public class UserControllerTest {
 
     @Test
     @WithMockUser
-    public void signIn_ShouldReturnJwtToken() throws Exception {
+    void signIn_ShouldReturnJwtToken() throws Exception {
         // given
         SignInCommand command = new SignInCommand("testAccount", "testPW@111");
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
@@ -108,7 +108,7 @@ public class UserControllerTest {
     // info 메소드 테스트
     @Test
     @WithMockUser
-    public void info_ShouldReturnUserMarketingAgreementDto() throws Exception {
+    void info_ShouldReturnUserMarketingAgreementDto() throws Exception {
         // given
         Long userId = 1L; // 예시 ID
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
@@ -127,7 +127,7 @@ public class UserControllerTest {
     // register 메소드 테스트
     @Test
     @WithMockUser
-    public void register_ShouldReturnJwtDto() throws Exception {
+    void register_ShouldReturnJwtDto() throws Exception {
         // given
         String account = "testAccount";
         String password = "testPW@111";
@@ -153,7 +153,7 @@ public class UserControllerTest {
     // signOut 메소드 테스트
     @Test
     @WithMockUser
-    public void signOut_ShouldReturnOk() throws Exception {
+    void signOut_ShouldReturnOk() throws Exception {
         // given
         Long userId = 1L;
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
@@ -166,7 +166,7 @@ public class UserControllerTest {
     // deleteAccount 메소드 테스트
     @Test
     @WithMockUser
-    public void deleteAccount_ShouldReturnOk() throws Exception {
+    void deleteAccount_ShouldReturnOk() throws Exception {
         // given
         Long userId = 1L;
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
@@ -179,7 +179,7 @@ public class UserControllerTest {
     // refreshToken 메소드 테스트
     @Test
     @WithMockUser
-    public void refreshToken_ShouldReturnJwtDto() throws Exception {
+    void refreshToken_ShouldReturnJwtDto() throws Exception {
         // given
         TokenRefreshCommand command = new TokenRefreshCommand("refreshToken");
         JwtDto jwtDto = new JwtDto("newToken", "newRefreshToken");

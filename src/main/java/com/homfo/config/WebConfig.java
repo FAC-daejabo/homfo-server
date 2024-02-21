@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @RequiredArgsConstructor
@@ -30,6 +31,6 @@ public class WebConfig {
     }
 
     private boolean isDevProfile() {
-        return env.getActiveProfiles().length > 0 && (env.acceptsProfiles("dev") || env.acceptsProfiles("local"));
+        return env.acceptsProfiles(Profiles.of("dev", "local"));
     }
 }

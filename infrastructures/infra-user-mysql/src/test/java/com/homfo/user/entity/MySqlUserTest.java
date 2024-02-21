@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MySqlUserTest {
@@ -29,6 +31,62 @@ class MySqlUserTest {
                 .birthday(LocalDate.of(1990, 1, 1))
                 .job("Developer")
                 .build();
+    }
+
+    @Test
+    void givenValidUserInfo_whenCreatingUser_thenUserIsCreatedSuccessfully() {
+        // given: 유효한 사용자 정보
+        String account = "testUser";
+        String password = encoder.encode("TestPassword123!");
+        String phoneNumber = "010-1234-5678";
+        String nickname = "testNickname";
+        Gender gender = Gender.MAN;
+        LocalDate birthday = LocalDate.of(1990, 1, 1);
+        String job = "Developer";
+
+        // when: MySqlUser 생성자를 사용하여 인스턴스 생성
+        MySqlUser user = MySqlUser.builder()
+                .account(account)
+                .password(password) // 실제 사용 시에는 암호화된 패스워드가 제공되어야 합니다.
+                .phoneNumber(phoneNumber)
+                .nickname(nickname)
+                .gender(gender)
+                .birthday(birthday)
+                .job(job)
+                .build();
+
+        // then: 생성된 사용자 정보가 기대값과 일치해야 함
+        assertThat(user.getAccount()).isEqualTo(account);
+        assertThat(user.getPassword()).isEqualTo(password);
+        assertThat(user.getPhoneNumber()).isEqualTo(phoneNumber);
+        assertThat(user.getNickname()).isEqualTo(nickname);
+        assertThat(user.getGender()).isEqualTo(gender);
+        assertThat(user.getBirthday()).isEqualTo(birthday);
+        assertThat(user.getJob()).isEqualTo(job);
+        assertThat(user.getStatus()).isEqualTo(UserStatus.USE); // PrePersist에 의해 상태가 USE로 설정됨
+    }
+
+    @Test
+    void givenInvalidUserInfo_whenCreatingUser_thenThrowException() {
+        // given: 유효하지 않은 사용자 정보 (예: 비밀번호가 null)
+        String account = "testUser";
+        String password = null; // 유효하지 않은 값
+        String phoneNumber = "010-1234-5678";
+        String nickname = "testNickname";
+        Gender gender = Gender.MAN;
+        LocalDate birthday = LocalDate.of(1990, 1, 1);
+        String job = "Developer";
+
+        // when & then: MySqlUser 생성자를 사용하여 인스턴스 생성 시 예외가 발생해야 함
+        assertThatThrownBy(() -> MySqlUser.builder()
+                .account(account)
+                .password(password) // 비밀번호 유효성 검사 실패
+                .phoneNumber(phoneNumber)
+                .nickname(nickname)
+                .gender(gender)
+                .birthday(birthday)
+                .job(job)
+                .build()).isInstanceOf(RuntimeException.class); // TODO: 구체적인 예외 타입으로 변경
     }
 
     @Test
