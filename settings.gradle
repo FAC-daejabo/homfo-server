@@ -40,8 +40,8 @@ findProject(':clients:t-map-client')?.name = 't-map-client'
 include 'infrastructures'
 
 // 사용자 MySQL 인프라
-include 'infrastructures:infra-user-mysql'
-findProject(':infrastructures:infra-user-mysql')?.name = 'infra-user-mysql'
+include 'infrastructures:infra-user-jpa'
+findProject(':infrastructures:infra-user-jpa')?.name = 'infra-user-jpa'
 
 // 관리자 MySQL 인프라
 include 'infrastructures:infra-employee-mysql'
