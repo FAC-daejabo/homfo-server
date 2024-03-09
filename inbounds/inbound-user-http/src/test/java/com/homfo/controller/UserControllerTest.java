@@ -9,6 +9,12 @@ import com.homfo.auth.entity.CustomUserDetails;
 import com.homfo.config.TestSecurityConfig;
 import com.homfo.enums.Gender;
 import com.homfo.enums.MarketingCode;
+import com.homfo.request.MarketingAgreementRequest;
+import com.homfo.request.RegisterRequest;
+import com.homfo.request.SignInRequest;
+import com.homfo.request.TokenRefreshRequest;
+import com.homfo.response.JwtResponse;
+import com.homfo.response.UserMarketingAgreementResponse;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.MarketingAgreementDto;
@@ -88,16 +94,18 @@ class UserControllerTest {
     @WithMockUser
     void signIn_ShouldReturnJwtToken() throws Exception {
         // given
+        SignInRequest request = new SignInRequest("testAccount", "testPW@111");
         SignInCommand command = new SignInCommand("testAccount", "testPW@111");
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
+        JwtResponse response = new JwtResponse(jwtDto);
         given(signInUsecase.signIn(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/users/sign-in")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(jwtDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
 
     // info 메소드 테스트
@@ -109,14 +117,15 @@ class UserControllerTest {
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
         UserDto userDto = new UserDto(userId, "testUser", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), UserStatus.USE);
         List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true)));
-        UserMarketingAgreementDto userMarketingAgreementDto = new UserMarketingAgreementDto(userDto, marketingAgreementDtoList);
+        UserMarketingAgreementDto dto = new UserMarketingAgreementDto(userDto, marketingAgreementDtoList);
+        UserMarketingAgreementResponse response = new UserMarketingAgreementResponse(dto);
 
-        given(getUserInfoUsecase.getUserInfo(userId)).willReturn(userMarketingAgreementDto);
+        given(getUserInfoUsecase.getUserInfo(userId)).willReturn(dto);
 
         // when & then
         mockMvc.perform(get("/users/info").with(user(customUserDetails)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(userMarketingAgreementDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
 
     // register 메소드 테스트
@@ -132,17 +141,20 @@ class UserControllerTest {
         String job = "학생";
         LocalDate birthday = LocalDate.of(2000, 12, 12);
         List<MarketingAgreementDto> marketingCodeList = List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true));
+        List<MarketingAgreementRequest> marketingCodeRequsetList = List.of(new MarketingAgreementRequest(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true));
+        RegisterRequest request = new RegisterRequest(account, password, nickname, phoneNumber, gender, job, birthday, marketingCodeRequsetList);
         RegisterCommand command = new RegisterCommand(account, password, nickname, phoneNumber, gender, job, birthday, marketingCodeList);
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
+        JwtResponse response = new JwtResponse(jwtDto);
 
         given(registerUsecase.register(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command)))
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(jwtDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(response)));
     }
 
     // signOut 메소드 테스트
@@ -176,8 +188,10 @@ class UserControllerTest {
     @WithMockUser
     void refreshToken_ShouldReturnJwtDto() throws Exception {
         // given
+        TokenRefreshRequest request = new TokenRefreshRequest("refreshToken");
         TokenRefreshCommand command = new TokenRefreshCommand("refreshToken");
         JwtDto jwtDto = new JwtDto("newToken", "newRefreshToken");
+        JwtResponse jwtResponse= new JwtResponse(jwtDto);
         Long userId = 1L;
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
         given(tokenRefreshUsecase.refreshToken(userId, command)).willReturn(jwtDto);
@@ -186,10 +200,10 @@ class UserControllerTest {
         mockMvc.perform(patch("/users/refresh")
                         .with(user(customUserDetails))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(command))
+                        .content(objectMapper.writeValueAsString(request))
                 )
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(jwtDto)));
+                .andExpect(content().json(objectMapper.writeValueAsString(jwtResponse)));
     }
 
 }
