@@ -21,50 +21,12 @@ findProject(':domains:domain-user')?.name = 'domain-user'
 include 'domains:domain-real-estate'
 findProject(':domains:domain-real-estate')?.name = 'domain-real-estate'
 
-// 외부 클라이언트
-include 'clients'
+include 'inbounds'
 
-// 카카오 맵 클라이언트
-include 'clients:kakao-map-client'
-findProject(':clients:kakao-map-client')?.name = 'kakao-map-client'
+include 'inbounds:inbound-user-http'
+findProject(':inbounds:inbound-user-http')?.name = 'inbound-user-http'
 
-// 공공데이터포털 클라이언트
-include 'clients:public-data-portal-client'
-findProject(':clients:public-data-portal-client')?.name = 'public-data-portal-client'
+include 'outbounds'
 
-// T-Map 클라이언트
-include 'clients:t-map-client'
-findProject(':clients:t-map-client')?.name = 't-map-client'
-
-// 인프라
-include 'infrastructures'
-
-// 사용자 MySQL 인프라
-include 'infrastructures:infra-user-jpa'
-findProject(':infrastructures:infra-user-jpa')?.name = 'infra-user-jpa'
-
-// 관리자 MySQL 인프라
-include 'infrastructures:infra-employee-mysql'
-findProject(':infrastructures:infra-employee-mysql')?.name = 'infra-employee-mysql'
-
-// 부동산 MySQL 인프라
-include 'infrastructures:infra-real-estate-mysql'
-findProject(':infrastructures:infra-real-estate-mysql')?.name = 'infra-real-estate-mysql'
-
-// application
-include 'apps'
-
-// 사용자 서버
-include 'apps:user'
-findProject(':apps:user')?.name = 'user'
-
-// 관리자 서버
-include 'apps:employee'
-findProject(':apps:employee')?.name = 'employee'
-
-// 부동산 서버
-include 'apps:real-estate'
-findProject(':apps:real-estate')?.name = 'real-estate'
-
-
-
+include 'outbounds:outbound-user-jpa'
+findProject(':outbounds:outbound-user-jpa')?.name = 'outbound-user-jpa'

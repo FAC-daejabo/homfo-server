@@ -32,18 +32,18 @@ jacocoTestCoverageVerification {
 }
 
 dependencies {
-    // spring
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation project(':core')
+    implementation project(':domains:domain-common')
+    implementation project(':domains:domain-user')
 
     // jwt
     implementation 'com.auth0:java-jwt:3.18.2'
 
     // test
-    implementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
-    testImplementation project(':outbounds:outbound-user-jpa')
 }
 
 tasks.named('test') {

@@ -11,5 +11,5 @@ public interface GetUserInfoUsecase {
      *
      * 마케팅 동의 여부도 제공합니다.
      * */
-    UserMarketingAgreementDto execute(long userId);
+    UserMarketingAgreementDto getUserInfo(long userId);
 }
