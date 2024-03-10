@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class JpaUserRefreshToken extends Jwt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(length = 60)

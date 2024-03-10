@@ -1,4 +1,4 @@
-package com.homfo.user.usecase;
+package com.homfo.employee.usecase;
 
 import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtDto;
@@ -10,5 +10,5 @@ public interface TokenRefreshUsecase {
      /**
       * 액세스 토큰을 리프레쉬합니다.
       * */
-     JwtDto refreshToken(long userId, TokenRefreshCommand command);
+     JwtDto refreshToken(long employeeId, TokenRefreshCommand command);
 }

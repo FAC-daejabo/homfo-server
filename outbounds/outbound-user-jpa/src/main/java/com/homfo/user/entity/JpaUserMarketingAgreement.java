@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class JpaUserMarketingAgreement extends UserMarketingAgreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_marketing_agreement_id")
     private Long id;
 
     @NotNull

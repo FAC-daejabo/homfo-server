@@ -28,7 +28,6 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserAccountPo
 
     @Override
     public UserDto loadUser(long userId) {
-        // TODO: 에러 정의
         JpaUser user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(UserErrorCode.NOT_EXIST_USER));
         return new UserDto(user.getId(), user.getAccount(), user.getNickname(), user.getPhoneNumber(), user.getGender(), user.getJob(), user.getBirthday(), user.getStatus());
     }
