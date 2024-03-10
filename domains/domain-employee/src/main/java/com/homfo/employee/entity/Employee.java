@@ -1,4 +1,4 @@
-package com.homfo.user.entity;
+package com.homfo.employee.entity;
 
 import com.homfo.employee.infra.enums.EmployeeRole;
 import com.homfo.enums.Gender;
@@ -111,7 +111,7 @@ public abstract class Employee {
     /**
      * 암호화된 비밀번호와 일치하는지 확인합니다.
      *
-     * 일치하지 않으면 [RuntimeException]이 발생합니다.
+     * @throws IllegalArgumentException 일치하지 않을 경우
      * */
     public abstract void signIn(PasswordEncoder encoder, String originPassword);
 
@@ -125,7 +125,7 @@ public abstract class Employee {
     /**
      * 계정 문자열이 올바른지 확인합니다.
      *
-     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * @throws IllegalArgumentException 올바르지 않은 비밀번호
      * */
     protected void validateAccount(String account) {
         Assert.isTrue(Pattern.matches(ACCOUNT_REGEXP, Objects.requireNonNull(account)), "올바르지 않은 계정입니다.");
@@ -134,7 +134,7 @@ public abstract class Employee {
     /**
      * 닉네임 문자열이 올바른지 확인합니다.
      *
-     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * @throws IllegalArgumentException 올바르지 않은 비밀번호
      * */
     protected void validateNickname(String nickname) {
         Assert.isTrue(Pattern.matches(NICKNAME_REGEXP, Objects.requireNonNull(nickname)), "올바르지 않은 닉네임입니다.");
@@ -143,16 +143,26 @@ public abstract class Employee {
     /**
      * 비밀번호 문자열이 올바른지 확인합니다.
      *
-     * 올바르지 않다면 [IllegalArgumentException]이 발생합니다.
+     * @throws IllegalArgumentException 올바르지 않은 비밀번호
      * */
     protected void validatePassword(String password) {
         Assert.isTrue(Pattern.matches(ENCRYPTED_PASSWORD_REGEXP, Objects.requireNonNull(password)), "올바르지 않은 비밀번호입니다.");
     }
 
+    /**
+     * 전화번호 문자열이 올바른지 확인합니다.
+     *
+     * @throws IllegalArgumentException 올바르지 않은 전화번호
+     * */
     protected void validatePhoneNumber(String phoneNumber) {
         Assert.isTrue(Pattern.matches(PHONE_NUMBER_REGEXP, Objects.requireNonNull(phoneNumber)), "올바르지 않은 전화번호입니다.");
     }
 
+    /**
+     * 직업 문자열이 올바른지 확인합니다.
+     *
+     * @throws IllegalArgumentException 올바르지 않은 직업
+     * */
     protected void validateJob(String job) {
         Assert.isTrue(Pattern.matches(JOB_REGEXP, Objects.requireNonNull(job)), "올바르지 않은 직업입니다.");
     }

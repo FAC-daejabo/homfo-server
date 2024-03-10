@@ -1,4 +1,4 @@
-package com.homfo.user.entity;
+package com.homfo.employee.entity;
 
 import com.homfo.enums.MarketingCode;
 
