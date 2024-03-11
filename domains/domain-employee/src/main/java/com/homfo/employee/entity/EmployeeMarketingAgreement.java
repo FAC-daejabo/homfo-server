@@ -14,9 +14,9 @@ public abstract class EmployeeMarketingAgreement {
     public abstract Long getId();
 
     /**
-     * 사용자 ID 값입니다.
+     * 직원 ID 값입니다.
      * */
-    public abstract Long getUserId();
+    public abstract Long getEmployeeId();
 
     /**
      * 마케팅 동의 코드 값입니다.

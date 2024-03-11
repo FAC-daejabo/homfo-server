@@ -30,3 +30,6 @@ include 'outbounds'
 
 include 'outbounds:outbound-user-jpa'
 findProject(':outbounds:outbound-user-jpa')?.name = 'outbound-user-jpa'
+
+include 'outbounds:outbound-employee-jpa'
+findProject(':outbounds:outbound-employee-jpa')?.name = 'outbound-employee-jpa'
