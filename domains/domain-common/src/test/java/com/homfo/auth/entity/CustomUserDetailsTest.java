@@ -18,7 +18,7 @@ class CustomUserDetailsTest {
         CustomUserDetails userDetails = new CustomUserDetails(expectedUserId);
 
         // when
-        Long userId = userDetails.userId();
+        Long userId = userDetails.employeeId();
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         String password = userDetails.getPassword();
         String username = userDetails.getUsername();

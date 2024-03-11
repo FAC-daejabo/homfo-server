@@ -4,8 +4,8 @@ import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
-import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.auth.port.LoadJwtPort;
+import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.UserDto;
@@ -15,12 +15,12 @@ import com.homfo.user.port.LoadUserPort;
 import com.homfo.user.port.ManageUserAccountPort;
 import com.homfo.user.port.ManageUserMarketingAgreementPort;
 import com.homfo.user.usecase.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, SignOutUsecase, RegisterUsecase, DeleteAccountUsecase, TokenRefreshUsecase {
     private final LoadUserPort loadUserPort;
 
@@ -37,6 +37,27 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
     private final JwtSecretDto userAccessTokenInfo;
 
     private final JwtSecretDto userRefreshTokenInfo;
+
+    @Autowired
+    public ManageUserService(
+            LoadUserPort loadUserPort,
+            @Qualifier("userRefreshTokenPersistenceAdapter") LoadJwtPort loadJwtPort,
+            LoadUserMarketingAgreementPort loadUserMarketingAgreementPort,
+            ManageUserAccountPort manageUserAccountPort,
+            @Qualifier("userRefreshTokenPersistenceAdapter") ManageJwtPort manageJwtPort,
+            ManageUserMarketingAgreementPort manageUserMarketingAgreementPort,
+            JwtSecretDto userAccessTokenInfo,
+            JwtSecretDto userRefreshTokenInfo
+    ) {
+        this.loadUserPort = loadUserPort;
+        this.loadJwtPort = loadJwtPort;
+        this.loadUserMarketingAgreementPort = loadUserMarketingAgreementPort;
+        this.manageUserAccountPort = manageUserAccountPort;
+        this.manageJwtPort = manageJwtPort;
+        this.manageUserMarketingAgreementPort = manageUserMarketingAgreementPort;
+        this.userAccessTokenInfo = userAccessTokenInfo;
+        this.userRefreshTokenInfo = userRefreshTokenInfo;
+    }
 
     @Override
     public UserMarketingAgreementDto getUserInfo(long userId) {

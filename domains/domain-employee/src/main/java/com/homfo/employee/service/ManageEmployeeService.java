@@ -15,12 +15,11 @@ import com.homfo.employee.port.LoadEmployeePort;
 import com.homfo.employee.port.ManageEmployeeAccountPort;
 import com.homfo.employee.port.ManageEmployeeMarketingAgreementPort;
 import com.homfo.employee.usecase.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsecase, SignOutUsecase, RegisterUsecase, DeleteAccountUsecase, TokenRefreshUsecase {
     private final LoadEmployeePort loadEmployeePort;
 
@@ -37,6 +36,26 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
     private final JwtSecretDto employeeAccessTokenInfo;
 
     private final JwtSecretDto employeeRefreshTokenInfo;
+
+    public ManageEmployeeService(
+            LoadEmployeePort loadEmployeePort,
+            @Qualifier("employeeRefreshTokenPersistenceAdapter") LoadJwtPort loadJwtPort,
+            LoadEmployeeMarketingAgreementPort loadUserMarketingAgreementPort,
+            ManageEmployeeAccountPort manageEmployeeAccountPort,
+            @Qualifier("employeeRefreshTokenPersistenceAdapter") ManageJwtPort manageJwtPort,
+            ManageEmployeeMarketingAgreementPort manageUserMarketingAgreementPort,
+            JwtSecretDto employeeAccessTokenInfo,
+            JwtSecretDto employeeRefreshTokenInfo
+    ) {
+        this.loadEmployeePort = loadEmployeePort;
+        this.loadJwtPort = loadJwtPort;
+        this.loadUserMarketingAgreementPort = loadUserMarketingAgreementPort;
+        this.manageEmployeeAccountPort = manageEmployeeAccountPort;
+        this.manageJwtPort = manageJwtPort;
+        this.manageUserMarketingAgreementPort = manageUserMarketingAgreementPort;
+        this.employeeAccessTokenInfo = employeeAccessTokenInfo;
+        this.employeeRefreshTokenInfo = employeeRefreshTokenInfo;
+    }
 
     @Override
     public EmployeeMarketingAgreementDto getEmployeeInfo(long employeeId) {

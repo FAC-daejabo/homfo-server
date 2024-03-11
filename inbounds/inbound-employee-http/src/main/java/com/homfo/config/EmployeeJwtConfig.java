@@ -9,36 +9,36 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class UserJwtConfig {
-    @Value("${jwt.user.accessTokenSecret}")
+public class EmployeeJwtConfig {
+    @Value("${jwt.employee.accessTokenSecret}")
     private String accessTokenSecret;
 
-    @Value("${jwt.user.accessTokenExpire}")
+    @Value("${jwt.employee.accessTokenExpire}")
     private String accessTokenExpire;
 
-    @Value("${jwt.user.refreshTokenSecret}")
+    @Value("${jwt.employee.refreshTokenSecret}")
     private String refreshTokenSecret;
 
-    @Value("${jwt.user.refreshTokenExpire}")
+    @Value("${jwt.employee.refreshTokenExpire}")
     private String refreshTokenExpire;
 
     @Bean
-    public JwtSecretDto userAccessTokenInfo() {
+    public JwtSecretDto employeeAccessTokenInfo() {
         return new JwtSecretDto(accessTokenSecret, Long.parseLong(accessTokenExpire));
     }
 
     @Bean
-    public JwtSecretDto userRefreshTokenInfo() {
+    public JwtSecretDto employeeRefreshTokenInfo() {
         return new JwtSecretDto(refreshTokenSecret, Long.parseLong(refreshTokenExpire));
     }
 
     @Bean
-    public List<String> userAccessTokenWhiteList() {
-        return List.of("/users/register", "/users/sign-in");
+    public List<String> employeeAccessTokenWhiteList() {
+        return List.of("/employees/register", "/employees/sign-in");
     }
 
     @Bean
-    public List<String> userRefreshTokenBlackList() {
-        return List.of("/users/refresh");
+    public List<String> employeeRefreshTokenBlackList() {
+        return List.of("/employees/refresh");
     }
 }

@@ -1,0 +1,5 @@
+jwt:
+  accessTokenSecret: abcdefghijklmn
+  accessTokenExpire: 60
+  refreshTokenSecret: opqrstuvwxyz
+  refreshTokenExpire: 120

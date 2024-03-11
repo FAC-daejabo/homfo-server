@@ -65,7 +65,7 @@ class JwtUtilTest {
     }
 
     @Test
-    @DisplayName("올바른 토큰이라면 userId 값을 돌려받을 수 있다.")
+    @DisplayName("올바른 토큰이라면 employeeId 값을 돌려받을 수 있다.")
     void getUserIdFromToken_WithValidToken_ShouldReturnUserId() {
         // given
         String token = JwtUtil.createToken(userId, jwtSecretDto);

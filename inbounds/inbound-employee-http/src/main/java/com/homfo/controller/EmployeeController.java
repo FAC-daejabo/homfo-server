@@ -2,13 +2,14 @@ package com.homfo.controller;
 
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.entity.CustomUserDetails;
+import com.homfo.employee.dto.EmployeeMarketingAgreementDto;
+import com.homfo.employee.usecase.*;
 import com.homfo.request.RegisterRequest;
 import com.homfo.request.SignInRequest;
 import com.homfo.request.TokenRefreshRequest;
 import com.homfo.response.JwtResponse;
-import com.homfo.response.UserMarketingAgreementResponse;
-import com.homfo.user.dto.UserMarketingAgreementDto;
-import com.homfo.user.usecase.*;
+import com.homfo.response.EmloyeeMarketingAgreementResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,13 +20,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@Tag(name = "user-controller", description = "사용자 컨트롤러")
+@Tag(name = "employee-controller", description = "직원 컨트롤러")
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/employees")
+public class EmployeeController {
     private final DeleteAccountUsecase deleteAccountUsecase;
 
-    private final GetUserInfoUsecase getUserInfoUsecase;
+    private final GetEmployeeInfoUsecase getEmployeeInfoUsecase;
 
     private final RegisterUsecase registerUsecase;
 
@@ -37,10 +38,10 @@ public class UserController {
 
     @Operation(summary = "사용자 정보 확인")
     @GetMapping("/info")
-    public ResponseEntity<UserMarketingAgreementResponse> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.employeeId();
-        UserMarketingAgreementDto dto = getUserInfoUsecase.getUserInfo(userId);
-        return ResponseEntity.status(HttpStatus.OK).body(new UserMarketingAgreementResponse(dto));
+    public ResponseEntity<EmloyeeMarketingAgreementResponse> info(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        Long employeeId = customUserDetails.employeeId();
+        EmployeeMarketingAgreementDto dto = getEmployeeInfoUsecase.getEmployeeInfo(employeeId);
+        return ResponseEntity.status(HttpStatus.OK).body(new EmloyeeMarketingAgreementResponse(dto));
     }
 
     @Operation(summary = "사용자 회원가입", description = "마케팅 동의 여부도 보내주셔야 합니다. 미동의더라도 false로 보내주세요.")
@@ -61,8 +62,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/sign-out")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.employeeId();
-        signOutUsecase.signOut(userId);
+        Long employeeId = customUserDetails.employeeId();
+        signOutUsecase.signOut(employeeId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -70,8 +71,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/account")
     public ResponseEntity<Void> deleteAccount(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
-        Long userId = customUserDetails.employeeId();
-        deleteAccountUsecase.deleteAccount(userId);
+        Long employeeId = customUserDetails.employeeId();
+        deleteAccountUsecase.deleteAccount(employeeId);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
@@ -79,8 +80,8 @@ public class UserController {
     @PreAuthorize("isAuthenticated()")
     @PatchMapping("/refresh")
     public ResponseEntity<JwtResponse> refreshToken(@AuthenticationPrincipal CustomUserDetails customUserDetails, @RequestBody TokenRefreshRequest request) {
-        Long userId = customUserDetails.employeeId();
-        JwtDto dto = tokenRefreshUsecase.refreshToken(userId, request.toCommand());
+        Long employeeId = customUserDetails.employeeId();
+        JwtDto dto = tokenRefreshUsecase.refreshToken(employeeId, request.toCommand());
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(dto));
     }
 }

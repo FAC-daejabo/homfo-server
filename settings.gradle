@@ -26,6 +26,9 @@ include 'inbounds'
 include 'inbounds:inbound-user-http'
 findProject(':inbounds:inbound-user-http')?.name = 'inbound-user-http'
 
+include 'inbounds:inbound-employee-http'
+findProject(':inbounds:inbound-employee-http')?.name = 'inbound-employee-http'
+
 include 'outbounds'
 
 include 'outbounds:outbound-user-jpa'
