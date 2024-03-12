@@ -18,7 +18,7 @@ public class JwtUtil {
     /**
      * 토큰을 생성합니다.
      * <p>
-     * payload에는 {id: employeeId} 정보만 저장합니다.
+     * payload에는 {id: id} 정보만 저장합니다.
      */
     public static String createToken(Long userId, JwtSecretDto jwtSecretDto) {
         return JWT.create()
@@ -53,7 +53,7 @@ public class JwtUtil {
     }
 
     /**
-     * 토큰에서 employeeId 값을 가져옵니다.
+     * 토큰에서 id 값을 가져옵니다.
      */
     public static Long getUserIdFromToken(String token, JwtSecretDto jwtSecretDto) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC512(jwtSecretDto.secretKey())).build();
