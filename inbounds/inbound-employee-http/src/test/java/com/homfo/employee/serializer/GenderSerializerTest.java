@@ -1,4 +1,4 @@
-package com.homfo.user.serializer;
+package com.homfo.employee.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,4 +1,4 @@
-package com.homfo.user.controller;
+package com.homfo.employee.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -6,13 +6,12 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.entity.CustomUserDetails;
-import com.homfo.user.config.TestSecurityConfig;
+import com.homfo.employee.config.TestSecurityConfig;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.EmployeeDto;
 import com.homfo.user.dto.EmployeeMarketingAgreementDto;
 import com.homfo.user.dto.MarketingAgreementDto;
-import com.homfo.employee.controller.EmployeeController;
 import com.homfo.user.infra.enums.EmployeeRole;
 import com.homfo.user.infra.enums.EmployeeStatus;
 import com.homfo.user.usecase.*;

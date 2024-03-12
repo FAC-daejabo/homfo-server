@@ -1,4 +1,4 @@
-package com.homfo.user.deserializer;
+package com.homfo.employee.deserializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

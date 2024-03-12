@@ -1,4 +1,4 @@
-package com.homfo.user.config;
+package com.homfo.employee.config;
 
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.filter.AccessTokenAuthenticationFilter;
