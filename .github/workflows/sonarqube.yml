@@ -33,10 +33,10 @@ jobs:
         MYSQL_PORT: ${{ secrets.MYSQL_PORT }}
         MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
         MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        USER_ACCESS_TOKEN_SECRET: ${{ secrets.USER_ACCESS_TOKEN_SECRET }}
-        USER_ACCESS_TOKEN_EXPIRE: ${{ secrets.USER_ACCESS_TOKEN_EXPIRE }}
-        USER_REFRESH_TOKEN_SECRET: ${{ secrets.USER_REFRESH_TOKEN_SECRET }}
-        USER_REFRESH_TOKEN_EXPIRE: ${{ secrets.USER_REFRESH_TOKEN_EXPIRE }}
+        ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+        ACCESS_TOKEN_EXPIRE: ${{ secrets.ACCESS_TOKEN_EXPIRE }}
+        REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
+        REFRESH_TOKEN_EXPIRE: ${{ secrets.REFRESH_TOKEN_EXPIRE }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./gradlew build sonar --info
