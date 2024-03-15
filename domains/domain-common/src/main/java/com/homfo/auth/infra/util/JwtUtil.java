@@ -20,9 +20,9 @@ public class JwtUtil {
      * <p>
      * payload에는 {id: id} 정보만 저장합니다.
      */
-    public static String createToken(Long userId, JwtSecretDto jwtSecretDto) {
+    public static String createToken(Long id, JwtSecretDto jwtSecretDto) {
         return JWT.create()
-                .withClaim(KEY, userId)
+                .withClaim(KEY, id)
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtSecretDto.expireTime()))
                 .sign(Algorithm.HMAC512(jwtSecretDto.secretKey()));
     }
@@ -55,7 +55,7 @@ public class JwtUtil {
     /**
      * 토큰에서 id 값을 가져옵니다.
      */
-    public static Long getUserIdFromToken(String token, JwtSecretDto jwtSecretDto) throws JWTVerificationException {
+    public static Long getIdFromToken(String token, JwtSecretDto jwtSecretDto) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC512(jwtSecretDto.secretKey())).build();
         return verifier.verify(token).getClaim(KEY).asLong();
     }

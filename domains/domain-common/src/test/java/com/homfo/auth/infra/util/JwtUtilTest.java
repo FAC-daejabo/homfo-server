@@ -1,12 +1,9 @@
 package com.homfo.auth.infra.util;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.homfo.auth.dto.JwtSecretDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -71,7 +68,7 @@ class JwtUtilTest {
         String token = JwtUtil.createToken(userId, jwtSecretDto);
 
         // when
-        Long extractedUserId = assertDoesNotThrow(() -> JwtUtil.getUserIdFromToken(token, jwtSecretDto),
+        Long extractedUserId = assertDoesNotThrow(() -> JwtUtil.getIdFromToken(token, jwtSecretDto),
                 "getUserIdFromToken는 Exception이 발생하면 안 됩니다.");
 
         // then

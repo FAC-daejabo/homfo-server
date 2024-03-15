@@ -33,9 +33,9 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
 
     private final ManageEmployeeMarketingAgreementPort manageUserMarketingAgreementPort;
 
-    private final JwtSecretDto employeeAccessTokenInfo;
+    private final JwtSecretDto accessTokenInfo;
 
-    private final JwtSecretDto employeeRefreshTokenInfo;
+    private final JwtSecretDto refreshTokenInfo;
 
     public ManageEmployeeService(
             LoadEmployeePort loadEmployeePort,
@@ -44,8 +44,8 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
             ManageEmployeeAccountPort manageEmployeeAccountPort,
             @Qualifier("employeeRefreshTokenPersistenceAdapter") ManageJwtPort manageJwtPort,
             ManageEmployeeMarketingAgreementPort manageUserMarketingAgreementPort,
-            JwtSecretDto employeeAccessTokenInfo,
-            JwtSecretDto employeeRefreshTokenInfo
+            JwtSecretDto accessTokenInfo,
+            JwtSecretDto refreshTokenInfo
     ) {
         this.loadEmployeePort = loadEmployeePort;
         this.loadJwtPort = loadJwtPort;
@@ -53,8 +53,8 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
         this.manageEmployeeAccountPort = manageEmployeeAccountPort;
         this.manageJwtPort = manageJwtPort;
         this.manageUserMarketingAgreementPort = manageUserMarketingAgreementPort;
-        this.employeeAccessTokenInfo = employeeAccessTokenInfo;
-        this.employeeRefreshTokenInfo = employeeRefreshTokenInfo;
+        this.accessTokenInfo = accessTokenInfo;
+        this.refreshTokenInfo = refreshTokenInfo;
     }
 
     @Override
@@ -74,8 +74,8 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
     @Transactional
     public JwtDto register(RegisterCommand command) {
         EmployeeDto employeeDto = manageEmployeeAccountPort.register(command);
-        String accessToken = JwtUtil.createToken(employeeDto.id(), employeeAccessTokenInfo);
-        String refreshToken = manageJwtPort.save(employeeDto.id(), employeeRefreshTokenInfo);
+        String accessToken = JwtUtil.createToken(employeeDto.id(), accessTokenInfo);
+        String refreshToken = manageJwtPort.save(employeeDto.id(), refreshTokenInfo);
 
         manageUserMarketingAgreementPort.save(command, employeeDto);
 
@@ -85,16 +85,16 @@ public class ManageEmployeeService implements GetEmployeeInfoUsecase, SignInUsec
     @Override
     public JwtDto signIn(SignInCommand command) {
         EmployeeDto employeeDto = loadEmployeePort.signIn(command);
-        String accessToken = JwtUtil.createToken(employeeDto.id(), employeeAccessTokenInfo);
-        String refreshToken = manageJwtPort.save(employeeDto.id(), employeeRefreshTokenInfo);
+        String accessToken = JwtUtil.createToken(employeeDto.id(), accessTokenInfo);
+        String refreshToken = manageJwtPort.save(employeeDto.id(), refreshTokenInfo);
 
         return new JwtDto(accessToken, refreshToken);
     }
 
     @Override
     public JwtDto refreshToken(long employeeId, TokenRefreshCommand command) {
-        String refreshToken = loadJwtPort.getVerifyToken(command.token(), employeeRefreshTokenInfo);
-        String accessToken = JwtUtil.createToken(employeeId, employeeAccessTokenInfo);
+        String refreshToken = loadJwtPort.getVerifyToken(command.token(), refreshTokenInfo);
+        String accessToken = JwtUtil.createToken(employeeId, accessTokenInfo);
 
         return new JwtDto(accessToken, refreshToken);
     }

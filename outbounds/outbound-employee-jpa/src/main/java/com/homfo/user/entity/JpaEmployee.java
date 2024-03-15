@@ -1,5 +1,6 @@
 package com.homfo.user.entity;
 
+import com.homfo.user.infra.attribute_converter.EmployeeRoleAttributeConverter;
 import com.homfo.user.infra.attribute_converter.GenderAttributeConverter;
 import com.homfo.user.infra.attribute_converter.EmployeeStatusAttributeConverter;
 import com.homfo.user.infra.enums.EmployeeRole;
@@ -54,6 +55,7 @@ public class JpaEmployee extends Employee {
     @Convert(converter = EmployeeStatusAttributeConverter.class)
     private EmployeeStatus status;
 
+    @Convert(converter = EmployeeRoleAttributeConverter.class)
     private EmployeeRole role;
 
     @Column(updatable = false)

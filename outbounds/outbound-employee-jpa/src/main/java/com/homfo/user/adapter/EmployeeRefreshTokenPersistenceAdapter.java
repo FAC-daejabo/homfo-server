@@ -38,7 +38,8 @@ public class EmployeeRefreshTokenPersistenceAdapter implements LoadJwtPort, Mana
 
     @Override
     public String getVerifyToken(String token, JwtSecretDto jwtSecretDto) {
-        Long userId = JwtUtil.getUserIdFromToken(token, jwtSecretDto);
+        // TODO : userId 비교, 타입 추가하기
+        Long userId = JwtUtil.getIdFromToken(token, jwtSecretDto);
         JpaEmployeeRefreshToken refreshToken = employeeRefreshTokenRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(EmployeeErrorCode.NOT_EXIST_TOKEN));
 
         if(encoder.matches(token, refreshToken.getToken())) {

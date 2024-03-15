@@ -54,13 +54,9 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
         boolean isAccessTokenPath = accessTokenWhiteList.stream()
                 .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
 
-        System.out.println("hello123 " + requestURI + " " + jwtSecretDto + " " + accessTokenWhiteList);
-
         if (isRefreshTokenPath) {
-            System.out.println("hello123 refresh " + requestURI + jwtSecretDto + refreshTokenBlackList);
             validateToken(request, true);
         } else if (!isAccessTokenPath) {
-            System.out.println("hello123 access " + requestURI + jwtSecretDto + accessTokenWhiteList);
             validateToken(request, false);
         }
 
@@ -96,7 +92,7 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
      * 인증 정보에 id 값을 저장합니다.
      */
     private void setDetails(HttpServletRequest request, String token) {
-        Long userId = JwtUtil.getUserIdFromToken(token, jwtSecretDto);
+        Long userId = JwtUtil.getIdFromToken(token, jwtSecretDto);
         CustomUserDetails userDetails = new CustomUserDetails(userId);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

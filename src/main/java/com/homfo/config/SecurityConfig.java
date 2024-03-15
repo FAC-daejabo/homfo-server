@@ -3,6 +3,7 @@ package com.homfo.config;
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.filter.AccessTokenAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,10 +23,17 @@ import java.util.List;
 @EnableConfigurationProperties
 @RequiredArgsConstructor
 public class SecurityConfig {
-    /**
-     * 사용자 액세스 토큰 정보입니다.
-     */
-    private final JwtSecretDto userAccessTokenInfo;
+    @Value("${jwt.accessTokenSecret}")
+    private String accessTokenSecret;
+
+    @Value("${jwt.accessTokenExpire}")
+    private String accessTokenExpire;
+
+    @Value("${jwt.refreshTokenSecret}")
+    private String refreshTokenSecret;
+
+    @Value("${jwt.refreshTokenExpire}")
+    private String refreshTokenExpire;
 
     /**
      * 사용자 액세스 토큰 허용 URI 목록입니다.
@@ -36,11 +44,6 @@ public class SecurityConfig {
      * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
      */
     private final List<String> userRefreshTokenBlackList;
-
-    /**
-     * 직원 액세스 토큰 정보입니다.
-     */
-    private final JwtSecretDto employeeAccessTokenInfo;
 
     /**
      * 직원 액세스 토큰 허용 URI 목록입니다.
@@ -65,6 +68,16 @@ public class SecurityConfig {
     ));
 
     @Bean
+    public JwtSecretDto accessTokenInfo() {
+        return new JwtSecretDto(accessTokenSecret, Long.parseLong(accessTokenExpire));
+    }
+
+    @Bean
+    public JwtSecretDto refreshTokenInfo() {
+        return new JwtSecretDto(refreshTokenSecret, Long.parseLong(refreshTokenExpire));
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -72,17 +85,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         List<String> whiteList = new ArrayList<>(WHITE_LIST);
-        List<String> userWhiteList = new ArrayList<>(WHITE_LIST);
-        List<String> employeeWhiteList = new ArrayList<>(WHITE_LIST);
+        List<String> accessTokenWhiteList = new ArrayList<>(WHITE_LIST);
+        List<String> refreshTokenBlackList = new ArrayList<>();
 
         whiteList.addAll(userAccessTokenWhiteList);
         whiteList.addAll(employeeAccessTokenWhiteList);
 
-        userWhiteList.add("/employees/**");
-        userWhiteList.addAll(userAccessTokenWhiteList);
+        refreshTokenBlackList.addAll(userRefreshTokenBlackList);
+        refreshTokenBlackList.addAll(employeeRefreshTokenBlackList);
 
-        employeeWhiteList.add("/users/**");
-        employeeWhiteList.addAll(employeeAccessTokenWhiteList);
+        accessTokenWhiteList.addAll(whiteList);
 
         return httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
@@ -91,8 +103,7 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new AccessTokenAuthenticationFilter(userAccessTokenInfo, userWhiteList, userRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new AccessTokenAuthenticationFilter(employeeAccessTokenInfo, employeeWhiteList, employeeRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AccessTokenAuthenticationFilter(accessTokenInfo(), accessTokenWhiteList, refreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

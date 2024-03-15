@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_refresh_token")
+@Table(name = "USER_REFRESH_TOKENS")
 @Entity
 public class JpaUserRefreshToken extends Jwt {
     @Id
