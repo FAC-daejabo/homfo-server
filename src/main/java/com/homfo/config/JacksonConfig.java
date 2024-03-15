@@ -7,10 +7,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.homfo.enums.Gender;
 import com.homfo.enums.MarketingCode;
-import com.homfo.deserializer.GenderDeserializer;
-import com.homfo.deserializer.MarketingCodeDeserializer;
-import com.homfo.serializer.GenderSerializer;
-import com.homfo.serializer.MarketingCodeSerializer;
+import com.homfo.employee.deserializer.GenderDeserializer;
+import com.homfo.employee.deserializer.MarketingCodeDeserializer;
+import com.homfo.employee.serializer.GenderSerializer;
+import com.homfo.employee.serializer.MarketingCodeSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

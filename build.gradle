@@ -71,8 +71,11 @@ dependencies {
     implementation project(':core')
     implementation project(':domains:domain-common')
     implementation project(':domains:domain-user')
+    implementation project(':domains:domain-employee')
     implementation project(':inbounds:inbound-user-http')
+    implementation project(':inbounds:inbound-employee-http')
     implementation project(':outbounds:outbound-user-jpa')
+    implementation project(':outbounds:outbound-employee-jpa')
 
     // mysql
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -97,6 +100,13 @@ tasks.register('loadDotEnvFile') {
             def (key, value) = line.split('=')
             System.setProperty(key, value)
         }
+    }
+}
+
+tasks.named('bootRun') {
+    dependsOn loadDotEnvFile
+    doFirst {
+        systemProperties System.getProperties()
     }
 }
 

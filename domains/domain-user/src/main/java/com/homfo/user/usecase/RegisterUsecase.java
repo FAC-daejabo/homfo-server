@@ -15,6 +15,8 @@ public interface RegisterUsecase {
      * 1. 사용자 정보 저장
      * 2. 사용자 리프레쉬 토큰 저장
      * 3. 사용자 마케팅 동의 여부 저장
+     *
+     * @throws com.homfo.error.ResourceAlreadyExistException 이미 존재하는 사용자 정보라면
      * */
     JwtDto register(RegisterCommand command);
 }

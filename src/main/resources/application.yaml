@@ -44,7 +44,7 @@ logging:
           filter:
             CommonsRequestLoggingFilter: DEBUG
 jwt:
-  accessTokenSecret: ${USER_ACCESS_TOKEN_SECRET}
-  accessTokenExpire: ${USER_ACCESS_TOKEN_EXPIRE}
-  refreshTokenSecret: ${USER_REFRESH_TOKEN_SECRET}
-  refreshTokenExpire: ${USER_REFRESH_TOKEN_EXPIRE}
+  accessTokenSecret: ${ACCESS_TOKEN_SECRET}
+  accessTokenExpire: ${ACCESS_TOKEN_EXPIRE}
+  refreshTokenSecret: ${REFRESH_TOKEN_SECRET}
+  refreshTokenExpire: ${REFRESH_TOKEN_EXPIRE}

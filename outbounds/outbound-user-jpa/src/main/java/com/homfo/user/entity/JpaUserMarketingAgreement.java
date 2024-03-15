@@ -15,11 +15,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "USER_MARKETING_AGREEMENT")
+@Table(name = "USER_MARKETING_AGREEMENTS")
 @Entity
 public class JpaUserMarketingAgreement extends UserMarketingAgreement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_marketing_agreement_id")
     private Long id;
 
     @NotNull

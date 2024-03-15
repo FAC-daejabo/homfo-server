@@ -2,6 +2,8 @@ package com.homfo.config;
 
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.filter.AccessTokenAuthenticationFilter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,11 +21,19 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties
+@RequiredArgsConstructor
 public class SecurityConfig {
-    /**
-     * 사용자 액세스 토큰 정보입니다.
-     */
-    private final JwtSecretDto userAccessTokenInfo;
+    @Value("${jwt.accessTokenSecret}")
+    private String accessTokenSecret;
+
+    @Value("${jwt.accessTokenExpire}")
+    private String accessTokenExpire;
+
+    @Value("${jwt.refreshTokenSecret}")
+    private String refreshTokenSecret;
+
+    @Value("${jwt.refreshTokenExpire}")
+    private String refreshTokenExpire;
 
     /**
      * 사용자 액세스 토큰 허용 URI 목록입니다.
@@ -34,6 +44,16 @@ public class SecurityConfig {
      * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
      */
     private final List<String> userRefreshTokenBlackList;
+
+    /**
+     * 직원 액세스 토큰 허용 URI 목록입니다.
+     */
+    private final List<String> employeeAccessTokenWhiteList;
+
+    /**
+     * 직원 리프레쉬 토큰 미허용 URI 목록입니다.
+     */
+    private final List<String> employeeRefreshTokenBlackList;
 
     /**
      * 서비스 화이트 리스트입니다.
@@ -47,14 +67,14 @@ public class SecurityConfig {
             "/actuator/**"
     ));
 
-    public SecurityConfig(
-            JwtSecretDto userAccessTokenInfo,
-            List<String> userAccessTokenWhiteList,
-            List<String> userRefreshTokenBlackList
-    ) {
-        this.userAccessTokenInfo = userAccessTokenInfo;
-        this.userAccessTokenWhiteList = userAccessTokenWhiteList;
-        this.userRefreshTokenBlackList = userRefreshTokenBlackList;
+    @Bean
+    public JwtSecretDto accessTokenInfo() {
+        return new JwtSecretDto(accessTokenSecret, Long.parseLong(accessTokenExpire));
+    }
+
+    @Bean
+    public JwtSecretDto refreshTokenInfo() {
+        return new JwtSecretDto(refreshTokenSecret, Long.parseLong(refreshTokenExpire));
     }
 
     @Bean
@@ -64,18 +84,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        WHITE_LIST.addAll(userAccessTokenWhiteList);
+        List<String> whiteList = new ArrayList<>(WHITE_LIST);
+        List<String> accessTokenWhiteList = new ArrayList<>(WHITE_LIST);
+        List<String> refreshTokenBlackList = new ArrayList<>();
 
-        // 화이트 리스트는 허용합니다.
-        // 이외에는 JWT 액세스 토큰 인증을 거칩니다.
+        whiteList.addAll(userAccessTokenWhiteList);
+        whiteList.addAll(employeeAccessTokenWhiteList);
+
+        refreshTokenBlackList.addAll(userRefreshTokenBlackList);
+        refreshTokenBlackList.addAll(employeeRefreshTokenBlackList);
+
+        accessTokenWhiteList.addAll(whiteList);
+
         return httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(WHITE_LIST.toArray(new String[0])).permitAll()
+                        .requestMatchers(whiteList.toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new AccessTokenAuthenticationFilter(userAccessTokenInfo, WHITE_LIST, userRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AccessTokenAuthenticationFilter(accessTokenInfo(), accessTokenWhiteList, refreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }

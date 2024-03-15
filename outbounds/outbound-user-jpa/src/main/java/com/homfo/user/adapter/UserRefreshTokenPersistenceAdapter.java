@@ -37,7 +37,7 @@ public class UserRefreshTokenPersistenceAdapter implements LoadJwtPort, ManageJw
 
     @Override
     public String getVerifyToken(String token, JwtSecretDto jwtSecretDto) {
-        Long userId = JwtUtil.getUserIdFromToken(token, jwtSecretDto);
+        Long userId = JwtUtil.getIdFromToken(token, jwtSecretDto);
         JpaUserRefreshToken refreshToken = userRefreshTokenRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(UserErrorCode.NOT_EXIST_TOKEN));
 
         if(encoder.matches(token, refreshToken.getToken())) {

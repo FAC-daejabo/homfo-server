@@ -1,0 +1,20 @@
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    driver-class-name: org.h2.Driver  # Database를 H2로 사용하겠다.
+    url: jdbc:h2:mem:test;MODE=MySQL;  # H2 접속 정보
+    username: ${DB_USERNAME}  # H2 접속 시 입력할 username 정보 (원하는 것으로 입력)
+    password: ${DB_PASSWORD} # H2 접속 시 입력할 password 정보 (원하는 것으로 입력)
+#  sql:
+#    init:
+#      mode: always
+#      schema-locations:
+#        - classpath:/sql/ddl.sql
+sql:
+  ddl: ${SQL_DDL}

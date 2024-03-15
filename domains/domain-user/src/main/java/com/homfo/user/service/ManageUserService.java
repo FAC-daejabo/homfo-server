@@ -4,8 +4,8 @@ import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
-import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.auth.port.LoadJwtPort;
+import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.UserDto;
@@ -15,12 +15,12 @@ import com.homfo.user.port.LoadUserPort;
 import com.homfo.user.port.ManageUserAccountPort;
 import com.homfo.user.port.ManageUserMarketingAgreementPort;
 import com.homfo.user.usecase.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@RequiredArgsConstructor
 public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, SignOutUsecase, RegisterUsecase, DeleteAccountUsecase, TokenRefreshUsecase {
     private final LoadUserPort loadUserPort;
 
@@ -34,9 +34,30 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
 
     private final ManageUserMarketingAgreementPort manageUserMarketingAgreementPort;
 
-    private final JwtSecretDto userAccessTokenInfo;
+    private final JwtSecretDto accessTokenInfo;
 
-    private final JwtSecretDto userRefreshTokenInfo;
+    private final JwtSecretDto refreshTokenInfo;
+
+    @Autowired
+    public ManageUserService(
+            LoadUserPort loadUserPort,
+            @Qualifier("userRefreshTokenPersistenceAdapter") LoadJwtPort loadJwtPort,
+            LoadUserMarketingAgreementPort loadUserMarketingAgreementPort,
+            ManageUserAccountPort manageUserAccountPort,
+            @Qualifier("userRefreshTokenPersistenceAdapter") ManageJwtPort manageJwtPort,
+            ManageUserMarketingAgreementPort manageUserMarketingAgreementPort,
+            JwtSecretDto accessTokenInfo,
+            JwtSecretDto refreshTokenInfo
+    ) {
+        this.loadUserPort = loadUserPort;
+        this.loadJwtPort = loadJwtPort;
+        this.loadUserMarketingAgreementPort = loadUserMarketingAgreementPort;
+        this.manageUserAccountPort = manageUserAccountPort;
+        this.manageJwtPort = manageJwtPort;
+        this.manageUserMarketingAgreementPort = manageUserMarketingAgreementPort;
+        this.accessTokenInfo = accessTokenInfo;
+        this.refreshTokenInfo = refreshTokenInfo;
+    }
 
     @Override
     public UserMarketingAgreementDto getUserInfo(long userId) {
@@ -55,8 +76,8 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
     @Transactional
     public JwtDto register(RegisterCommand command) {
         UserDto userDto = manageUserAccountPort.register(command);
-        String accessToken = JwtUtil.createToken(userDto.id(), userAccessTokenInfo);
-        String refreshToken = manageJwtPort.save(userDto.id(), userRefreshTokenInfo);
+        String accessToken = JwtUtil.createToken(userDto.id(), accessTokenInfo);
+        String refreshToken = manageJwtPort.save(userDto.id(), refreshTokenInfo);
 
         manageUserMarketingAgreementPort.save(command, userDto);
 
@@ -66,16 +87,16 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
     @Override
     public JwtDto signIn(SignInCommand command) {
         UserDto userDto = loadUserPort.signIn(command);
-        String accessToken = JwtUtil.createToken(userDto.id(), userAccessTokenInfo);
-        String refreshToken = manageJwtPort.save(userDto.id(), userRefreshTokenInfo);
+        String accessToken = JwtUtil.createToken(userDto.id(), accessTokenInfo);
+        String refreshToken = manageJwtPort.save(userDto.id(), refreshTokenInfo);
 
         return new JwtDto(accessToken, refreshToken);
     }
 
     @Override
     public JwtDto refreshToken(long userId, TokenRefreshCommand command) {
-        String refreshToken = loadJwtPort.getVerifyToken(command.token(), userRefreshTokenInfo);
-        String accessToken = JwtUtil.createToken(userId, userAccessTokenInfo);
+        String refreshToken = loadJwtPort.getVerifyToken(command.token(), refreshTokenInfo);
+        String accessToken = JwtUtil.createToken(userId, accessTokenInfo);
 
         return new JwtDto(accessToken, refreshToken);
     }

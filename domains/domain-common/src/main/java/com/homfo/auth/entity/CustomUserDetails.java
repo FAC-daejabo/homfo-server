@@ -11,7 +11,7 @@ import java.util.Collections;
  * <p>
  * JWT를 사용하기 때문에 username과 password는 사용하지 않습니다.
  */
-public record CustomUserDetails(Long userId) implements UserDetails {
+public record CustomUserDetails(Long id) implements UserDetails {
     /**
      * 사용하지 않는 메소드입니다.
      * */

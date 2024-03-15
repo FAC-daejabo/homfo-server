@@ -89,10 +89,10 @@ public class AccessTokenAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * 인증 정보에 userId 값을 저장합니다.
+     * 인증 정보에 id 값을 저장합니다.
      */
     private void setDetails(HttpServletRequest request, String token) {
-        Long userId = JwtUtil.getUserIdFromToken(token, jwtSecretDto);
+        Long userId = JwtUtil.getIdFromToken(token, jwtSecretDto);
         CustomUserDetails userDetails = new CustomUserDetails(userId);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());

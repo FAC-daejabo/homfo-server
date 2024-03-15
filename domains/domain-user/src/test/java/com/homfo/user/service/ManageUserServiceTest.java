@@ -53,9 +53,9 @@ class ManageUserServiceTest {
     @Mock
     private ManageUserMarketingAgreementPort manageUserMarketingAgreementPort;
 
-    private JwtSecretDto userAccessTokenInfo = new JwtSecretDto("accessSecret", 10);
+    private JwtSecretDto accessTokenInfo = new JwtSecretDto("accessSecret", 10);
 
-    private JwtSecretDto userRefreshTokenInfo = new JwtSecretDto("refreshSecret", 10);
+    private JwtSecretDto refreshTokenInfo = new JwtSecretDto("refreshSecret", 10);
 
     private ManageUserService manageUserService;
 
@@ -69,8 +69,8 @@ class ManageUserServiceTest {
                 manageUserAccountPort,
                 manageJwtPort,
                 manageUserMarketingAgreementPort,
-                userAccessTokenInfo,
-                userRefreshTokenInfo
+                accessTokenInfo,
+                refreshTokenInfo
         );
     }
 
@@ -86,10 +86,10 @@ class ManageUserServiceTest {
         String expectedRefreshToken = "refreshToken";
 
         when(manageUserAccountPort.register(command)).thenReturn(userDto);
-        when(manageJwtPort.save(userDto.id(), userRefreshTokenInfo)).thenReturn(expectedRefreshToken);
+        when(manageJwtPort.save(userDto.id(), refreshTokenInfo)).thenReturn(expectedRefreshToken);
 
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
-            jwtUtil.when(() -> JwtUtil.createToken(eq(userDto.id()), eq(userAccessTokenInfo))).thenReturn(expectedAccessToken);
+            jwtUtil.when(() -> JwtUtil.createToken(eq(userDto.id()), eq(accessTokenInfo))).thenReturn(expectedAccessToken);
 
             // When
             JwtDto result = manageUserService.register(command);
@@ -99,7 +99,7 @@ class ManageUserServiceTest {
             assertThat(result.refreshToken()).isEqualTo(expectedRefreshToken);
 
             verify(manageUserAccountPort, times(1)).register(command);
-            verify(manageJwtPort, times(1)).save(userDto.id(), userRefreshTokenInfo);
+            verify(manageJwtPort, times(1)).save(userDto.id(), refreshTokenInfo);
             verify(manageUserMarketingAgreementPort, times(1)).save(command, userDto);
         }
     }
@@ -130,10 +130,10 @@ class ManageUserServiceTest {
         String expectedRefreshToken = "refreshToken";
 
         when(loadUserPort.signIn(command)).thenReturn(userDto);
-        when(manageJwtPort.save(userDto.id(), userRefreshTokenInfo)).thenReturn(expectedRefreshToken);
+        when(manageJwtPort.save(userDto.id(), refreshTokenInfo)).thenReturn(expectedRefreshToken);
 
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
-            jwtUtil.when(() -> JwtUtil.createToken(eq(userDto.id()), eq(userAccessTokenInfo))).thenReturn(expectedAccessToken);
+            jwtUtil.when(() -> JwtUtil.createToken(eq(userDto.id()), eq(accessTokenInfo))).thenReturn(expectedAccessToken);
 
             // When
             JwtDto result = manageUserService.signIn(command);
@@ -142,7 +142,7 @@ class ManageUserServiceTest {
             assertThat(result.accessToken()).isEqualTo(expectedAccessToken);
             assertThat(result.refreshToken()).isEqualTo(expectedRefreshToken);
             verify(loadUserPort, times(1)).signIn(command);
-            verify(manageJwtPort, times(1)).save(userDto.id(), userRefreshTokenInfo);
+            verify(manageJwtPort, times(1)).save(userDto.id(), refreshTokenInfo);
         }
     }
 
@@ -155,7 +155,7 @@ class ManageUserServiceTest {
         String expectedRefreshToken = command.token();
         String expectedAccessToken = "newAccessToken";
 
-        when(loadJwtPort.getVerifyToken(command.token(), userRefreshTokenInfo)).thenReturn(expectedRefreshToken);
+        when(loadJwtPort.getVerifyToken(command.token(), refreshTokenInfo)).thenReturn(expectedRefreshToken);
 
         try (MockedStatic<JwtUtil> jwtUtil = Mockito.mockStatic(JwtUtil.class)) {
             jwtUtil.when(() -> JwtUtil.createToken(eq(userId), any(JwtSecretDto.class))).thenReturn(expectedAccessToken);
@@ -166,7 +166,7 @@ class ManageUserServiceTest {
             // Then
             assertThat(result.accessToken()).isEqualTo(expectedAccessToken);
             assertThat(result.refreshToken()).isEqualTo(expectedRefreshToken);
-            verify(loadJwtPort, times(1)).getVerifyToken(command.token(), userRefreshTokenInfo);
+            verify(loadJwtPort, times(1)).getVerifyToken(command.token(), refreshTokenInfo);
         }
     }
 

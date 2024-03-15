@@ -12,11 +12,12 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user_refresh_token")
+@Table(name = "USER_REFRESH_TOKENS")
 @Entity
 public class JpaUserRefreshToken extends Jwt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(length = 60)
