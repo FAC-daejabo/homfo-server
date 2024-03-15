@@ -16,5 +16,5 @@ public interface RegisterUsecase {
      * 2. 사용자 리프레쉬 토큰 저장
      * 3. 사용자 마케팅 동의 여부 저장
      * */
-    JwtDto execute(RegisterCommand command);
+    JwtDto register(RegisterCommand command);
 }

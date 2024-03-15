@@ -2,7 +2,7 @@ package com.homfo.auth.entity;
 
 import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
-import com.homfo.user.entity.MySqlRefreshToken;
+import com.homfo.user.entity.JpaUserRefreshToken;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
@@ -26,7 +26,7 @@ class JwtTest {
         JwtSecretDto jwtSecretDto = new JwtSecretDto(secretKey, expireTime);
         String token = JwtUtil.createToken(userId, jwtSecretDto);
         String encryptedToken = encoder.encode(token);
-        MySqlRefreshToken jwt = new MySqlRefreshToken(userId, encryptedToken);
+        JpaUserRefreshToken jwt = new JpaUserRefreshToken(userId, encryptedToken);
 
         // when
         Executable validation = () -> jwt.validateToken(encryptedToken);
@@ -44,7 +44,7 @@ class JwtTest {
         JwtSecretDto jwtSecretDto = new JwtSecretDto(secretKey, expireTime);
         String token = JwtUtil.createToken(userId, jwtSecretDto);
         String encryptedToken = encoder.encode(token);
-        MySqlRefreshToken jwt = new MySqlRefreshToken(userId, encryptedToken);
+        JpaUserRefreshToken jwt = new JpaUserRefreshToken(userId, encryptedToken);
 
         // when
         Executable validation = () -> jwt.validateToken(token);

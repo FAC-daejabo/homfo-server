@@ -5,5 +5,5 @@ import com.homfo.auth.dto.JwtDto;
 
 
 public interface TokenRefreshUsecase {
-     JwtDto execute(long userId, TokenRefreshCommand command);
+     JwtDto refreshToken(long userId, TokenRefreshCommand command);
 }

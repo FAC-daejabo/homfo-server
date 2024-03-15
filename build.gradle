@@ -69,9 +69,13 @@ dependencies {
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus:1.12.2'
 
     implementation project(':core')
-    implementation project(':apps:user')
     implementation project(':domains:domain-common')
     implementation project(':domains:domain-user')
+    implementation project(':inbounds:inbound-user-http')
+    implementation project(':outbounds:outbound-user-jpa')
+
+    // mysql
+    runtimeOnly 'com.mysql:mysql-connector-j'
 
     // lombok
     compileOnly 'org.projectlombok:lombok'
