@@ -25,10 +25,14 @@ import com.homfo.user.usecase.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -52,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = UserController.class)
 @WebMvcTest(UserController.class)
-@Import({TestSecurityConfig.class})
+@Import({TestSecurityConfig.class, UserControllerTestConfig.class})
 class UserControllerTest {
     private MockMvc mockMvc;
 
@@ -62,22 +66,10 @@ class UserControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @MockBean
-    private SignOutUsecase signOutUsecase;
-
-    @MockBean
-    private DeleteAccountUsecase deleteAccountUsecase;
+    private ManageUserService manageUserService;
 
     @MockBean
     private GetUserInfoUsecase getUserInfoUsecase;
-
-    @MockBean
-    private RegisterUsecase registerUsecase;
-
-    @MockBean
-    private SignInUsecase signInUsecase;
-
-    @MockBean
-    private TokenRefreshUsecase tokenRefreshUsecase;
 
     @BeforeEach
     void setup() {
@@ -98,7 +90,7 @@ class UserControllerTest {
         SignInCommand command = new SignInCommand("testAccount", "testPW@111");
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
         JwtResponse response = new JwtResponse(jwtDto);
-        given(signInUsecase.signIn(command)).willReturn(jwtDto);
+        given(manageUserService.signIn(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/users/sign-in")
@@ -147,7 +139,7 @@ class UserControllerTest {
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
         JwtResponse response = new JwtResponse(jwtDto);
 
-        given(registerUsecase.register(command)).willReturn(jwtDto);
+        given(manageUserService.register(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/users/register")
@@ -194,7 +186,7 @@ class UserControllerTest {
         JwtResponse jwtResponse= new JwtResponse(jwtDto);
         Long userId = 1L;
         CustomUserDetails customUserDetails = new CustomUserDetails(userId);
-        given(tokenRefreshUsecase.refreshToken(userId, command)).willReturn(jwtDto);
+        given(manageUserService.refreshToken(userId, command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(patch("/users/refresh")
@@ -206,4 +198,41 @@ class UserControllerTest {
                 .andExpect(content().json(objectMapper.writeValueAsString(jwtResponse)));
     }
 
+}
+
+@Configuration
+class UserControllerTestConfig {
+    @Bean
+    @Primary
+    public ManageUserService manageUserService() {
+        return Mockito.mock(ManageUserService.class);
+    }
+}
+
+class ManageUserService implements DeleteAccountUsecase, RegisterUsecase, SignInUsecase, SignOutUsecase, TokenRefreshUsecase {
+
+    @Override
+    public void deleteAccount(long employeeId) {
+
+    }
+
+    @Override
+    public JwtDto register(RegisterCommand command) {
+        return null;
+    }
+
+    @Override
+    public JwtDto signIn(SignInCommand command) {
+        return null;
+    }
+
+    @Override
+    public void signOut(long employeeId) {
+
+    }
+
+    @Override
+    public JwtDto refreshToken(long employeeId, TokenRefreshCommand command) {
+        return null;
+    }
 }

@@ -1,7 +1,7 @@
 package com.homfo.employee.response;
 
 
-import com.homfo.user.dto.EmployeeMarketingAgreementDto;
+import com.homfo.employee.dto.EmployeeMarketingAgreementDto;
 import lombok.Getter;
 
 import java.util.List;

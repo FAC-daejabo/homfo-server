@@ -1,6 +1,6 @@
 package com.homfo.employee.request;
 
-import com.homfo.user.command.SignInCommand;
+import com.homfo.employee.command.SignInCommand;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**

@@ -69,6 +69,17 @@
 + 확장성을 위해서 모듈명은 inbound-{외부 어플리케이션 명}-{통신 프로토콜} 으로 작명합니다.
 + 각 모듈에서는 인터페이스의 에러를 통신 프로토콜에 맞게 핸들링합니다.
 
+```shell
+.
+├── config # 해당 inbound에서 등록할 Bean 모음입니다.
+├── controller # 클라이언트와의 API 통신을 담당합니다.
+├── deserializer # 클래스 => JSON 직렬화를 담당합니다.
+├── request # 요청 Format 입니다. OpenAPI 및 Swagger-doc를 지원합니다.
+├── response # 응답 Format 입니다. OpenAPI 및 Swagger-doc를 지원합니다.
+└── serializer # JSON => 클래스 직렬화를 담당합니다.
+```
+
+
 ### [Outbouds](outbounds/README.md)
 서비스의 데이터를 외부로 저장하거나, 외부의 데이터를 불러오는 모듈입니다. 다음과 같은 원칙을 적용합니다.
 
@@ -78,5 +89,13 @@
 + 각 모듈에서는 인터페이스의 에러에 알맞게 에러를 발생시켜야 합니다.
 + 런타임 구현체는 main에서 import 합니다. ex) jpa에서 rdb는 mysql을 사용한다면, outbound 모듈이 아니라 main에서 runtimeOnly로 import
 
+```shell
+.
+├── adapter # Domains 모듈의 Port interface를 구현합니다.
+├── entity # Domains 모듈의 Entity abstract class를 구현합니다.
+├── infra # ETC
+│   └── attribute_converter # Enum 등의 직렬화를 담당합니다.
+└── repository # DB 연결 및 연산을 담당합니다.
+```
 ### [Core](core/README.md)
 제일 하위 모듈입니다. 시스템 내 모든 레이어에서 공통으로 사용되어야 할 POJO, Util 등을 모아놓습니다.

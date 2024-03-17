@@ -6,30 +6,34 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.homfo.auth.command.TokenRefreshCommand;
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.entity.CustomUserDetails;
+import com.homfo.employee.command.RegisterCommand;
+import com.homfo.employee.command.SignInCommand;
 import com.homfo.employee.config.TestSecurityConfig;
-import com.homfo.user.command.RegisterCommand;
-import com.homfo.user.command.SignInCommand;
-import com.homfo.user.dto.EmployeeDto;
-import com.homfo.user.dto.EmployeeMarketingAgreementDto;
-import com.homfo.user.dto.MarketingAgreementDto;
-import com.homfo.user.infra.enums.EmployeeRole;
-import com.homfo.user.infra.enums.EmployeeStatus;
-import com.homfo.user.usecase.*;
-import com.homfo.enums.Gender;
-import com.homfo.enums.MarketingCode;
+import com.homfo.employee.dto.EmployeeDto;
+import com.homfo.employee.dto.EmployeeMarketingAgreementDto;
+import com.homfo.employee.dto.MarketingAgreementDto;
+import com.homfo.employee.infra.enums.EmployeeRole;
+import com.homfo.employee.infra.enums.EmployeeStatus;
 import com.homfo.employee.request.MarketingAgreementRequest;
 import com.homfo.employee.request.RegisterRequest;
 import com.homfo.employee.request.SignInRequest;
 import com.homfo.employee.request.TokenRefreshRequest;
 import com.homfo.employee.response.EmloyeeMarketingAgreementResponse;
 import com.homfo.employee.response.JwtResponse;
+import com.homfo.employee.usecase.*;
+import com.homfo.enums.Gender;
+import com.homfo.enums.MarketingCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -51,9 +55,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = EmployeeController.class)
+@ContextConfiguration(classes = {EmployeeController.class})
 @WebMvcTest(EmployeeController.class)
-@Import({TestSecurityConfig.class})
+@Import({TestSecurityConfig.class, EmployeeControllerTestConfig.class})
 class EmployeeControllerTest {
     private MockMvc mockMvc;
 
@@ -63,22 +67,10 @@ class EmployeeControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @MockBean
-    private SignOutUsecase signOutUsecase;
-
-    @MockBean
-    private DeleteAccountUsecase deleteAccountUsecase;
+    private ManageEmployeeService manageEmployeeService;
 
     @MockBean
     private GetEmployeeInfoUsecase getEmployeeInfoUsecase;
-
-    @MockBean
-    private RegisterUsecase registerUsecase;
-
-    @MockBean
-    private SignInUsecase signInUsecase;
-
-    @MockBean
-    private TokenRefreshUsecase tokenRefreshUsecase;
 
     @BeforeEach
     void setup() {
@@ -99,7 +91,7 @@ class EmployeeControllerTest {
         SignInCommand command = new SignInCommand("testAccount", "testPW@111");
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
         JwtResponse response = new JwtResponse(jwtDto);
-        given(signInUsecase.signIn(command)).willReturn(jwtDto);
+        given(manageEmployeeService.signIn(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/employees/sign-in")
@@ -148,7 +140,7 @@ class EmployeeControllerTest {
         JwtDto jwtDto = new JwtDto("token", "refreshToken");
         JwtResponse response = new JwtResponse(jwtDto);
 
-        given(registerUsecase.register(command)).willReturn(jwtDto);
+        given(manageEmployeeService.register(command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(post("/employees/register")
@@ -192,10 +184,10 @@ class EmployeeControllerTest {
         TokenRefreshRequest request = new TokenRefreshRequest("refreshToken");
         TokenRefreshCommand command = new TokenRefreshCommand("refreshToken");
         JwtDto jwtDto = new JwtDto("newToken", "newRefreshToken");
-        JwtResponse jwtResponse= new JwtResponse(jwtDto);
+        JwtResponse jwtResponse = new JwtResponse(jwtDto);
         Long employeeId = 1L;
         CustomUserDetails customUserDetails = new CustomUserDetails(employeeId);
-        given(tokenRefreshUsecase.refreshToken(employeeId, command)).willReturn(jwtDto);
+        given(manageEmployeeService.refreshToken(employeeId, command)).willReturn(jwtDto);
 
         // when & then
         mockMvc.perform(patch("/employees/refresh")
@@ -206,5 +198,41 @@ class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(jwtResponse)));
     }
+}
 
+@Configuration
+class EmployeeControllerTestConfig {
+    @Bean
+    @Primary
+    public ManageEmployeeService manageEmployeeService() {
+        return Mockito.mock(ManageEmployeeService.class);
+    }
+}
+
+class ManageEmployeeService implements DeleteAccountUsecase, RegisterUsecase, SignInUsecase, SignOutUsecase, TokenRefreshUsecase {
+
+    @Override
+    public void deleteAccount(long employeeId) {
+
+    }
+
+    @Override
+    public JwtDto register(RegisterCommand command) {
+        return null;
+    }
+
+    @Override
+    public JwtDto signIn(SignInCommand command) {
+        return null;
+    }
+
+    @Override
+    public void signOut(long employeeId) {
+
+    }
+
+    @Override
+    public JwtDto refreshToken(long employeeId, TokenRefreshCommand command) {
+        return null;
+    }
 }

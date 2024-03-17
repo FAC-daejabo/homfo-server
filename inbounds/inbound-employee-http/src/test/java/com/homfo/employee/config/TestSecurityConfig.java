@@ -23,7 +23,7 @@ public class TestSecurityConfig {
     /**
      * 사용자 액세스 토큰 정보입니다.
      */
-    private final JwtSecretDto userAccessTokenInfo =  new JwtSecretDto("abcdefg", Long.parseLong("60"));
+    private final JwtSecretDto accessTokenInfo =  new JwtSecretDto("abcdefg", Long.parseLong("60"));
 
     /**
      * 사용자 액세스 토큰 허용 URI 목록입니다.
@@ -34,6 +34,16 @@ public class TestSecurityConfig {
      * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
      */
     private final List<String> userRefreshTokenBlackList = List.of("/users/refresh");
+
+    /**
+     * 직 액세스 토큰 허용 URI 목록입니다.
+     */
+    private final List<String> employeeAccessTokenWhiteList = List.of("/employees/register", "/employees/sign-in");
+
+    /**
+     * 직원 리프레쉬 토큰 미허용 URI 목록입니다.
+     */
+    private final List<String> employeeRefreshTokenBlackList = List.of("/employees/refresh");
 
     /**
      * 서비스 화이트 리스트입니다.
@@ -54,18 +64,26 @@ public class TestSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        WHITE_LIST.addAll(userAccessTokenWhiteList);
+        List<String> whiteList = new ArrayList<>(WHITE_LIST);
+        List<String> accessTokenWhiteList = new ArrayList<>(WHITE_LIST);
+        List<String> refreshTokenBlackList = new ArrayList<>();
 
-        // 화이트 리스트는 허용합니다.
-        // 이외에는 JWT 액세스 토큰 인증을 거칩니다.
+        whiteList.addAll(userAccessTokenWhiteList);
+        whiteList.addAll(employeeAccessTokenWhiteList);
+
+        refreshTokenBlackList.addAll(userRefreshTokenBlackList);
+        refreshTokenBlackList.addAll(employeeRefreshTokenBlackList);
+
+        accessTokenWhiteList.addAll(whiteList);
+
         return httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(WHITE_LIST.toArray(new String[0])).permitAll()
+                        .requestMatchers(whiteList.toArray(new String[0])).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new AccessTokenAuthenticationFilter(userAccessTokenInfo, WHITE_LIST, userRefreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AccessTokenAuthenticationFilter(accessTokenInfo, accessTokenWhiteList, refreshTokenBlackList), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 }
