@@ -1,6 +1,6 @@
 package com.homfo.employee.request;
 
-import com.homfo.user.command.RegisterCommand;
+import com.homfo.employee.command.RegisterCommand;
 import com.homfo.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 

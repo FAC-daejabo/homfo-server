@@ -1,8 +1,8 @@
 package com.homfo.employee.response;
 
-import com.homfo.user.dto.EmployeeDto;
-import com.homfo.user.infra.enums.EmployeeRole;
-import com.homfo.user.infra.enums.EmployeeStatus;
+import com.homfo.employee.dto.EmployeeDto;
+import com.homfo.employee.infra.enums.EmployeeRole;
+import com.homfo.employee.infra.enums.EmployeeStatus;
 import com.homfo.enums.Gender;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

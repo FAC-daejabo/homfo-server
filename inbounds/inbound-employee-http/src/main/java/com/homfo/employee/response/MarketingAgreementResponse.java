@@ -1,6 +1,6 @@
 package com.homfo.employee.response;
 
-import com.homfo.user.dto.MarketingAgreementDto;
+import com.homfo.employee.dto.MarketingAgreementDto;
 import com.homfo.enums.MarketingCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
