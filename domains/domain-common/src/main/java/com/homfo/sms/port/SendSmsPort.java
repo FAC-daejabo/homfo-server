@@ -12,5 +12,5 @@ public interface SendSmsPort {
      *
      * @throws com.homfo.error.ThirdPartyUnavailableException 외부 서비스에서 장애가 발생했을 때
      */
-    void send(@NonNull SmsSendDto smsSendDto);
+    void sendSms(@NonNull SmsSendDto smsSendDto);
 }

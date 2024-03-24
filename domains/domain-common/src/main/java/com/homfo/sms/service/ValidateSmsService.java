@@ -34,7 +34,7 @@ public class ValidateSmsService implements ValidateSmsCodeUsecase, RequestSmsCod
         String message = "[홈포] 인증번호: " + smsCodeDto.code() + "\n타인 유출로 인한 피해 주의";
         SmsSendDto smsSendDto = new SmsSendDto(smsCodeDto.phoneNumber(), message);
 
-        sendSmsPort.send(smsSendDto);
+        sendSmsPort.sendSms(smsSendDto);
 
         return true;
     }
