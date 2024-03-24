@@ -12,7 +12,7 @@ import com.homfo.user.dto.UserDto;
 import com.homfo.user.dto.UserMarketingAgreementDto;
 import com.homfo.user.port.LoadUserMarketingAgreementPort;
 import com.homfo.user.port.LoadUserPort;
-import com.homfo.user.port.ManageUserAccountPort;
+import com.homfo.user.port.ManageUserPort;
 import com.homfo.user.port.ManageUserMarketingAgreementPort;
 import com.homfo.user.usecase.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
 
     private final LoadUserMarketingAgreementPort loadUserMarketingAgreementPort;
 
-    private final ManageUserAccountPort manageUserAccountPort;
+    private final ManageUserPort manageUserAccountPort;
 
     private final ManageJwtPort manageJwtPort;
 
@@ -43,7 +43,7 @@ public class ManageUserService implements GetUserInfoUsecase, SignInUsecase, Sig
             LoadUserPort loadUserPort,
             @Qualifier("userRefreshTokenPersistenceAdapter") LoadJwtPort loadJwtPort,
             LoadUserMarketingAgreementPort loadUserMarketingAgreementPort,
-            ManageUserAccountPort manageUserAccountPort,
+            ManageUserPort manageUserAccountPort,
             @Qualifier("userRefreshTokenPersistenceAdapter") ManageJwtPort manageJwtPort,
             ManageUserMarketingAgreementPort manageUserMarketingAgreementPort,
             JwtSecretDto accessTokenInfo,

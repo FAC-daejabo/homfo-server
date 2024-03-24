@@ -4,7 +4,7 @@ import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.dto.UserDto;
 import lombok.NonNull;
 
-public interface ManageUserAccountPort {
+public interface ManageUserPort {
     /**
      * 회원가입합니다.
      *

@@ -11,7 +11,7 @@ import com.homfo.user.infra.enums.UserErrorCode;
 import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.infra.util.ValidationUtil;
 import com.homfo.user.port.LoadUserPort;
-import com.homfo.user.port.ManageUserAccountPort;
+import com.homfo.user.port.ManageUserPort;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserPersistenceAdapter implements LoadUserPort, ManageUserAccountPort {
+public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
     private final UserRepository userRepository;
 
     private final PasswordEncoder encoder;

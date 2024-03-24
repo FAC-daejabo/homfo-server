@@ -3,7 +3,7 @@ package com.homfo.user.usecase;
 /**
  * 사용자 전화번호가 중복되는지, 올바른 전화번호인지 확인합니다.
  * */
-public interface ValidatePhoneNumberUsecase {
+public interface RequestSmsCodeUsecase {
     /**
      * 사용자 전화번호가 중복되는지, 올바른 전화번호인지 확인합니다.
      *

@@ -16,7 +16,7 @@ import com.homfo.user.dto.UserMarketingAgreementDto;
 import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.port.LoadUserMarketingAgreementPort;
 import com.homfo.user.port.LoadUserPort;
-import com.homfo.user.port.ManageUserAccountPort;
+import com.homfo.user.port.ManageUserPort;
 import com.homfo.user.port.ManageUserMarketingAgreementPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ class ManageUserServiceTest {
     private LoadUserMarketingAgreementPort loadUserMarketingAgreementPort;
 
     @Mock
-    private ManageUserAccountPort manageUserAccountPort;
+    private ManageUserPort manageUserAccountPort;
 
     @Mock
     private ManageJwtPort manageJwtPort;
