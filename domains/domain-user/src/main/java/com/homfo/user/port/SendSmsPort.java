@@ -1,5 +1,6 @@
 package com.homfo.user.port;
 
+import com.homfo.user.dto.SmsSendDto;
 import lombok.NonNull;
 
 /**
@@ -11,5 +12,5 @@ public interface SendSmsPort {
      *
      * @throws com.homfo.error.ThirdPartyUnavailableException 외부 서비스에서 장애가 발생했을 때
      */
-    void send(@NonNull String command);
+    void send(@NonNull SmsSendDto smsSendDto);
 }

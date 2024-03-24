@@ -9,5 +9,5 @@ public interface ValidateDuplicateAccountUsecase {
      *
      * @throws com.homfo.error.ResourceAlreadyExistException 이미 존재하는 계정이라면
      * */
-    void validate(String account);
+    boolean validateAccount(String account);
 }

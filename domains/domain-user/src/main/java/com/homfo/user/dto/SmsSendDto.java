@@ -1,8 +1,8 @@
 package com.homfo.user.dto;
 
-public record SmsCodeDto(
+public record SmsSendDto(
         String phoneNumber,
 
-        String code
+        String message
 ) {
 }

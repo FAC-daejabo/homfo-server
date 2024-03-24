@@ -9,5 +9,5 @@ public interface ValidateDuplicateNicknameUsecase {
      *
      * @throws com.homfo.error.ResourceAlreadyExistException 이미 존재하는 닉네임이라면
      * */
-    void validate(String nickname);
+    boolean validateNickname(String nickname);
 }
