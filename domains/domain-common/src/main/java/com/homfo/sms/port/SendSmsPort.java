@@ -1,6 +1,6 @@
-package com.homfo.user.port;
+package com.homfo.sms.port;
 
-import com.homfo.user.dto.SmsSendDto;
+import com.homfo.sms.dto.SmsSendDto;
 import lombok.NonNull;
 
 /**

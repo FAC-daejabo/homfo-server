@@ -1,4 +1,4 @@
-package com.homfo.user.dto;
+package com.homfo.sms.dto;
 
 public record SmsCodeDto(
         String phoneNumber,

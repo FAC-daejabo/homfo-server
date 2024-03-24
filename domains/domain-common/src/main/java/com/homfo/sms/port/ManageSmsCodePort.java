@@ -1,7 +1,8 @@
-package com.homfo.user.port;
+package com.homfo.sms.port;
 
-import com.homfo.user.command.ValidateSmsCodeCommand;
-import com.homfo.user.dto.SmsCodeDto;
+
+import com.homfo.sms.command.ValidateSmsCodeCommand;
+import com.homfo.sms.dto.SmsCodeDto;
 import lombok.NonNull;
 
 /**
