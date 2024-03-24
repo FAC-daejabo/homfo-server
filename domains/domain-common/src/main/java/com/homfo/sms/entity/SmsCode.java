@@ -3,6 +3,7 @@ package com.homfo.sms.entity;
 import com.homfo.error.RequestLimitException;
 import com.homfo.sms.command.ValidateSmsCodeCommand;
 import com.homfo.sms.infra.enums.SmsErrorCode;
+import com.homfo.util.RandomNumberUtil;
 import jakarta.persistence.MappedSuperclass;
 
 import java.time.Duration;
@@ -14,6 +15,14 @@ import java.util.Objects;
  */
 @MappedSuperclass
 public abstract class SmsCode {
+    private static final int CODE_LENGTH = 6;
+
+    private static final int EXPIRED_MINUTES = 5;
+
+    private static final int REQUEST_LIMIT = 5;
+
+    protected String code;
+
     protected Integer count;
 
     /**
@@ -24,7 +33,9 @@ public abstract class SmsCode {
     /**
      * Sms 인증 코드입니다.
      */
-    public abstract String getCode();
+    public String getCode() {
+        return code;
+    }
 
     /**
      * Entity 전화번호에 Sms 코드를 보낸 횟수입니다.
@@ -33,13 +44,42 @@ public abstract class SmsCode {
         return count;
     }
 
+    /**
+     * 데이터가 변경된 시점입니다.
+     */
     public abstract LocalDateTime getUpdatedAt();
+
+    /**
+     * 낙관적 락을 위해 사용합니다.
+     */
+    public abstract Long getVersion();
+
+
+    /**
+     * 인증 코드가 만료되었는지 확인합니다.
+     */
+    public boolean isExpired() {
+        long minutesSinceLastUpdate = Duration.between(getUpdatedAt(), LocalDateTime.now()).toMinutes();
+
+        return minutesSinceLastUpdate >= EXPIRED_MINUTES;
+    }
+
+    /**
+     * 이미 제한된 인증 코드인지 확인합니다.
+     */
+    public boolean isLimited() {
+        return getCount() >= REQUEST_LIMIT;
+    }
 
     /**
      * 전화번호랑 코드가 맞는지 확인합니다.
      */
     public boolean verifyCode(ValidateSmsCodeCommand command) {
-        return Objects.equals(command.phoneNumber(), getPhoneNumber()) && Objects.equals(command.code(), getCode());
+        if (isExpired() || isLimited()) {
+            return false;
+        }
+
+        return Objects.equals(command.phoneNumber(), getPhoneNumber()) && Objects.equals(command.code(), code);
     }
 
     /**
@@ -50,18 +90,24 @@ public abstract class SmsCode {
      *
      * @throws RequestLimitException
      */
-    public void sendSmsCode() {
-        if (getCount() >= 5) {
+    public void createCode() {
+        if (isLimited()) {
             throw new RequestLimitException(SmsErrorCode.LIMITED_SEND_SMS);
         }
 
-        // 5분 이상 차이나는지 확인
-        long minutesSinceLastUpdate = Duration.between(getUpdatedAt(), LocalDateTime.now()).toMinutes();
-
-        if (minutesSinceLastUpdate < 5) {
-            count++;
-        } else {
+        if (isExpired()) {
             count = 1;
+        } else {
+            count++;
         }
+
+        generateCode();
+    }
+
+    /**
+     * 인증 코드를 생성합니다.
+     */
+    private void generateCode() {
+        this.code = RandomNumberUtil.random(CODE_LENGTH);
     }
 }

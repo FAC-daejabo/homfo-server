@@ -36,3 +36,6 @@ findProject(':outbounds:outbound-user-jpa')?.name = 'outbound-user-jpa'
 
 include 'outbounds:outbound-employee-jpa'
 findProject(':outbounds:outbound-employee-jpa')?.name = 'outbound-employee-jpa'
+include 'outbounds:outbound-common-jpa'
+findProject(':outbounds:outbound-common-jpa')?.name = 'outbound-common-jpa'
+
