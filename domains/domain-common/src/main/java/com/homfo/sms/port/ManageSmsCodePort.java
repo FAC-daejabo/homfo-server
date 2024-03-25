@@ -15,7 +15,7 @@ public interface ManageSmsCodePort {
      *
      * @throws com.homfo.error.RequestLimitException 가능한 요청 횟수를 넘었을 때
      */
-    SmsCodeTransactionDto saveSmsCode(@NonNull String phoneNumber);
+    SmsCodeTransactionDto createSmsCode(@NonNull String phoneNumber);
 
     /**
      * 전화번호와 인증코드가 맞는지 확인합니다.

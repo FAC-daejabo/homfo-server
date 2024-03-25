@@ -24,7 +24,7 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
 
     @Override
     @Transactional
-    public SmsCodeTransactionDto saveSmsCode(@NonNull String phoneNumber) {
+    public SmsCodeTransactionDto createSmsCode(@NonNull String phoneNumber) {
         SmsCodeDto before;
         SmsCodeDto after;
         JpaUserSmsCode smsCode = repository.findById(phoneNumber).orElse(new JpaUserSmsCode(phoneNumber));
@@ -47,7 +47,7 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
     @Override
     @Transactional
     public boolean verifySmsCode(@NonNull ValidateSmsCodeCommand command) {
-        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.LIMITED_SEND_SMS));
+        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
         boolean isValid = smsCode.verifyCode(command);
 
         if (isValid) {
@@ -61,7 +61,10 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
     @Override
     @Transactional
     public SmsCodeDto rollbackSmsCode(@NonNull SmsCodeTransactionDto smsCodeTransactionDto) {
-        JpaUserSmsCode smsCode = new JpaUserSmsCode(smsCodeTransactionDto.phoneNumber(), smsCodeTransactionDto.before().code(), smsCodeTransactionDto.before().createdAt());
+        JpaUserSmsCode smsCode = repository.findById(smsCodeTransactionDto.phoneNumber()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
+
+        smsCode.rollback(smsCodeTransactionDto);
+
         repository.save(smsCode);
 
         return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());

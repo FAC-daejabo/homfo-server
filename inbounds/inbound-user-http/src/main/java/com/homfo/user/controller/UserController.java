@@ -13,7 +13,10 @@ import com.homfo.user.response.JwtResponse;
 import com.homfo.user.response.UserMarketingAgreementResponse;
 import com.homfo.user.usecase.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -82,14 +85,22 @@ public class UserController {
 
     @Operation(summary = "사용자 회원가입", description = "마케팅 동의 여부도 보내주셔야 합니다. 미동의더라도 false로 보내주세요.")
     @PostMapping("/register")
-    public ResponseEntity<JwtResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<JwtResponse> register(
+            @Valid
+            @RequestBody
+            RegisterRequest request
+    ) {
         JwtDto jwtDto = registerUsecase.register(request.toCommand());
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwtDto));
     }
 
     @Operation(summary = "사용자 로그인")
     @PostMapping("/sign-in")
-    public ResponseEntity<JwtResponse> signIn(@RequestBody SignInRequest request) {
+    public ResponseEntity<JwtResponse> signIn(
+            @Valid
+            @RequestBody
+            SignInRequest request
+    ) {
         JwtDto jwtDto = signInUsecase.signIn(request.toCommand());
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(jwtDto));
     }
@@ -123,25 +134,46 @@ public class UserController {
 
     @Operation(summary = "사용자 계정 중복 확인")
     @PostMapping("/validate/duplicateAccount")
-    public ResponseEntity<Boolean> validateDuplicateAccount(@RequestBody String account) {
+    public ResponseEntity<Boolean> validateDuplicateAccount(
+            @Valid
+            @RequestBody
+            @Schema(example = "testAccount", description = "계 ㅇㄷ")
+            @Pattern(regexp = "^[a-zA-Z\\d]{8,15}$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
+            String account
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(validateDuplicateAccountUsecase.validateAccount(account));
     }
 
     @Operation(summary = "사용자 닉네임 중복 확인")
     @PostMapping("/validate/duplicateNickname")
-    public ResponseEntity<Boolean> validateDuplicateNickname(@RequestBody String nickname) {
+    public ResponseEntity<Boolean> validateDuplicateNickname(
+            @Valid
+            @RequestBody
+            @Schema(example = "닉네임", description = "닉네임")
+            @Pattern(regexp = "^[a-zA-Z\\\\d가-힣]{1,15}$", message = "올바르지 않은 닉네임입니다.")
+            String nickname
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(validateDuplicateNicknameUsecase.validateNickname(nickname));
     }
 
     @Operation(summary = "사용자 전화번호 인증 코드 확인")
     @PatchMapping("/validate/smsCode")
-    public ResponseEntity<Boolean> validateSmsCode(@RequestBody ValidateSmsCodeRequest request) {
+    public ResponseEntity<Boolean> validateSmsCode(
+            @Valid
+            @RequestBody
+            ValidateSmsCodeRequest request
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(validateSmsCodeUsecase.validateSmsCode(request.toCommand()));
     }
 
-    @Operation(summary = "사용자 닉네임 인증 코드 요청")
+    @Operation(summary = "사용자 닉네임 인증 코드 요청", description = "Body 보내실 때 전화번호에서 따옴표 제거하고 보내주세요.")
     @PostMapping("/validate/smsCode")
-    public ResponseEntity<Boolean> requestSmsCode(@RequestBody String phoneNumber) {
+    public ResponseEntity<Boolean> requestSmsCode(
+            @Valid
+            @RequestBody
+            @Schema(example = "010-0000-0000", description = "전화번호")
+            String phoneNumber
+    ) {
         return ResponseEntity.status(HttpStatus.OK).body(requestSmsCodeUsecase.requestSmsCode(phoneNumber));
     }
 }

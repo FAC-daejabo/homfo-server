@@ -3,9 +3,11 @@ package com.homfo.user.request;
 import com.homfo.enums.MarketingCode;
 import com.homfo.user.dto.MarketingAgreementDto;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 
 public record MarketingAgreementRequest(
         @Schema(example = "MARKETING_CODE_00000001", description = "마케팅 코드")
+        @NotNull
         MarketingCode code,
 
         @Schema(example = "true", description = "동의 여부")

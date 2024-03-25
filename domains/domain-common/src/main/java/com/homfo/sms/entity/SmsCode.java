@@ -2,6 +2,7 @@ package com.homfo.sms.entity;
 
 import com.homfo.error.RequestLimitException;
 import com.homfo.sms.command.ValidateSmsCodeCommand;
+import com.homfo.sms.dto.SmsCodeTransactionDto;
 import com.homfo.sms.infra.enums.SmsCodeStatus;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.util.RandomNumberUtil;
@@ -132,4 +133,6 @@ public abstract class SmsCode {
             count++;
         }
     }
+
+    public abstract void rollback(SmsCodeTransactionDto smsCodeTransactionDto);
 }

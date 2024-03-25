@@ -17,24 +17,24 @@ public abstract class User {
     /**
      * 계정은 8자 이상, 15자 이하의 대소문자 및 숫자로 구성되어야 합니다.
      */
-    protected static final String ACCOUNT_REGEXP = "^[a-zA-Z\\d]{8,15}$";
+    public static final String ACCOUNT_REGEXP = "^[a-zA-Z\\d]{8,15}$";
 
-    protected static final String ENCRYPTED_PASSWORD_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
+    public static final String ENCRYPTED_PASSWORD_REGEXP = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$";
 
     /**
      * 닉네임은 1자 이상, 15자 이하의 대소문자, 숫자, 한글로 구성되어야 합니다.
      */
-    protected static final String NICKNAME_REGEXP = "^[a-zA-Z\\d가-힣]{1,15}$";
+    public static final String NICKNAME_REGEXP = "^[a-zA-Z\\d가-힣]{1,15}$";
 
     /**
      * 전화번호는 xxx-xxxx-xxxx 형태여야 합니다.
      */
-    protected static final String PHONE_NUMBER_REGEXP = "^\\d{3}-\\d{4}-\\d{4}$";
+    public static final String PHONE_NUMBER_REGEXP = "^\\d{3}-\\d{4}-\\d{4}$";
 
     /**
      * 직업은 1자 이상, 15자 이하의 대소문자, 한글로 구성되어야 합니다.
      */
-    protected static final String JOB_REGEXP = "^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z]{1,15}$";
+    public static final String JOB_REGEXP = "^(?=.*[가-힣a-zA-Z])[가-힣a-zA-Z]{1,15}$";
 
     /**
      * PK 입니다.

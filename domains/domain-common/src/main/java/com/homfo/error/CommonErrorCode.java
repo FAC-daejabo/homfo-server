@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum CommonErrorCode implements ErrorCode {
     INTERNAL_SERVER_ERROR("SERVER_ERROR_00000001", "서버에서 에러가 발생했습니다."),
     DUPLICATE("SERVER_ERROR_00000002", "다시 시도해주세요."),
-    BAD_REQUEST("SERVER_ERROR_00000003", "잘못된 요청입니다.");
+    BAD_REQUEST("SERVER_ERROR_00000003", "잘못된 요청입니다."),
+    SERVICE_UNAVAILABLE("SERVER_ERROR_00000004", "외부 요청에 실패했습니다.");
 
     private final String code;
 

@@ -2,11 +2,15 @@ package com.homfo.config;
 
 import com.homfo.error.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
@@ -35,10 +39,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.warn("ClientException", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse(CommonErrorCode.BAD_REQUEST));
     }
+
+    @ExceptionHandler(ThirdPartyUnavailableException.class)
+    public ResponseEntity<Object> handleThirdPartyUnavailable(ThirdPartyUnavailableException e) {
+        log.warn("ThirdPartyUnavailableException", e);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(makeErrorResponse(CommonErrorCode.SERVICE_UNAVAILABLE));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception e) {
         log.warn("handleException", e);
         return ResponseEntity.status(500).body(makeErrorResponse(CommonErrorCode.INTERNAL_SERVER_ERROR));
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse(CommonErrorCode.BAD_REQUEST));
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {
