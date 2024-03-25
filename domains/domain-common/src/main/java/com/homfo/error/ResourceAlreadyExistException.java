@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ResourceAlreadyExistException extends RuntimeException {
+public class ResourceAlreadyExistException extends ClientException {
     private final ErrorCode errorCode;
 }

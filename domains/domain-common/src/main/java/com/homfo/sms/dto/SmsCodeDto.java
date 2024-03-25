@@ -1,5 +1,7 @@
 package com.homfo.sms.dto;
 
+import com.homfo.sms.infra.enums.SmsCodeStatus;
+
 import java.time.LocalDateTime;
 
 /**
@@ -10,6 +12,7 @@ public record SmsCodeDto(
 
         String code,
 
+        SmsCodeStatus status,
         LocalDateTime createdAt
 ) {
 }

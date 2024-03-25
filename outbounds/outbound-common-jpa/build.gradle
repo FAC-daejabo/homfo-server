@@ -46,19 +46,7 @@ dependencies {
 
 }
 
-
-tasks.register('loadDotEnvFile') {
-    if (file('.env').exists()) {
-        file('.env').eachLine { line ->
-            def (key, value) = line.split('=')
-            System.setProperty(key, value)
-        }
-    }
-}
-
 tasks.named('test') {
-    dependsOn loadDotEnvFile
     finalizedBy jacocoTestReport, jacocoTestCoverageVerification
     useJUnitPlatform()
-    systemProperties System.getProperties()
 }

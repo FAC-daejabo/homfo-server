@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class RequestLimitException extends RuntimeException {
+public class RequestLimitException extends ClientException {
     private final ErrorCode errorCode;
 }

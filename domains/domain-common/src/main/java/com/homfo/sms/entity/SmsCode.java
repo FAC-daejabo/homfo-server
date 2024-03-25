@@ -2,6 +2,7 @@ package com.homfo.sms.entity;
 
 import com.homfo.error.RequestLimitException;
 import com.homfo.sms.command.ValidateSmsCodeCommand;
+import com.homfo.sms.infra.enums.SmsCodeStatus;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.util.RandomNumberUtil;
 import jakarta.persistence.MappedSuperclass;
@@ -22,6 +23,8 @@ public abstract class SmsCode {
     private static final int REQUEST_LIMIT = 5;
 
     protected String code;
+
+    protected SmsCodeStatus status;
 
     protected Integer count;
 
@@ -44,6 +47,13 @@ public abstract class SmsCode {
      */
     public Integer getCount() {
         return count;
+    }
+
+    /**
+     * 인증 코드 상태입니다.
+     */
+    public SmsCodeStatus getStatus() {
+        return status;
     }
 
     /**
@@ -88,7 +98,13 @@ public abstract class SmsCode {
             return false;
         }
 
-        return Objects.equals(command.phoneNumber(), getPhoneNumber()) && Objects.equals(command.code(), code);
+        boolean isValid = Objects.equals(command.phoneNumber(), getPhoneNumber()) && Objects.equals(command.code(), code);
+
+        if(isValid) {
+            status = SmsCodeStatus.SUCCESS;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -100,9 +116,14 @@ public abstract class SmsCode {
      * @throws RequestLimitException
      */
     public void createCode() {
-        if (isLimited()) {
+        boolean limit = !isExpired() && isLimited();
+
+        if (limit) {
             throw new RequestLimitException(SmsErrorCode.LIMITED_SEND_SMS);
         }
+
+        status = SmsCodeStatus.REQUESTED;
+        code = RandomNumberUtil.random(CODE_LENGTH);
 
         if (isExpired()) {
             count = 1;
@@ -110,14 +131,5 @@ public abstract class SmsCode {
         } else {
             count++;
         }
-
-        generateCode();
-    }
-
-    /**
-     * 인증 코드를 생성합니다.
-     */
-    private void generateCode() {
-        this.code = RandomNumberUtil.random(CODE_LENGTH);
     }
 }

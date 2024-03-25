@@ -1,6 +1,5 @@
 package com.homfo.user.infra.attribute_converter;
 
-import com.homfo.user.infra.attribute_converter.UserStatusAttributeConverter;
 import com.homfo.user.infra.enums.UserStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

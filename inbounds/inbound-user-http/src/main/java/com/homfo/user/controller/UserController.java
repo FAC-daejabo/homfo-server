@@ -2,10 +2,13 @@ package com.homfo.user.controller;
 
 import com.homfo.auth.dto.JwtDto;
 import com.homfo.auth.entity.CustomUserDetails;
+import com.homfo.sms.usecase.RequestSmsCodeUsecase;
+import com.homfo.sms.usecase.ValidateSmsCodeUsecase;
 import com.homfo.user.dto.UserMarketingAgreementDto;
 import com.homfo.user.request.RegisterRequest;
 import com.homfo.user.request.SignInRequest;
 import com.homfo.user.request.TokenRefreshRequest;
+import com.homfo.user.request.ValidateSmsCodeRequest;
 import com.homfo.user.response.JwtResponse;
 import com.homfo.user.response.UserMarketingAgreementResponse;
 import com.homfo.user.usecase.*;
@@ -36,6 +39,14 @@ public class UserController {
 
     private final TokenRefreshUsecase tokenRefreshUsecase;
 
+    private final ValidateDuplicateAccountUsecase validateDuplicateAccountUsecase;
+
+    private final ValidateDuplicateNicknameUsecase validateDuplicateNicknameUsecase;
+
+    private final ValidateSmsCodeUsecase validateSmsCodeUsecase;
+
+    private final RequestSmsCodeUsecase requestSmsCodeUsecase;
+
     @Autowired
     public UserController(
             @Qualifier("manageUserService") DeleteAccountUsecase deleteAccountUsecase,
@@ -43,7 +54,11 @@ public class UserController {
             @Qualifier("manageUserService") RegisterUsecase registerUsecase,
             @Qualifier("manageUserService") SignInUsecase signInUsecase,
             @Qualifier("manageUserService") SignOutUsecase signOutUsecase,
-            @Qualifier("manageUserService") TokenRefreshUsecase tokenRefreshUsecase
+            @Qualifier("manageUserService") TokenRefreshUsecase tokenRefreshUsecase,
+            @Qualifier("validateUserService") ValidateDuplicateAccountUsecase validateDuplicateAccountUsecase,
+            @Qualifier("validateUserService") ValidateDuplicateNicknameUsecase validateDuplicateNicknameUsecase,
+            @Qualifier("validateUserService") ValidateSmsCodeUsecase validateSmsCodeUsecase,
+            @Qualifier("validateUserService") RequestSmsCodeUsecase requestSmsCodeUsecase
     ) {
         this.deleteAccountUsecase = deleteAccountUsecase;
         this.getUserInfoUsecase = getUserInfoUsecase;
@@ -51,6 +66,10 @@ public class UserController {
         this.signInUsecase = signInUsecase;
         this.signOutUsecase = signOutUsecase;
         this.tokenRefreshUsecase = tokenRefreshUsecase;
+        this.validateDuplicateAccountUsecase = validateDuplicateAccountUsecase;
+        this.validateDuplicateNicknameUsecase = validateDuplicateNicknameUsecase;
+        this.validateSmsCodeUsecase = validateSmsCodeUsecase;
+        this.requestSmsCodeUsecase = requestSmsCodeUsecase;
     }
 
     @Operation(summary = "사용자 정보 확인")
@@ -100,5 +119,29 @@ public class UserController {
         Long userId = customUserDetails.id();
         JwtDto dto = tokenRefreshUsecase.refreshToken(userId, request.toCommand());
         return ResponseEntity.status(HttpStatus.OK).body(new JwtResponse(dto));
+    }
+
+    @Operation(summary = "사용자 계정 중복 확인")
+    @PostMapping("/validate/duplicateAccount")
+    public ResponseEntity<Boolean> validateDuplicateAccount(@RequestBody String account) {
+        return ResponseEntity.status(HttpStatus.OK).body(validateDuplicateAccountUsecase.validateAccount(account));
+    }
+
+    @Operation(summary = "사용자 닉네임 중복 확인")
+    @PostMapping("/validate/duplicateNickname")
+    public ResponseEntity<Boolean> validateDuplicateNickname(@RequestBody String nickname) {
+        return ResponseEntity.status(HttpStatus.OK).body(validateDuplicateNicknameUsecase.validateNickname(nickname));
+    }
+
+    @Operation(summary = "사용자 전화번호 인증 코드 확인")
+    @PatchMapping("/validate/smsCode")
+    public ResponseEntity<Boolean> validateSmsCode(@RequestBody ValidateSmsCodeRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(validateSmsCodeUsecase.validateSmsCode(request.toCommand()));
+    }
+
+    @Operation(summary = "사용자 닉네임 인증 코드 요청")
+    @PostMapping("/validate/smsCode")
+    public ResponseEntity<Boolean> requestSmsCode(@RequestBody String phoneNumber) {
+        return ResponseEntity.status(HttpStatus.OK).body(requestSmsCodeUsecase.requestSmsCode(phoneNumber));
     }
 }

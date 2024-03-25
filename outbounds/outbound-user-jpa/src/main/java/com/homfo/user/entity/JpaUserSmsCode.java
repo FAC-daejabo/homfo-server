@@ -1,5 +1,7 @@
-package com.homfo.sms.entity;
+package com.homfo.user.entity;
 
+import com.homfo.sms.entity.SmsCode;
+import com.homfo.sms.infra.enums.SmsCodeStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,11 +12,11 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
-@Table(name = "SMS_CODES")
+@Table(name = "USER_SMS_CODES")
 @Entity
 @NoArgsConstructor
 @Getter
-public class JpaSmsCode extends SmsCode {
+public class JpaUserSmsCode extends SmsCode {
     @Id
     private String phoneNumber;
 
@@ -24,14 +26,18 @@ public class JpaSmsCode extends SmsCode {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public JpaSmsCode(String phoneNumber) {
+    public JpaUserSmsCode(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        this.count = 0;
+        this.status = SmsCodeStatus.REQUESTED;
         this.createdAt = LocalDateTime.now();
     }
 
-    public JpaSmsCode(String phoneNumber, String code, LocalDateTime createdAt) {
+    public JpaUserSmsCode(String phoneNumber, String code, LocalDateTime createdAt) {
         this.phoneNumber = phoneNumber;
+        this.count = 0;
         this.code = code;
+        this.status = SmsCodeStatus.REQUESTED;
         this.createdAt = createdAt;
     }
 }

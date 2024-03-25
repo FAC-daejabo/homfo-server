@@ -6,9 +6,11 @@ import com.homfo.error.ThirdPartyUnavailableException;
 import com.homfo.sms.dto.SmsSendDto;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.sms.port.SendSmsPort;
+import com.homfo.sms.request.NaverSmsPayload;
 import com.homfo.sms.request.NaverSmsRequest;
 import com.homfo.sms.response.NaverSmsResponse;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -28,17 +31,18 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Slf4j
 public class NaverSmsClient implements SendSmsPort {
-    @Value("${naver-cloud-sms.accessKey}")
+    @Value("${naver-cloud.sms.accessKey}")
     private String accessKey;
 
-    @Value("${naver-cloud-sms.secretKey}")
+    @Value("${naver-cloud.sms.secretKey}")
     private String secretKey;
 
-    @Value("${naver-cloud-sms.serviceId}")
+    @Value("${naver-cloud.sms.serviceId}")
     private String serviceId;
 
-    @Value("${naver-cloud-sms.senderPhone}")
+    @Value("${naver-cloud.sms.senderPhone}")
     private String senderPhone;
 
     private static final String NCP_TIMESTAMP_HEADER = "x-ncp-apigw-timestamp";
@@ -51,7 +55,7 @@ public class NaverSmsClient implements SendSmsPort {
 
     @Autowired
     public NaverSmsClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("https://sens.apigw.ntruss.com").build();
+        this.webClient = webClientBuilder.baseUrl("https://sens.apigw.ntruss.com/sms/v2/services").build();
     }
 
 
@@ -59,33 +63,34 @@ public class NaverSmsClient implements SendSmsPort {
         try {
             NaverSmsResponse response = sendSmsToNcp(smsSendDto);
 
-            if(!Objects.equals(response.getStatusCode(), "202")) {
+            if (!Objects.equals(response.getStatusCode(), "202")) {
                 throw new ThirdPartyUnavailableException(SmsErrorCode.FAILED_SEND_SMS);
             }
         } catch (Exception e) {
+            log.warn("NaverSmsClient sendSms error " + e);
             throw new ThirdPartyUnavailableException(SmsErrorCode.FAILED_SEND_SMS);
         }
     }
 
-    private NaverSmsResponse sendSmsToNcp(SmsSendDto smsSendDto) throws JsonProcessingException, RestClientException, InvalidKeyException, NoSuchAlgorithmException {
+    private NaverSmsResponse sendSmsToNcp(SmsSendDto smsSendDto) throws JsonProcessingException, RestClientException, InvalidKeyException, NoSuchAlgorithmException, URISyntaxException {
         HttpHeaders headers = getNcpHttpHeaders();
-        List<SmsSendDto> messages = new ArrayList<>();
-        messages.add(smsSendDto);
+        List<NaverSmsPayload> messages = new ArrayList<>();
+        NaverSmsPayload payload = new NaverSmsPayload(smsSendDto.phoneNumber(), "", smsSendDto.message());
+        messages.add(payload);
 
-        NaverSmsRequest request = NaverSmsRequest.builder()
-                .type("SMS")
-                .contentType("COMM")
-                .countryCode("82")
-                .from(senderPhone)
-                .content(smsSendDto.message())
-                .messages(messages)
-                .build();
-
+        NaverSmsRequest request = new NaverSmsRequest(
+                "SMS",
+                "COMM",
+                "82",
+                senderPhone,
+                smsSendDto.message(),
+                messages
+        );
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(request);
 
         return webClient.post()
-                .uri("/sms/v2/services/{serviceId}/messages", serviceId)
+                .uri(uriBuilder -> uriBuilder.path("/"+ serviceId + "/messages").build())
                 .headers(httpHeaders -> httpHeaders.addAll(headers))
                 .bodyValue(body)
                 .retrieve()

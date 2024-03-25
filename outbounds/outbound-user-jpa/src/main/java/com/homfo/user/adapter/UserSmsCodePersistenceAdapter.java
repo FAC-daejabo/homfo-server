@@ -1,14 +1,16 @@
-package com.homfo.sms.adapter;
+package com.homfo.user.adapter;
 
 import com.homfo.error.DuplicateRequestException;
 import com.homfo.error.ResourceNotFoundException;
 import com.homfo.sms.command.ValidateSmsCodeCommand;
 import com.homfo.sms.dto.SmsCodeDto;
 import com.homfo.sms.dto.SmsCodeTransactionDto;
-import com.homfo.sms.entity.JpaSmsCode;
+
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.sms.port.ManageSmsCodePort;
-import com.homfo.sms.repository.SmsCodeRepository;
+
+import com.homfo.user.entity.JpaUserSmsCode;
+import com.homfo.user.repository.UserSmsCodeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
@@ -17,22 +19,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Repository
-public class SmsCodePersistenceAdapter implements ManageSmsCodePort {
-    private final SmsCodeRepository repository;
+public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
+    private final UserSmsCodeRepository repository;
 
     @Override
     @Transactional
     public SmsCodeTransactionDto saveSmsCode(@NonNull String phoneNumber) {
         SmsCodeDto before;
         SmsCodeDto after;
-        JpaSmsCode smsCode = repository.findById(phoneNumber).orElse(new JpaSmsCode(phoneNumber));
+        JpaUserSmsCode smsCode = repository.findById(phoneNumber).orElse(new JpaUserSmsCode(phoneNumber));
 
-        before = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getCreatedAt());
+        before = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
 
         try {
             smsCode.createCode();
 
-            after = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getCreatedAt());
+            after = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
 
             repository.save(smsCode);
         } catch (ObjectOptimisticLockingFailureException e) {
@@ -43,18 +45,25 @@ public class SmsCodePersistenceAdapter implements ManageSmsCodePort {
     }
 
     @Override
+    @Transactional
     public boolean verifySmsCode(@NonNull ValidateSmsCodeCommand command) {
-        JpaSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.LIMITED_SEND_SMS));
+        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.LIMITED_SEND_SMS));
+        boolean isValid = smsCode.verifyCode(command);
 
-        return smsCode.verifyCode(command);
+        if (isValid) {
+            repository.save(smsCode);
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     @Transactional
     public SmsCodeDto rollbackSmsCode(@NonNull SmsCodeTransactionDto smsCodeTransactionDto) {
-        JpaSmsCode smsCode = new JpaSmsCode(smsCodeTransactionDto.phoneNumber(), smsCodeTransactionDto.before().code(), smsCodeTransactionDto.before().createdAt());
+        JpaUserSmsCode smsCode = new JpaUserSmsCode(smsCodeTransactionDto.phoneNumber(), smsCodeTransactionDto.before().code(), smsCodeTransactionDto.before().createdAt());
         repository.save(smsCode);
 
-        return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getCreatedAt());
+        return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
     }
 }

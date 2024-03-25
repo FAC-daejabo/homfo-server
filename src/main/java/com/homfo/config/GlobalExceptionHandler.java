@@ -1,10 +1,10 @@
 package com.homfo.config;
 
-import com.homfo.error.ErrorCode;
-import com.homfo.error.ResourceAlreadyExistException;
-import com.homfo.error.ResourceNotFoundException;
+import com.homfo.error.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -24,10 +24,21 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(400).body(makeErrorResponse(e.getErrorCode()));
     }
 
+    @ExceptionHandler(ObjectOptimisticLockingFailureException.class)
+    public ResponseEntity<Object> handleOptimisticLocking(ObjectOptimisticLockingFailureException e) {
+        log.warn("ObjectOptimisticLockingFailureException", e);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(makeErrorResponse(CommonErrorCode.DUPLICATE));
+    }
+
+    @ExceptionHandler(ClientException.class)
+    public ResponseEntity<Object> handleClientException(ClientException e) {
+        log.warn("ClientException", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(makeErrorResponse(CommonErrorCode.BAD_REQUEST));
+    }
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception e) {
         log.warn("handleException", e);
-        return ResponseEntity.status(500).body(new ErrorResponse("SERVER_ERROR_00000001", "서버에서 에러가 발생했습니다."));
+        return ResponseEntity.status(500).body(makeErrorResponse(CommonErrorCode.INTERNAL_SERVER_ERROR));
     }
 
     private ErrorResponse makeErrorResponse(ErrorCode errorCode) {

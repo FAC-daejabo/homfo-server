@@ -1,8 +1,11 @@
 package com.homfo.user.adapter;
 
+import com.homfo.sms.infra.enums.SmsCodeStatus;
+import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.user.entity.JpaUser;
 import com.homfo.error.ResourceAlreadyExistException;
 import com.homfo.error.ResourceNotFoundException;
+import com.homfo.user.entity.JpaUserSmsCode;
 import com.homfo.user.repository.UserRepository;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
@@ -12,10 +15,12 @@ import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.infra.util.ValidationUtil;
 import com.homfo.user.port.LoadUserPort;
 import com.homfo.user.port.ManageUserPort;
+import com.homfo.user.repository.UserSmsCodeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -23,6 +28,8 @@ import java.util.Optional;
 @Service
 public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
     private final UserRepository userRepository;
+
+    private final UserSmsCodeRepository userSmsCodeRepository;
 
     private final PasswordEncoder encoder;
 
@@ -46,6 +53,7 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
     }
 
     @Override
+    @Transactional
     public UserDto register(@NonNull RegisterCommand command) {
         JpaUser user;
         Optional<JpaUser> optionalUser;
@@ -56,6 +64,13 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
 
         if (optionalUser.isPresent()) {
             throw new ResourceAlreadyExistException(UserErrorCode.ALREADY_EXIST_USER);
+        }
+
+        JpaUserSmsCode smsCode = userSmsCodeRepository.findByPhoneNumberAndStatus(command.phoneNumber(), SmsCodeStatus.SUCCESS)
+                .orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
+
+        if(smsCode.isExpired()) {
+            throw new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS);
         }
 
         user = JpaUser.builder()
@@ -79,5 +94,20 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
 
         user.deleteAccount();
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean existAccount(@NonNull String account) {
+        return userRepository.existsByAccount(account);
+    }
+
+    @Override
+    public boolean existNickname(@NonNull String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public boolean existPhoneNumber(@NonNull String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }
