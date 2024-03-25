@@ -1,15 +1,13 @@
 package com.homfo.sms.dto;
 
-import java.time.LocalDateTime;
-
 /**
  * 문자 인증을 위한 DTO 입니다.
  * */
-public record SmsCodeDto(
+public record SmsCodeTransactionDto(
         String phoneNumber,
 
-        String code,
+        SmsCodeDto before,
 
-        LocalDateTime createdAt
+        SmsCodeDto after
 ) {
 }

@@ -1,20 +1,20 @@
-package com.homfo.naver.sms.client;
+package com.homfo.sms.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.homfo.error.ThirdPartyUnavailableException;
-import com.homfo.naver.sms.request.NaverSmsRequest;
-import com.homfo.naver.sms.response.NaverSmsResponse;
 import com.homfo.sms.dto.SmsSendDto;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.sms.port.SendSmsPort;
+import com.homfo.sms.request.NaverSmsRequest;
+import com.homfo.sms.response.NaverSmsResponse;
 import lombok.NonNull;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-@Component
+@Service
 public class NaverSmsClient implements SendSmsPort {
     @Value("${naver-cloud-sms.accessKey}")
     private String accessKey;

@@ -1,4 +1,4 @@
-package com.homfo.naver.sms.request;
+package com.homfo.sms.request;
 
 import com.homfo.sms.dto.SmsSendDto;
 import lombok.*;

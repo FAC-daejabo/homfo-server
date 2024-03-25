@@ -6,7 +6,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -19,15 +18,20 @@ public class JpaSmsCode extends SmsCode {
     @Id
     private String phoneNumber;
 
-    @CreationTimestamp
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @Version
     private Long version;
 
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
+
     public JpaSmsCode(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        this.updatedAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public JpaSmsCode(String phoneNumber, String code, LocalDateTime createdAt) {
+        this.phoneNumber = phoneNumber;
+        this.code = code;
+        this.createdAt = createdAt;
     }
 }

@@ -25,6 +25,8 @@ public abstract class SmsCode {
 
     protected Integer count;
 
+    protected LocalDateTime createdAt;
+
     /**
      * Sms 코드를 보낸 전화번호입니다. 유일한 값이어야 합니다.
      */
@@ -45,7 +47,14 @@ public abstract class SmsCode {
     }
 
     /**
-     * 데이터가 변경된 시점입니다.
+     * 5분 내로 첫번째 문자 메세지를 보낸 시각입니다.
+     */
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    /**
+     * 데이터 수정 시각입니다.
      */
     public abstract LocalDateTime getUpdatedAt();
 
@@ -59,7 +68,7 @@ public abstract class SmsCode {
      * 인증 코드가 만료되었는지 확인합니다.
      */
     public boolean isExpired() {
-        long minutesSinceLastUpdate = Duration.between(getUpdatedAt(), LocalDateTime.now()).toMinutes();
+        long minutesSinceLastUpdate = Duration.between(getCreatedAt(), LocalDateTime.now()).toMinutes();
 
         return minutesSinceLastUpdate >= EXPIRED_MINUTES;
     }
@@ -97,6 +106,7 @@ public abstract class SmsCode {
 
         if (isExpired()) {
             count = 1;
+            createdAt = LocalDateTime.now();
         } else {
             count++;
         }

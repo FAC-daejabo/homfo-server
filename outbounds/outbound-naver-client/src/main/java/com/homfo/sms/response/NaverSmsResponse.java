@@ -1,4 +1,4 @@
-package com.homfo.naver.sms.response;
+package com.homfo.sms.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
