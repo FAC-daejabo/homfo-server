@@ -38,4 +38,6 @@ include 'outbounds:outbound-employee-jpa'
 findProject(':outbounds:outbound-employee-jpa')?.name = 'outbound-employee-jpa'
 include 'outbounds:outbound-common-jpa'
 findProject(':outbounds:outbound-common-jpa')?.name = 'outbound-common-jpa'
+include 'outbounds:outbound-naver-client'
+findProject(':outbounds:outbound-naver-client')?.name = 'outbound-naver-client'
 
