@@ -39,4 +39,8 @@ jobs:
         REFRESH_TOKEN_EXPIRE: ${{ secrets.REFRESH_TOKEN_EXPIRE }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        NAVER_CLOUD_SMS_ACCESS_KEY: ${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}
+        NAVER_CLOUD_SMS_SECRET_KEY: ${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}
+        NAVER_CLOUD_SMS_SERVICE_ID: ${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}
+        NAVER_CLOUD_SMS_SENDER_PHONE: ${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}
       run: ./gradlew build sonar --info

@@ -32,6 +32,10 @@ jobs:
           ACCESS_TOKEN_EXPIRE: ${{ secrets.ACCESS_TOKEN_EXPIRE }}
           REFRESH_TOKEN_SECRET: ${{ secrets.REFRESH_TOKEN_SECRET }}
           REFRESH_TOKEN_EXPIRE: ${{ secrets.REFRESH_TOKEN_EXPIRE }}
+          NAVER_CLOUD_SMS_ACCESS_KEY: ${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}
+          NAVER_CLOUD_SMS_SECRET_KEY: ${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}
+          NAVER_CLOUD_SMS_SERVICE_ID: ${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}
+          NAVER_CLOUD_SMS_SENDER_PHONE: ${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}
         run: ./gradlew test --info
 
       - name: Notify Discord about build result
