@@ -1,28 +1,32 @@
 package com.homfo.user.adapter;
 
-import com.homfo.user.entity.JpaUser;
 import com.homfo.error.ResourceAlreadyExistException;
 import com.homfo.error.ResourceNotFoundException;
-import com.homfo.user.repository.UserRepository;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.UserDto;
+import com.homfo.user.entity.JpaUser;
 import com.homfo.user.infra.enums.UserErrorCode;
 import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.infra.util.ValidationUtil;
 import com.homfo.user.port.LoadUserPort;
-import com.homfo.user.port.ManageUserAccountPort;
+import com.homfo.user.port.ManageUserPort;
+import com.homfo.user.repository.UserRepository;
+import com.homfo.user.repository.UserSmsCodeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserPersistenceAdapter implements LoadUserPort, ManageUserAccountPort {
+public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
     private final UserRepository userRepository;
+
+    private final UserSmsCodeRepository userSmsCodeRepository;
 
     private final PasswordEncoder encoder;
 
@@ -46,6 +50,7 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserAccountPo
     }
 
     @Override
+    @Transactional
     public UserDto register(@NonNull RegisterCommand command) {
         JpaUser user;
         Optional<JpaUser> optionalUser;
@@ -79,5 +84,20 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserAccountPo
 
         user.deleteAccount();
         userRepository.save(user);
+    }
+
+    @Override
+    public boolean existAccount(@NonNull String account) {
+        return userRepository.existsByAccount(account);
+    }
+
+    @Override
+    public boolean existNickname(@NonNull String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public boolean existPhoneNumber(@NonNull String phoneNumber) {
+        return userRepository.existsByPhoneNumber(phoneNumber);
     }
 }

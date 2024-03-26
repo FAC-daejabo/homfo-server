@@ -10,7 +10,13 @@ import java.util.List;
 public class UserJwtConfig {
     @Bean
     public List<String> userAccessTokenWhiteList() {
-        return List.of("/users/register", "/users/sign-in");
+        return List.of(
+                "/users/register",
+                "/users/sign-in",
+                "/users/validate/smsCode",
+                "/users/validate/duplicateAccount",
+                "/users/validate/duplicateNickname"
+        );
     }
 
     @Bean

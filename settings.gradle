@@ -36,3 +36,12 @@ findProject(':outbounds:outbound-user-jpa')?.name = 'outbound-user-jpa'
 
 include 'outbounds:outbound-employee-jpa'
 findProject(':outbounds:outbound-employee-jpa')?.name = 'outbound-employee-jpa'
+include 'outbounds:outbound-common-jpa'
+findProject(':outbounds:outbound-common-jpa')?.name = 'outbound-common-jpa'
+include 'outbounds:outbound-naver-client'
+findProject(':outbounds:outbound-naver-client')?.name = 'outbound-naver-client'
+include 'inbounds:inbound-common-http'
+findProject(':inbounds:inbound-common-http')?.name = 'inbound-common-http'
+include 'outbounds:outbound-common-jpa'
+findProject(':outbounds:outbound-common-jpa')?.name = 'outbound-common-jpa'
+

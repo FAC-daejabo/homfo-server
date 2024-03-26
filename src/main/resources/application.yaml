@@ -48,3 +48,9 @@ jwt:
   accessTokenExpire: ${ACCESS_TOKEN_EXPIRE}
   refreshTokenSecret: ${REFRESH_TOKEN_SECRET}
   refreshTokenExpire: ${REFRESH_TOKEN_EXPIRE}
+naver-cloud:
+  sms:
+    accessKey: ${NAVER_CLOUD_SMS_ACCESS_KEY}
+    secretKey: ${NAVER_CLOUD_SMS_SECRET_KEY}
+    serviceId: ${NAVER_CLOUD_SMS_SERVICE_ID}
+    senderPhone: ${NAVER_CLOUD_SMS_SENDER_PHONE}

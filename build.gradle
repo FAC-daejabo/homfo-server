@@ -74,8 +74,10 @@ dependencies {
     implementation project(':domains:domain-employee')
     implementation project(':inbounds:inbound-user-http')
     implementation project(':inbounds:inbound-employee-http')
+    implementation project(':outbounds:outbound-common-jpa')
     implementation project(':outbounds:outbound-user-jpa')
     implementation project(':outbounds:outbound-employee-jpa')
+    implementation project(':outbounds:outbound-naver-client')
 
     // mysql
     runtimeOnly 'com.mysql:mysql-connector-j'

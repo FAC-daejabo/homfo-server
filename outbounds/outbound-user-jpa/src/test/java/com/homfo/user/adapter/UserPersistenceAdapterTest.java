@@ -2,7 +2,6 @@ package com.homfo.user.adapter;
 
 import com.homfo.error.ResourceAlreadyExistException;
 import com.homfo.error.ResourceNotFoundException;
-import com.homfo.user.adapter.UserPersistenceAdapter;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.UserDto;

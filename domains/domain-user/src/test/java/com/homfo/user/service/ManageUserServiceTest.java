@@ -8,6 +8,10 @@ import com.homfo.auth.port.LoadJwtPort;
 import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.enums.Gender;
 import com.homfo.enums.MarketingCode;
+import com.homfo.error.BadRequestException;
+import com.homfo.error.ResourceNotFoundException;
+import com.homfo.sms.infra.enums.SmsErrorCode;
+import com.homfo.sms.port.ManageSmsCodePort;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.MarketingAgreementDto;
@@ -16,11 +20,12 @@ import com.homfo.user.dto.UserMarketingAgreementDto;
 import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.port.LoadUserMarketingAgreementPort;
 import com.homfo.user.port.LoadUserPort;
-import com.homfo.user.port.ManageUserAccountPort;
 import com.homfo.user.port.ManageUserMarketingAgreementPort;
+import com.homfo.user.port.ManageUserPort;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
@@ -31,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.*;
 
 class ManageUserServiceTest {
@@ -45,13 +51,16 @@ class ManageUserServiceTest {
     private LoadUserMarketingAgreementPort loadUserMarketingAgreementPort;
 
     @Mock
-    private ManageUserAccountPort manageUserAccountPort;
+    private ManageUserPort manageUserAccountPort;
 
     @Mock
     private ManageJwtPort manageJwtPort;
 
     @Mock
     private ManageUserMarketingAgreementPort manageUserMarketingAgreementPort;
+
+    @Mock
+    private ManageSmsCodePort manageSmsCodePort;
 
     private JwtSecretDto accessTokenInfo = new JwtSecretDto("accessSecret", 10);
 
@@ -69,6 +78,7 @@ class ManageUserServiceTest {
                 manageUserAccountPort,
                 manageJwtPort,
                 manageUserMarketingAgreementPort,
+                manageSmsCodePort,
                 accessTokenInfo,
                 refreshTokenInfo
         );
@@ -85,6 +95,7 @@ class ManageUserServiceTest {
         String expectedAccessToken = "accessToken";
         String expectedRefreshToken = "refreshToken";
 
+        when(manageSmsCodePort.existSuccessSmsCode(command.phoneNumber())).thenReturn(true);
         when(manageUserAccountPort.register(command)).thenReturn(userDto);
         when(manageJwtPort.save(userDto.id(), refreshTokenInfo)).thenReturn(expectedRefreshToken);
 
@@ -102,6 +113,34 @@ class ManageUserServiceTest {
             verify(manageJwtPort, times(1)).save(userDto.id(), refreshTokenInfo);
             verify(manageUserMarketingAgreementPort, times(1)).save(command, userDto);
         }
+    }
+
+    @Test
+    @DisplayName("성공한 인증 코드를 찾지 못 했다면 BadRequestException가 발생한다")
+    void register_ThrowsBadRequestException_WhenNotExistSmsCode() {
+        // given
+        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true)));
+        RegisterCommand command = new RegisterCommand("testUser", "password", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), marketingAgreementDtoList);
+
+        when(manageSmsCodePort.existSuccessSmsCode(command.phoneNumber())).thenThrow(new ResourceNotFoundException(SmsErrorCode.NOT_EXIST_SMS));
+
+        Executable result = () -> manageUserService.register(command);
+
+        assertThrows(BadRequestException.class, result);
+    }
+
+    @Test
+    @DisplayName("성공한 인증 코드가 이미 만료되었다면 BadRequestException가 발생한다")
+    void register_ThrowsBadRequestException_WhenSmsCodeExpired() {
+        // given
+        List<MarketingAgreementDto> marketingAgreementDtoList = new ArrayList<>(List.of(new MarketingAgreementDto(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY, true)));
+        RegisterCommand command = new RegisterCommand("testUser", "password", "testUser", "999-9999-9999", Gender.MAN, "job", LocalDate.now(), marketingAgreementDtoList);
+
+        when(manageSmsCodePort.existSuccessSmsCode(command.phoneNumber())).thenReturn(false);
+
+        Executable result = () -> manageUserService.register(command);
+
+        assertThrows(BadRequestException.class, result);
     }
 
     @Test

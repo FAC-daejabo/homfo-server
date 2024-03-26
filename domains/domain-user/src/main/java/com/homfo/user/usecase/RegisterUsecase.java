@@ -16,6 +16,7 @@ public interface RegisterUsecase {
      * 2. 사용자 리프레쉬 토큰 저장
      * 3. 사용자 마케팅 동의 여부 저장
      *
+     * @throws com.homfo.error.BadRequestException 올바르지 않은 입력 데이터이거나 성공한 인증 코드가 없을 때
      * @throws com.homfo.error.ResourceAlreadyExistException 이미 존재하는 사용자 정보라면
      * */
     JwtDto register(RegisterCommand command);
