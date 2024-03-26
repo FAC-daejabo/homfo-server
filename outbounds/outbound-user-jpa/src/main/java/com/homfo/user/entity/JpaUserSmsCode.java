@@ -32,27 +32,19 @@ public class JpaUserSmsCode extends SmsCode {
         this.phoneNumber = phoneNumber;
         this.count = 0;
         this.status = SmsCodeStatus.REQUESTED;
-        this.createdAt = LocalDateTime.now();
     }
 
-    public JpaUserSmsCode(String phoneNumber, String code, LocalDateTime createdAt) {
-        this.phoneNumber = phoneNumber;
-        this.count = 0;
-        this.code = code;
-        this.status = SmsCodeStatus.REQUESTED;
-        this.createdAt = createdAt;
-    }
-
-    @Override
     public void rollback(SmsCodeTransactionDto smsCodeTransactionDto) {
         boolean isValid = Objects.equals(this.phoneNumber, smsCodeTransactionDto.phoneNumber()) &&
                 Objects.equals(this.code, smsCodeTransactionDto.after().code()) &&
                 Objects.equals(this.status, smsCodeTransactionDto.after().status()) &&
+                Objects.equals(this.firstCreatedAt, smsCodeTransactionDto.after().firstCreatedAt()) &&
                 Objects.equals(this.createdAt, smsCodeTransactionDto.after().createdAt());
 
         if(isValid) {
             this.code = smsCodeTransactionDto.before().code();
             this.status = smsCodeTransactionDto.before().status();
+            this.firstCreatedAt = smsCodeTransactionDto.before().firstCreatedAt();
             this.createdAt = smsCodeTransactionDto.before().createdAt();
             return;
         }

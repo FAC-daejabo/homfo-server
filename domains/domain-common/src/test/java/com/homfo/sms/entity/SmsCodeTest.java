@@ -77,7 +77,7 @@ import static org.junit.jupiter.api.Assertions.*;
         int expectCount = 1;
 
         smsCode.setCount(currentCount);
-        smsCode.setCreatedAt(LocalDateTime.now().minusMinutes(6)); // 만료 시간을 설정하여, count가 초기화되도록 함
+        smsCode.setFirstCreatedAt(LocalDateTime.now().minusMinutes(6)); // 만료 시간을 설정하여, count가 초기화되도록 함
 
         // When
         smsCode.createCode();

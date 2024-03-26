@@ -2,7 +2,6 @@ package com.homfo.sms.entity;
 
 import com.homfo.error.RequestLimitException;
 import com.homfo.sms.command.ValidateSmsCodeCommand;
-import com.homfo.sms.dto.SmsCodeTransactionDto;
 import com.homfo.sms.infra.enums.SmsCodeStatus;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.util.RandomNumberUtil;
@@ -28,6 +27,8 @@ public abstract class SmsCode {
     protected SmsCodeStatus status;
 
     protected Integer count;
+
+    protected LocalDateTime firstCreatedAt;
 
     protected LocalDateTime createdAt;
 
@@ -60,6 +61,13 @@ public abstract class SmsCode {
     /**
      * 5분 내로 첫번째 문자 메세지를 보낸 시각입니다.
      */
+    public LocalDateTime getFirstCreatedAt() {
+        return firstCreatedAt;
+    }
+
+    /**
+     * 문자 메세지를 보낸 시각입니다.
+     */
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -68,11 +76,6 @@ public abstract class SmsCode {
      * 데이터 수정 시각입니다.
      */
     public abstract LocalDateTime getUpdatedAt();
-
-    /**
-     * 낙관적 락을 위해 사용합니다.
-     */
-    public abstract Long getVersion();
 
 
     /**
@@ -111,7 +114,7 @@ public abstract class SmsCode {
      * @throws RequestLimitException
      */
     public void createCode() {
-        boolean limit = !isExpired() && getCount() >= REQUEST_LIMIT;
+        boolean limit = getCount() != 0 && !requestWithIn5minutes() && getCount() >= REQUEST_LIMIT;
 
         if (limit) {
             throw new RequestLimitException(SmsErrorCode.LIMITED_SEND_SMS);
@@ -119,14 +122,22 @@ public abstract class SmsCode {
 
         status = SmsCodeStatus.REQUESTED;
         code = RandomNumberUtil.random(CODE_LENGTH);
+        createdAt = LocalDateTime.now();
 
-        if (isExpired()) {
+        if (getCount() == 0 || requestWithIn5minutes()) {
             count = 1;
-            createdAt = LocalDateTime.now();
+            firstCreatedAt = LocalDateTime.now();
         } else {
             count++;
         }
     }
 
-    public abstract void rollback(SmsCodeTransactionDto smsCodeTransactionDto);
+    /**
+     * 인증 코드가
+     */
+    public boolean requestWithIn5minutes() {
+        long minutesSinceFirstCreate = Duration.between(getFirstCreatedAt(), LocalDateTime.now()).toMinutes();
+
+        return minutesSinceFirstCreate >= EXPIRED_MINUTES;
+    }
 }

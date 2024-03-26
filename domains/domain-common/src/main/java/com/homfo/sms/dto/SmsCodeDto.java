@@ -13,6 +13,9 @@ public record SmsCodeDto(
         String code,
 
         SmsCodeStatus status,
+
+        LocalDateTime firstCreatedAt,
+
         LocalDateTime createdAt
 ) {
 }

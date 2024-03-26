@@ -1,6 +1,5 @@
 package com.homfo.sms.entity;
 
-import com.homfo.sms.dto.SmsCodeTransactionDto;
 import com.homfo.sms.infra.enums.SmsCodeStatus;
 
 import java.time.LocalDateTime;
@@ -13,6 +12,7 @@ public class MockSmsCode extends SmsCode {
 
     public MockSmsCode() {
         this.count = 0;
+        this.firstCreatedAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
     }
     public void setCode(String code) {
@@ -31,6 +31,10 @@ public class MockSmsCode extends SmsCode {
         this.createdAt = createdAt;
     }
 
+    public void setFirstCreatedAt(LocalDateTime firstCreatedAt) {
+        this.firstCreatedAt = firstCreatedAt;
+    }
+
     @Override
     public String getPhoneNumber() {
         return phoneNumber;
@@ -47,19 +51,5 @@ public class MockSmsCode extends SmsCode {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    @Override
-    public Long getVersion() {
-        return version;
-    }
-
-    public void setVersion(Long version) {
-        this.version = version;
-    }
-
-    @Override
-    public void rollback(SmsCodeTransactionDto smsCodeTransactionDto) {
-
     }
 }

@@ -30,12 +30,12 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
         SmsCodeDto after;
         JpaUserSmsCode smsCode = repository.findById(phoneNumber).orElse(new JpaUserSmsCode(phoneNumber));
 
-        before = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
+        before = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(),  smsCode.getFirstCreatedAt(), smsCode.getCreatedAt());
 
         try {
             smsCode.createCode();
 
-            after = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
+            after = new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getFirstCreatedAt(), smsCode.getCreatedAt());
 
             repository.save(smsCode);
         } catch (ObjectOptimisticLockingFailureException e) {
@@ -75,7 +75,7 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
 
         repository.save(smsCode);
 
-        return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
+        return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getFirstCreatedAt(),  smsCode.getCreatedAt());
     }
 
     @Override
