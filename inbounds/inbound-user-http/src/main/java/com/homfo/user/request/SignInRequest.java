@@ -13,7 +13,7 @@ public record SignInRequest(
         String account,
 
         @Schema(example = "testPW@111", description = "비밀번호")
-        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,15}$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
+        @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,15}$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
         String password
 ) {
         public SignInCommand toCommand() {

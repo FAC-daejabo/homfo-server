@@ -104,8 +104,6 @@ public class NaverSmsClient implements SendSmsPort {
         String method = "POST";
         String url = "/sms/v2/services/" + this.serviceId + "/messages";
         String timestamp = time.toString();
-        String accessKey = this.accessKey;
-        String secretKey = this.secretKey;
         String message = method +
                 space +
                 url +

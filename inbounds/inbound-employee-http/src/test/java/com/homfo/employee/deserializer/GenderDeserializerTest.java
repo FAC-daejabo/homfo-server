@@ -3,7 +3,6 @@ package com.homfo.employee.deserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.homfo.enums.Gender;
-import com.homfo.employee.deserializer.GenderDeserializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,8 @@ class GenderDeserializerTest {
         Gender gender = mapper.readValue(json, Gender.class);
 
         // then
-        assertThat(gender).isNotNull();
-        assertThat(gender).isEqualTo(Gender.MAN);
+        assertThat(gender)
+                .isNotNull()
+                .isEqualTo(Gender.MAN);
     }
 }

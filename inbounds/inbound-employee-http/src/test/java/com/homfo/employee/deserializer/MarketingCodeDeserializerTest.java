@@ -3,7 +3,6 @@ package com.homfo.employee.deserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.homfo.enums.MarketingCode;
-import com.homfo.employee.deserializer.MarketingCodeDeserializer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,8 @@ class MarketingCodeDeserializerTest {
         MarketingCode marketingCode = mapper.readValue(json, MarketingCode.class);
 
         // then
-        assertThat(marketingCode).isNotNull();
-        assertThat(marketingCode).isEqualTo(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY);
+        assertThat(marketingCode)
+                .isNotNull()
+                .isEqualTo(MarketingCode.SEND_INFORMATION_TO_THIRD_PARTY);
     }
 }

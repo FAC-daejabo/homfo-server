@@ -6,6 +6,8 @@ import com.homfo.auth.port.LoadJwtPort;
 import com.homfo.auth.port.ManageJwtPort;
 import com.homfo.employee.entity.JpaEmployeeRefreshToken;
 import com.homfo.employee.infra.enums.EmployeeErrorCode;
+import com.homfo.error.BadRequestException;
+import com.homfo.error.CommonErrorCode;
 import com.homfo.error.ResourceNotFoundException;
 import com.homfo.employee.repository.EmployeeRefreshTokenRepository;
 
@@ -46,6 +48,7 @@ public class EmployeeRefreshTokenPersistenceAdapter implements LoadJwtPort, Mana
             return token;
         }
 
-        throw new RuntimeException();
+        // TODO : 에러 정의
+        throw new BadRequestException(CommonErrorCode.BAD_REQUEST);
     }
 }

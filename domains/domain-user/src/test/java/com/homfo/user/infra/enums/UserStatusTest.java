@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Description;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserStatusTest {
+ class UserStatusTest {
 
     @Test
     @Description("코드로부터 UserStatus를 생성할 수 있어야 한다.")

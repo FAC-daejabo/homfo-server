@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SmsCodeTest {
+ class SmsCodeTest {
     @Test
     @DisplayName("5회까지 새로운 코드 생성")
     void createCode_NewCodeGenerated() {
@@ -46,7 +46,7 @@ public class SmsCodeTest {
 
         // Then
         assertNotNull(smsCode.getCode());
-        assertEquals(smsCode.getCode().length(), SmsCode.CODE_LENGTH);
+        assertEquals(SmsCode.CODE_LENGTH, smsCode.getCode().length());
         assertEquals(expectCount, smsCode.getCount());
         assertEquals(SmsCodeStatus.REQUESTED, smsCode.getStatus());
     }
@@ -84,7 +84,7 @@ public class SmsCodeTest {
 
         // Then
         assertNotNull(smsCode.getCode());
-        assertEquals(smsCode.getCode().length(), SmsCode.CODE_LENGTH);
+        assertEquals(SmsCode.CODE_LENGTH, smsCode.getCode().length());
         assertEquals(expectCount, smsCode.getCount());
         assertEquals(SmsCodeStatus.REQUESTED, smsCode.getStatus());
     }

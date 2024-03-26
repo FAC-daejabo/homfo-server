@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ContextConfiguration(classes = {EmployeeRepository.class})
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.yaml")
-public class EmployeeRepositoryTest {
+class EmployeeRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;

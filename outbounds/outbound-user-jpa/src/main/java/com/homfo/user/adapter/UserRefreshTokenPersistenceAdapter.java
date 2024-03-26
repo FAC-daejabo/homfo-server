@@ -4,6 +4,8 @@ import com.homfo.auth.dto.JwtSecretDto;
 import com.homfo.auth.infra.util.JwtUtil;
 import com.homfo.auth.port.LoadJwtPort;
 import com.homfo.auth.port.ManageJwtPort;
+import com.homfo.error.BadRequestException;
+import com.homfo.error.CommonErrorCode;
 import com.homfo.user.entity.JpaUserRefreshToken;
 import com.homfo.error.ResourceNotFoundException;
 import com.homfo.user.repository.UserRefreshTokenRepository;
@@ -44,6 +46,7 @@ public class UserRefreshTokenPersistenceAdapter implements LoadJwtPort, ManageJw
             return token;
         }
 
-        throw new RuntimeException();
+        // TODO: 에러 정의
+        throw new BadRequestException(CommonErrorCode.BAD_REQUEST);
     }
 }

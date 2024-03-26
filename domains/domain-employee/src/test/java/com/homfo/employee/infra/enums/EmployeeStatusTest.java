@@ -1,12 +1,11 @@
 package com.homfo.employee.infra.enums;
 
-import com.homfo.employee.infra.enums.EmployeeStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Description;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EmployeeStatusTest {
+ class EmployeeStatusTest {
 
     @Test
     @Description("코드로부터 EmployeeStatus를 생성할 수 있어야 한다.")
