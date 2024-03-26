@@ -25,9 +25,18 @@ public interface ManageSmsCodePort {
     boolean verifySmsCode(@NonNull ValidateSmsCodeCommand command);
 
     /**
+     * 5분 내로 인증이 성공한 적이 있는지 확인합니다.
+     *
+     * @throws com.homfo.error.ResourceNotFoundException 전화번호에 맞는 데이터를 찾지 못 했을때
+     * */
+    boolean existSuccessSmsCode(@NonNull String phoneNumber);
+
+    /**
      * 저장한 문자 인증 코드를 롤백합니다.
      *
      * @throws com.homfo.error.RequestLimitException 가능한 요청 횟수를 넘었을 때
      */
     SmsCodeDto rollbackSmsCode(@NonNull SmsCodeTransactionDto smsCodeTransactionDto);
+
+    void deleteSmsCode(@NonNull String phoneNumber);
 }

@@ -17,11 +17,11 @@ import java.util.Objects;
  */
 @MappedSuperclass
 public abstract class SmsCode {
-    private static final int CODE_LENGTH = 6;
+    public static final int CODE_LENGTH = 6;
 
-    private static final int EXPIRED_MINUTES = 5;
+    public static final int EXPIRED_MINUTES = 5;
 
-    private static final int REQUEST_LIMIT = 5;
+    public static final int REQUEST_LIMIT = 5;
 
     protected String code;
 
@@ -85,26 +85,20 @@ public abstract class SmsCode {
     }
 
     /**
-     * 이미 제한된 인증 코드인지 확인합니다.
-     */
-    public boolean isLimited() {
-        return getCount() >= REQUEST_LIMIT;
-    }
-
-    /**
      * 전화번호랑 코드가 맞는지 확인합니다.
      */
     public boolean verifyCode(ValidateSmsCodeCommand command) {
-        if (isExpired() || isLimited()) {
+        if (isExpired() || getCount() > REQUEST_LIMIT) {
             return false;
         }
 
         boolean isValid = Objects.equals(command.phoneNumber(), getPhoneNumber()) && Objects.equals(command.code(), code);
 
-        if(isValid) {
+        if (isValid) {
             status = SmsCodeStatus.SUCCESS;
             return true;
         }
+
         return false;
     }
 
@@ -117,7 +111,7 @@ public abstract class SmsCode {
      * @throws RequestLimitException
      */
     public void createCode() {
-        boolean limit = !isExpired() && isLimited();
+        boolean limit = !isExpired() && getCount() >= REQUEST_LIMIT;
 
         if (limit) {
             throw new RequestLimitException(SmsErrorCode.LIMITED_SEND_SMS);

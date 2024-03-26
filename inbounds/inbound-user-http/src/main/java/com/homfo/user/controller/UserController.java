@@ -137,7 +137,7 @@ public class UserController {
     public ResponseEntity<Boolean> validateDuplicateAccount(
             @Valid
             @RequestBody
-            @Schema(example = "testAccount", description = "계 ㅇㄷ")
+            @Schema(example = "testAccount", description = "계정")
             @Pattern(regexp = "^[a-zA-Z\\d]{8,15}$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
             String account
     ) {
@@ -172,6 +172,7 @@ public class UserController {
             @Valid
             @RequestBody
             @Schema(example = "010-0000-0000", description = "전화번호")
+            @Pattern(regexp = "^010-\\d{4}-\\d{4}$", message = "-가 포함된 모바일 전화번호 11자리여야 합니다.")
             String phoneNumber
     ) {
         return ResponseEntity.status(HttpStatus.OK).body(requestSmsCodeUsecase.requestSmsCode(phoneNumber));

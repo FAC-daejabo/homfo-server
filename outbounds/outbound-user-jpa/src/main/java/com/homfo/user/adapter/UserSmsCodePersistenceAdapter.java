@@ -6,6 +6,7 @@ import com.homfo.sms.command.ValidateSmsCodeCommand;
 import com.homfo.sms.dto.SmsCodeDto;
 import com.homfo.sms.dto.SmsCodeTransactionDto;
 
+import com.homfo.sms.infra.enums.SmsCodeStatus;
 import com.homfo.sms.infra.enums.SmsErrorCode;
 import com.homfo.sms.port.ManageSmsCodePort;
 
@@ -47,7 +48,7 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
     @Override
     @Transactional
     public boolean verifySmsCode(@NonNull ValidateSmsCodeCommand command) {
-        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
+        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndCode(command.phoneNumber(), command.code()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_EXIST_SMS));
         boolean isValid = smsCode.verifyCode(command);
 
         if (isValid) {
@@ -59,14 +60,26 @@ public class UserSmsCodePersistenceAdapter implements ManageSmsCodePort {
     }
 
     @Override
+    public boolean existSuccessSmsCode(@NonNull String phoneNumber) {
+        JpaUserSmsCode smsCode = repository.findByPhoneNumberAndStatus(phoneNumber, SmsCodeStatus.SUCCESS).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_EXIST_SMS));
+
+        return !smsCode.isExpired();
+    }
+
+    @Override
     @Transactional
     public SmsCodeDto rollbackSmsCode(@NonNull SmsCodeTransactionDto smsCodeTransactionDto) {
-        JpaUserSmsCode smsCode = repository.findById(smsCodeTransactionDto.phoneNumber()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
+        JpaUserSmsCode smsCode = repository.findById(smsCodeTransactionDto.phoneNumber()).orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_EXIST_SMS));
 
         smsCode.rollback(smsCodeTransactionDto);
 
         repository.save(smsCode);
 
         return new SmsCodeDto(smsCode.getPhoneNumber(), smsCode.getCode(), smsCode.getStatus(), smsCode.getCreatedAt());
+    }
+
+    @Override
+    public void deleteSmsCode(@NonNull String phoneNumber) {
+        repository.deleteById(phoneNumber);
     }
 }

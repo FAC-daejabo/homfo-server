@@ -1,20 +1,17 @@
 package com.homfo.user.adapter;
 
-import com.homfo.sms.infra.enums.SmsCodeStatus;
-import com.homfo.sms.infra.enums.SmsErrorCode;
-import com.homfo.user.entity.JpaUser;
 import com.homfo.error.ResourceAlreadyExistException;
 import com.homfo.error.ResourceNotFoundException;
-import com.homfo.user.entity.JpaUserSmsCode;
-import com.homfo.user.repository.UserRepository;
 import com.homfo.user.command.RegisterCommand;
 import com.homfo.user.command.SignInCommand;
 import com.homfo.user.dto.UserDto;
+import com.homfo.user.entity.JpaUser;
 import com.homfo.user.infra.enums.UserErrorCode;
 import com.homfo.user.infra.enums.UserStatus;
 import com.homfo.user.infra.util.ValidationUtil;
 import com.homfo.user.port.LoadUserPort;
 import com.homfo.user.port.ManageUserPort;
+import com.homfo.user.repository.UserRepository;
 import com.homfo.user.repository.UserSmsCodeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -64,13 +61,6 @@ public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
 
         if (optionalUser.isPresent()) {
             throw new ResourceAlreadyExistException(UserErrorCode.ALREADY_EXIST_USER);
-        }
-
-        JpaUserSmsCode smsCode = userSmsCodeRepository.findByPhoneNumberAndStatus(command.phoneNumber(), SmsCodeStatus.SUCCESS)
-                .orElseThrow(() -> new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS));
-
-        if(smsCode.isExpired()) {
-            throw new ResourceNotFoundException(SmsErrorCode.NOT_VALID_SMS);
         }
 
         user = JpaUser.builder()

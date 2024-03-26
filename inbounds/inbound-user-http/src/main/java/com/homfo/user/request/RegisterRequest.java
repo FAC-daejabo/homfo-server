@@ -17,7 +17,7 @@ public record RegisterRequest(
         String account,
 
         @Schema(example = "testPW@111", description = "비밀번호")
-        @Pattern(regexp = "^\\$2[ayb]\\$\\d{2}\\$[./A-Za-z0-9]+$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
+        @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,15}$", message = "올바르지 않은 계정 또는 비밀번호입니다.")
         String password,
 
         @Schema(example = "닉네임", description = "닉네임")

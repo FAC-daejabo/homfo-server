@@ -28,7 +28,13 @@ public class TestSecurityConfig {
     /**
      * 사용자 액세스 토큰 허용 URI 목록입니다.
      */
-    private final List<String> userAccessTokenWhiteList = List.of("/users/register", "/users/sign-in");
+    private final List<String> userAccessTokenWhiteList = List.of(
+            "/users/register",
+            "/users/sign-in",
+            "/users/validate/duplicateAccount",
+            "/users/validate/duplicateNickname",
+            "/users/validate/smsCode"
+    );
 
     /**
      * 사용자 리프레쉬 토큰 미허용 URI 목록입니다.
