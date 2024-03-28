@@ -78,7 +78,7 @@ public class ValidateUserService implements ValidateDuplicateAccountUsecase, Val
 
         SmsCodeTransactionDto smsCodeTransactionDto = manageSmsCodePort.createSmsCode(phoneNumber);
         String message = "[홈포] 인증번호: " + smsCodeTransactionDto.after().code() + "\n타인 유출로 인한 피해 주의";
-        SmsSendDto smsSendDto = new SmsSendDto(smsCodeTransactionDto.phoneNumber().replaceAll("-", ""), message);
+        SmsSendDto smsSendDto = new SmsSendDto(smsCodeTransactionDto.phoneNumber(), message);
 
         try {
             sendSmsPort.sendSms(smsSendDto);

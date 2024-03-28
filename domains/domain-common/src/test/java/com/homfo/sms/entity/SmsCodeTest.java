@@ -11,17 +11,18 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
- class SmsCodeTest {
+class SmsCodeTest {
     @Test
-    @DisplayName("5회까지 새로운 코드 생성")
+    @DisplayName("SmsCode.REQUEST_LIMIT 회까지 새로운 코드 생성")
     void createCode_NewCodeGenerated() {
         // Given
         MockSmsCode smsCode = new MockSmsCode();
 
+        smsCode.setCount(SmsCode.REQUEST_LIMIT - 1);
+        smsCode.setCreatedAt(LocalDateTime.now().minusMinutes(1));
+
         // When
-        for (int i = 0; i < SmsCode.REQUEST_LIMIT; i++) {
-            smsCode.createCode();
-        }
+        smsCode.createCode();
 
         // Then
         assertNotNull(smsCode.getCode());
@@ -31,35 +32,14 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-    @DisplayName("5분 내에 여러 번 인증 코드 요청하면 그만큼 count 증가")
-    void createCode_NewCodeGenerated_IncreaseCount() {
-        // Given
-        MockSmsCode smsCode = new MockSmsCode();
-        int currentCount = 1;
-        int expectCount = currentCount + 1;
-
-        smsCode.setCount(currentCount);
-        smsCode.setCreatedAt(LocalDateTime.now());
-
-        // When
-        smsCode.createCode();
-
-        // Then
-        assertNotNull(smsCode.getCode());
-        assertEquals(SmsCode.CODE_LENGTH, smsCode.getCode().length());
-        assertEquals(expectCount, smsCode.getCount());
-        assertEquals(SmsCodeStatus.REQUESTED, smsCode.getStatus());
-    }
-
-    @Test
     @DisplayName("5분 내로 요청 제한 횟수에 도달했다면 에러 발생")
     void createCode_ThrowsRequestLimitException_WhenNotExpired() {
         // Given
         MockSmsCode smsCode = new MockSmsCode();
-        int currentCount = 5;
+        int currentCount = SmsCode.REQUEST_LIMIT;
 
         smsCode.setCount(currentCount);
-        smsCode.setCreatedAt(LocalDateTime.now().minusMinutes(4)); // 만료 시간을 설정하여, count가 초기화되도록 함
+        smsCode.setCreatedAt(LocalDateTime.now().minusMinutes(SmsCode.EXPIRED_MINUTES - 1));
 
         // When
         Executable result = smsCode::createCode;
@@ -69,7 +49,24 @@ import static org.junit.jupiter.api.Assertions.*;
     }
 
     @Test
-    @DisplayName("요청 제한 횟수에 도달했어도 5분이 지났으면 새로운 코드 생성")
+    @DisplayName("코드를 생성한지 1분이 지나지 않았다면 에러 발생")
+    void createCode_ThrowsRequestLimitException_WhenCanNotGenerateNewCode() {
+        // Given
+        MockSmsCode smsCode = new MockSmsCode();
+        int currentCount = 1;
+
+        smsCode.setCount(currentCount);
+        smsCode.setCreatedAt(LocalDateTime.now().minusSeconds(30));
+
+        // When
+        Executable result = smsCode::createCode;
+
+        // Then
+        assertThrows(RequestLimitException.class, result);
+    }
+
+    @Test
+    @DisplayName("요청 제한 횟수에 도달했어도 5분이 지났고 마지막 코드 생성한지 1분 지났으면 새로운 코드 생성")
     void createCode_NewCodeGenerated_WhenExpired() {
         // Given
         MockSmsCode smsCode = new MockSmsCode();
@@ -77,7 +74,8 @@ import static org.junit.jupiter.api.Assertions.*;
         int expectCount = 1;
 
         smsCode.setCount(currentCount);
-        smsCode.setFirstCreatedAt(LocalDateTime.now().minusMinutes(6)); // 만료 시간을 설정하여, count가 초기화되도록 함
+        smsCode.setFirstCreatedAt(LocalDateTime.now().minusMinutes(SmsCode.REQUEST_LIMIT + 1)); // 만료 시간을 설정하여, count가 초기화되도록 함
+        smsCode.setCreatedAt(LocalDateTime.now().minusMinutes(1));
 
         // When
         smsCode.createCode();
@@ -87,6 +85,24 @@ import static org.junit.jupiter.api.Assertions.*;
         assertEquals(SmsCode.CODE_LENGTH, smsCode.getCode().length());
         assertEquals(expectCount, smsCode.getCount());
         assertEquals(SmsCodeStatus.REQUESTED, smsCode.getStatus());
+    }
+
+    @Test
+    @DisplayName("요청 제한 횟수에 도달했어도 5분이 지났고 마지막 코드 생성한지 1분이 지나지 않았으면 에러 발생")
+    void createCode_NewCodeGenerated_WhenLimited() {
+        // Given
+        MockSmsCode smsCode = new MockSmsCode();
+        int currentCount = 6;
+
+        smsCode.setCount(currentCount);
+        smsCode.setFirstCreatedAt(LocalDateTime.now().minusMinutes(SmsCode.REQUEST_LIMIT + 1));
+        smsCode.setCreatedAt(LocalDateTime.now().minusSeconds(50));
+
+        // When
+        Executable result = smsCode::createCode;
+
+        // Then
+        assertThrows(RequestLimitException.class, result);
     }
 
     @Test

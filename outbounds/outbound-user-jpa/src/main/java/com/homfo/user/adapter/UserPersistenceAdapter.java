@@ -12,7 +12,6 @@ import com.homfo.user.infra.util.ValidationUtil;
 import com.homfo.user.port.LoadUserPort;
 import com.homfo.user.port.ManageUserPort;
 import com.homfo.user.repository.UserRepository;
-import com.homfo.user.repository.UserSmsCodeRepository;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,8 +24,6 @@ import java.util.Optional;
 @Service
 public class UserPersistenceAdapter implements LoadUserPort, ManageUserPort {
     private final UserRepository userRepository;
-
-    private final UserSmsCodeRepository userSmsCodeRepository;
 
     private final PasswordEncoder encoder;
 

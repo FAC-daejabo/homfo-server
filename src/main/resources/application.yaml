@@ -15,6 +15,7 @@ spring:
     active: ${SERVER_MODE}
 
 server:
+  port: 8082
   servlet:
     context-path: /api
 

@@ -2,7 +2,6 @@ package com.homfo.user.entity;
 
 import com.homfo.sms.dto.SmsCodeTransactionDto;
 import com.homfo.sms.entity.SmsCode;
-import com.homfo.sms.infra.enums.SmsCodeStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -30,8 +29,6 @@ public class JpaUserSmsCode extends SmsCode {
 
     public JpaUserSmsCode(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        this.count = 0;
-        this.status = SmsCodeStatus.REQUESTED;
     }
 
     public void rollback(SmsCodeTransactionDto smsCodeTransactionDto) {

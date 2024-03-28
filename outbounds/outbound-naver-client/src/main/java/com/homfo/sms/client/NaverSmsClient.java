@@ -75,7 +75,7 @@ public class NaverSmsClient implements SendSmsPort {
     private NaverSmsResponse sendSmsToNcp(SmsSendDto smsSendDto) throws JsonProcessingException, RestClientException, InvalidKeyException, NoSuchAlgorithmException, URISyntaxException {
         HttpHeaders headers = getNcpHttpHeaders();
         List<NaverSmsPayload> messages = new ArrayList<>();
-        NaverSmsPayload payload = new NaverSmsPayload(smsSendDto.phoneNumber(), "", smsSendDto.message());
+        NaverSmsPayload payload = new NaverSmsPayload(smsSendDto.phoneNumber().replaceAll("-", ""), "", smsSendDto.message());
         messages.add(payload);
 
         NaverSmsRequest request = new NaverSmsRequest(

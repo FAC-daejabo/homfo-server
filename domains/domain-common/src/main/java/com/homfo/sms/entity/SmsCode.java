@@ -16,20 +16,44 @@ import java.util.Objects;
  */
 @MappedSuperclass
 public abstract class SmsCode {
+    /**
+     * 인증 코드 길이입니다.
+     */
     public static final int CODE_LENGTH = 6;
 
+    /**
+     * 인증 코드가 만료되는 시각입니다.
+     */
     public static final int EXPIRED_MINUTES = 5;
 
+    /**
+     * 인증 코드를 최대로 요청할 수 있는 횟수입니다.
+     */
     public static final int REQUEST_LIMIT = 5;
 
+    /**
+     * {@value CODE_LENGTH} 길이에 해당되는 10진수 숫자로 이루어진 문자열입니다.
+     */
     protected String code;
 
+    /**
+     * 인증 코드의 상태입니다.
+     */
     protected SmsCodeStatus status;
 
+    /**
+     * 인증 코드가 생성된 횟수를 저장합니다.
+     */
     protected Integer count;
 
+    /**
+     * {@value EXPIRED_MINUTES} 분 내로 첫번째 요청됐던 시각을 저장합니다.
+     */
     protected LocalDateTime firstCreatedAt;
 
+    /**
+     * 인증 코드가 생성된 시각을 저장합니다.
+     */
     protected LocalDateTime createdAt;
 
     /**
@@ -59,7 +83,7 @@ public abstract class SmsCode {
     }
 
     /**
-     * 5분 내로 첫번째 문자 메세지를 보낸 시각입니다.
+     * {@value EXPIRED_MINUTES}분 내로 첫번째 문자 메세지를 보낸 시각입니다.
      */
     public LocalDateTime getFirstCreatedAt() {
         return firstCreatedAt;
@@ -108,36 +132,58 @@ public abstract class SmsCode {
     /**
      * Entity 전화번호에 Sms 코드를 보냅니다.
      * <p>
-     * 5분 내에 5번을 더이상 문자를 보낼 수 없습니다.
-     * 5분이 지난 뒤에 문자를 보내면 1회로 초기화 됩니다.
+     * {@value EXPIRED_MINUTES}분 내에 {@value REQUEST_LIMIT}번을 더이상 문자를 보낼 수 없습니다.
+     * {@value EXPIRED_MINUTES}분이 지난 뒤에 문자를 보내면 1회로 초기화 됩니다.
      *
      * @throws RequestLimitException
      */
     public void createCode() {
-        boolean limit = getCount() != 0 && !requestWithIn5minutes() && getCount() >= REQUEST_LIMIT;
-
-        if (limit) {
-            throw new RequestLimitException(SmsErrorCode.LIMITED_SEND_SMS);
+        if (createLimited()) {
+            throw new RequestLimitException(SmsErrorCode.LIMITED_REQUEST_SMS);
         }
+
+        Integer count = getCount();
+        boolean notCreated = count == null || count == 0;
 
         status = SmsCodeStatus.REQUESTED;
         code = RandomNumberUtil.random(CODE_LENGTH);
         createdAt = LocalDateTime.now();
 
-        if (getCount() == 0 || requestWithIn5minutes()) {
-            count = 1;
-            firstCreatedAt = LocalDateTime.now();
+        if (notCreated || isCreateTimeLimitExpired()) {
+            this.count = 1;
+            firstCreatedAt = createdAt;
         } else {
-            count++;
+            this.count++;
         }
     }
 
     /**
-     * 인증 코드가
+     * {@value EXPIRED_MINUTES}분 내 {@value REQUEST_LIMIT}회 생성 제한 정책이 만료되었는지 확인합니다.
      */
-    public boolean requestWithIn5minutes() {
+    public boolean isCreateTimeLimitExpired() {
         long minutesSinceFirstCreate = Duration.between(getFirstCreatedAt(), LocalDateTime.now()).toMinutes();
 
         return minutesSinceFirstCreate >= EXPIRED_MINUTES;
+    }
+
+    /**
+     * 인증 코드가 {@value EXPIRED_MINUTES}분 내로 요청된 것인지 확인합니다.
+     */
+    public boolean createLimited() {
+        LocalDateTime createdAt = getCreatedAt();
+
+        if(createdAt == null) {
+            return false;
+        }
+
+        long minutesSinceCreate = Duration.between(createdAt, LocalDateTime.now()).toMinutes();
+
+        if(getCount() >= REQUEST_LIMIT) {
+            if(isCreateTimeLimitExpired()) {
+                return minutesSinceCreate < 1;
+            }
+            return true;
+        }
+        return minutesSinceCreate < 1;
     }
 }
